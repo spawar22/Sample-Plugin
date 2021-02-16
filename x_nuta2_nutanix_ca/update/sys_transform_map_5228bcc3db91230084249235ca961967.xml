@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_map">
+    <sys_transform_map action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copy_empty_fields>false</copy_empty_fields>
+        <create_new_record_on_empty_coalesce_fields>false</create_new_record_on_empty_coalesce_fields>
+        <enforce_mandatory_fields>No</enforce_mandatory_fields>
+        <name>Nutanix Transform MarketPlaceItems</name>
+        <order>100</order>
+        <run_business_rules>true</run_business_rules>
+        <run_script>true</run_script>
+        <script><![CDATA[(function transformRow(source, target, map, log, isUpdate) {
+
+	// Add your code here
+	var logger = new Nutanix_Calm_Logger();
+	var appUtil = new Nutanix_Calm_Utils();
+	
+	logger.info("Transform map ["+ map.name+"] started.");
+	
+	target.template_type = "Multi Vm/Pod";
+		
+	if(source.owner_reference){
+		var owner = JSON.parse(source.owner_reference);
+		target.owner_name = owner.name;
+	}
+	if(source.categories){
+		var categories = JSON.parse(source.categories);
+		target.appfamily = categories.AppFamily;
+		target.template_type = (categories.TemplateType) ? ((categories.TemplateType=="Vm") ? "Single Vm" : categories.TemplateType+"") : "Multi Vm/Pod";
+		
+	}
+	
+	/*if(source.categories){
+		var category = JSON.parse(source.categories);
+		target.appfamily = category.AppFamily;	
+		
+		var gr = new GlideRecord('sc_category');
+		gr.addQuery('title', category.AppFamily);
+		gr.query();
+		
+		if(gr.next())
+			target.category = gr.sys_id+'';
+		else
+			target.category = gs.getProperty('x_nuta2_nutanix_ca.nutanix_category_sysId')+'';
+	}*/
+	
+	target.category = gs.getProperty('x_nuta2_nutanix_ca.nutanix_category_sysId')+'';	
+	target.sc_catalogs = gs.getProperty('x_nuta2_nutanix_ca.nutanix_catalog_sysId')+'';
+	
+	target.workflow = gs.getProperty('x_nuta2_nutanix_ca.Workflow')+'';
+	
+	target.no_cart = true;
+	target.no_quantity = true;
+	target.omit_price = true;
+	target.no_proceed_checkout = true;
+	target.delivery_time.setDateNumericValue(0);
+	target.use_sc_layout = false;
+	
+	target.active = false;
+	
+	target.description = appUtil.markdown_renderer(source.description) + '';
+	
+	target.state = "active";
+	
+	logger.info("Transform map ["+ map.name+"]. completed.");
+	
+})(source, target, map, log, action==="update");]]></script>
+        <source_table>x_nuta2_nutanix_ca_nutanix_staging_marketplace_items</source_table>
+        <sys_class_name>sys_transform_map</sys_class_name>
+        <sys_created_by>nikita.kumari</sys_created_by>
+        <sys_created_on>2018-10-26 09:42:40</sys_created_on>
+        <sys_id>5228bcc3db91230084249235ca961967</sys_id>
+        <sys_mod_count>24</sys_mod_count>
+        <sys_name>Nutanix Transform MarketPlaceItems</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_map_5228bcc3db91230084249235ca961967</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2019-08-21 09:56:45</sys_updated_on>
+        <target_table>x_nuta2_nutanix_ca_nutanix_marketplaceitems</target_table>
+    </sys_transform_map>
+</record_update>

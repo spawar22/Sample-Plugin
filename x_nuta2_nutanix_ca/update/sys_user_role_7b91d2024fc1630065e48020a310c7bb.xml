@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_user_role">
+    <sys_user_role action="INSERT_OR_UPDATE">
+        <assignable_by/>
+        <can_delegate>true</can_delegate>
+        <description>CALM admin role to configure plugin and define runtime variables</description>
+        <elevated_privilege>false</elevated_privilege>
+        <grantable>true</grantable>
+        <includes_roles/>
+        <name>x_nuta2_nutanix_ca.calm_admin</name>
+        <requires_subscription>-1</requires_subscription>
+        <scoped_admin>false</scoped_admin>
+        <suffix>calm_admin</suffix>
+        <sys_class_name>sys_user_role</sys_class_name>
+        <sys_created_by>nitin</sys_created_by>
+        <sys_created_on>2018-10-11 03:27:07</sys_created_on>
+        <sys_id>7b91d2024fc1630065e48020a310c7bb</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.calm_admin</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_user_role_7b91d2024fc1630065e48020a310c7bb</sys_update_name>
+        <sys_updated_by>nikita.kumari</sys_updated_by>
+        <sys_updated_on>2018-11-21 09:03:45</sys_updated_on>
+    </sys_user_role>
+</record_update>

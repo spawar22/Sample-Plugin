@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Projects" max_length="40" name="x_nuta2_nutanix_ca_nutanix_project" type="collection">
+        <element label="Creation Time" max_length="250" name="creation_time" type="string"/>
+        <element label="Description" max_length="2000" name="description" type="string"/>
+        <element label="Environment UUID" max_length="250" name="environment_uuid" type="string"/>
+        <element label="Is Default" max_length="250" name="is_default" type="string"/>
+        <element label="Last Update Time" max_length="250" name="last_update_time" type="string"/>
+        <element label="Name" max_length="500" name="name" type="string"/>
+        <element label="Owner Name" max_length="100" name="owner_name" type="string"/>
+        <element label="Owner UUID" max_length="250" name="owner_uuid" type="string"/>
+        <element label="Spec Version" max_length="50" name="spec_version" type="string"/>
+        <element label="State" max_length="250" name="state" type="string"/>
+        <element attributes="edge_encryption_enabled=true,no_sort=true,slushbucket_ref_no_expand=true" label="Subnet" max_length="4000" name="subnet" reference="x_nuta2_nutanix_ca_subnet" type="glide_list"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+    </element>
+</database>

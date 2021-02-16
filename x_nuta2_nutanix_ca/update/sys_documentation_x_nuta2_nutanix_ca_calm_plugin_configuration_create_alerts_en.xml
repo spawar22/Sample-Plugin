@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="create_alerts" label="Create Incidents ?" language="en" table="x_nuta2_nutanix_ca_calm_plugin_configuration">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>create_alerts</element>
+            <help/>
+            <hint>If checked, an incident will be created on failed blueprint launch or else, a log line would be generated, indicating the failure</hint>
+            <label>Create Incidents ?</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_calm_plugin_configuration</name>
+            <plural>Create Incidents ?s</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-11 11:31:52</sys_created_on>
+            <sys_id>b8810c5e4fc5630065e48020a310c783</sys_id>
+            <sys_mod_count>5</sys_mod_count>
+            <sys_name>Create Incidents ?</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_calm_plugin_configuration_create_alerts_en</sys_update_name>
+            <sys_updated_by>bharat.vajj</sys_updated_by>
+            <sys_updated_on>2018-12-05 06:09:29</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

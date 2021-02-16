@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="" label="Application Profile" language="en" table="x_nuta2_nutanix_ca_application_profile">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element/>
+            <help/>
+            <hint/>
+            <label>Application Profile</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_application_profile</name>
+            <plural>Application Profiles</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-10-29 14:24:04</sys_created_on>
+            <sys_id>2a85d540372d2300fdfc097973990edd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Application Profile</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_application_profile__en</sys_update_name>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-10-29 14:24:04</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

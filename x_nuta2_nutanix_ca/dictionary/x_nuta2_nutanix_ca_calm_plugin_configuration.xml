@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="update_synch=true" extends="sys_metadata" label="Plugin Configuration" max_length="40" name="x_nuta2_nutanix_ca_calm_plugin_configuration" type="collection">
+        <element hint="You can enable or disable workflow for all Apps managed through Calm and hence ServiceNow" label="Enable/Disable workflow for actions" max_length="40" name="actions_approval_workflow" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" label="Applications" max_length="40" name="apps_last_runtime" type="glide_date_time"/>
+        <element attributes="edge_encryption_enabled=true" hint="Group assigned for managing incidents created on blueprint launch failure" label="Assignment Group" mandatory="true" max_length="32" name="assignment_group" reference="sys_user_group" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" label="Blueprints" max_length="40" name="blueprints_last_runtime" type="glide_date_time"/>
+        <element attributes="edge_encryption_enabled=true" label="Calm Admin Password" mandatory="true" max_length="255" name="calm_admin_password" type="password2"/>
+        <element hint="Calm admin credentials – username " label="Calm Admin Username" mandatory="true" max_length="255" name="calm_admin_username" type="string"/>
+        <element hint="Calm instance FQDN/IP address this Plugin connects to" label="Calm Instance" mandatory="true" max_length="255" name="calm_instance" type="url"/>
+        <element label="Calm SaaS and ServiceNow" max_length="40" name="calm_saas_and_servicenow" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" hint="Select the Calm Version" label="Calm Version" max_length="40" name="calm_version" read_only="true" type="string"/>
+        <element attributes="edge_encryption_enabled=true" hint="If checked, an incident will be created on failed blueprint launch or else, a log line would be generated, indicating the failure" label="Create Incidents ?" max_length="40" name="create_alerts" type="boolean"/>
+        <element label="Credential" mandatory="true" max_length="32" name="credential" reference="sys_alias" type="reference"/>
+        <element label="Instance Locked" max_length="20" name="datadelflag" type="string"/>
+        <element attributes="edge_encryption_enabled=true" choice="3" default="1" hint="Set the Log level" label="Log Verbosity" max_length="4000" name="log_verbosity" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Debug" sequence="0" value="3"/>
+                <element inactive_on_update="false" label="Info" sequence="1" value="2"/>
+                <element inactive_on_update="false" label="Warning" sequence="2" value="1"/>
+                <element inactive_on_update="false" label="Error" sequence="3" value="0"/>
+            </choice>
+        </element>
+        <element label="MID Application" max_length="32" name="mid_application" reference="ecc_agent_application" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" hint="MID server configured to connect with the Calm Instance in this ServiceNow instance" label="MID Server" mandatory="true" max_length="32" name="mid_server" reference="ecc_agent" type="reference"/>
+        <element label="Name" mandatory="true" max_length="40" name="name" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Projects" max_length="40" name="projects_last_runtime" type="glide_date_time"/>
+        <element default="Nutanix Calm" hint="Service Catalog name that appears in the ServiceNow instance." label="Service Catalog" mandatory="true" max_length="255" name="service_catalog" read_only="true" type="string"/>
+        <element attributes="edge_encryption_enabled=true" default="true" label="Show Help Text" max_length="40" name="show_help_text" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" hint="Show only published blueprints" label="Show Un-Published Blueprints" max_length="40" name="show_published_blueprints" type="boolean"/>
+        <element hint="URL for plugin support" label="Support URL" max_length="1024" name="support_url" type="url"/>
+        <element hint="You can enable or disable workflow for system actions on all Apps&#13;&#10;" label="Enable/Disable workflow for system actions" max_length="40" name="system_actions" type="boolean"/>
+        <element hint="You can enable or disable workflow for user (custom) actions on all Apps" label="Enable/Disable workflow for user actions" max_length="40" name="user_actions" type="boolean"/>
+        <element label="Use external credential system?" max_length="40" name="use_external_credential_system" type="boolean"/>
+        <element label="Use Local Groups" max_length="40" name="use_local_groups" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" choice="1" hint="Approval workflow that will be used for processing blueprint launch requests" label="Approval Workflow" mandatory="true" max_length="32" name="workflow" reference="wf_workflow" type="reference">
+            <choice/>
+        </element>
+        <element hint="ServiceNow will trigger this workflow on any system action triggered by the user" label="System Action Workflow" max_length="32" name="workflows_for_system_actions" reference="wf_workflow" reference_qual="tableLIKEx_nuta2_nutanix_ca_app_action_workflow_trigger^nameNOT LIKENutanix - Handle Perform Actions^EQ" reference_qual_condition="tableLIKEx_nuta2_nutanix_ca_app_action_workflow_trigger^nameNOT LIKENutanix - Handle Perform Actions^EQ" type="reference"/>
+        <element hint="ServiceNow will trigger this workflow on any user (custom) action triggered by the user" label="User Action Workflow" max_length="32" name="workflows_for_user_actions" reference="wf_workflow" reference_qual="tableLIKEx_nuta2_nutanix_ca_app_action_workflow_trigger^nameNOT LIKENutanix - Handle Perform Actions^EQ" reference_qual_condition="tableLIKEx_nuta2_nutanix_ca_app_action_workflow_trigger^nameNOT LIKENutanix - Handle Perform Actions^EQ" type="reference"/>
+        <index name="index">
+            <element name="workflows_for_user_actions"/>
+        </index>
+        <index name="index2">
+            <element name="assignment_group"/>
+        </index>
+        <index name="index3">
+            <element name="credential"/>
+        </index>
+        <index name="index4">
+            <element name="mid_server"/>
+        </index>
+        <index name="index5">
+            <element name="workflow"/>
+        </index>
+        <index name="index6">
+            <element name="workflows_for_system_actions"/>
+        </index>
+        <index name="index7">
+            <element name="mid_application"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_number">
+    <sys_number action="INSERT_OR_UPDATE">
+        <category display_value="" name="x_nuta2_nutanix_ca_app_action_workflow_trigger">x_nuta2_nutanix_ca_app_action_workflow_trigger</category>
+        <maximum_digits>7</maximum_digits>
+        <number>1000</number>
+        <prefix>RACT</prefix>
+        <sys_class_name>sys_number</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 06:43:54</sys_created_on>
+        <sys_id>98de2958db4900900a41ab7dca96192f</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>RACT</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_number_98de2958db4900900a41ab7dca96192f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:41:27</sys_updated_on>
+    </sys_number>
+</record_update>

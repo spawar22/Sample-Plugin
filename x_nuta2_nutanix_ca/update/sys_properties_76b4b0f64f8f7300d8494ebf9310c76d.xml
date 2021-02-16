@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>Boolean Data validation list</description>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.booleanValidationList</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>booleanValidationList</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-08-07 10:50:30</sys_created_on>
+        <sys_id>76b4b0f64f8f7300d8494ebf9310c76d</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.booleanValidationList</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_76b4b0f64f8f7300d8494ebf9310c76d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-20 04:48:44</sys_updated_on>
+        <type>string</type>
+        <value>,associate_public_ip_address,use_managed_disks,use_custom_image,block_project_wide_ssh_key,drs_mode,disable_readiness_probe,hardware_clock_utc,</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=76b4b0f64f8f7300d8494ebf9310c76d"/>
+</record_update>

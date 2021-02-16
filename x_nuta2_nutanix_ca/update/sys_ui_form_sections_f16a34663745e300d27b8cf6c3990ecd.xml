@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_form_sections form_id="f16a34663745e300d27b8cf6c3990ecd" sys_domain="global" table="x_nuta2_nutanix_ca_nutanix_blueprint" version="3">
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>x_nuta2_nutanix_ca_nutanix_blueprint</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>mumtaz.ansari</sys_created_by>
+            <sys_created_on>2018-10-12 10:18:55</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>f16a34663745e300d27b8cf6c3990ecd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_nuta2_nutanix_ca_nutanix_blueprint</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_form_sections_f16a34663745e300d27b8cf6c3990ecd</sys_update_name>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-10-12 10:18:55</sys_updated_on>
+            <sys_user/>
+            <view display_value="Item Designer" name="sc_cat_item_designer">f5a795fceb3211003623666cd206fe19</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>

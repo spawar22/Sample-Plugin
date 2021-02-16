@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Run Books" max_length="40" name="x_nuta2_nutanix_ca_nutanix_calm_run_book" type="collection">
+        <element label="Parent Name" max_length="100" name="action_name" type="string"/>
+        <element label="Parent UUID" max_length="100" name="action_uuid" type="string"/>
+        <element label="Description" max_length="200" name="description" type="string"/>
+        <element label="Name" max_length="100" name="name" type="string"/>
+        <element label="State" max_length="50" name="state" type="string"/>
+        <element label="UUID" max_length="100" name="uuid" type="string"/>
+    </element>
+</database>

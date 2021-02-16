@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices>Info,&#13;
+Warning,&#13;
+Error,&#13;
+Debug</choices>
+        <description>Log Verbosity</description>
+        <ignore_cache>true</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.Log Verbosity</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>Log Verbosity</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>nitin</sys_created_by>
+        <sys_created_on>2018-10-10 04:22:38</sys_created_on>
+        <sys_id>b37559b14f09230065e48020a310c72f</sys_id>
+        <sys_mod_count>8</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.Log Verbosity</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_b37559b14f09230065e48020a310c72f</sys_update_name>
+        <sys_updated_by>nitin</sys_updated_by>
+        <sys_updated_on>2018-10-19 09:32:46</sys_updated_on>
+        <type>choicelist</type>
+        <value>3</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=b37559b14f09230065e48020a310c72f"/>
+</record_update>

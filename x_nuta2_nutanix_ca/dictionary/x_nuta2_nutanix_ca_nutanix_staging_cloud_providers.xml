@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="sys_import_set_row" label="Staging Cloud Providers" max_length="40" name="x_nuta2_nutanix_ca_nutanix_staging_cloud_providers" type="collection">
+        <element label="Action List" max_length="1000" name="action_list" type="string"/>
+        <element label="Address" max_length="100" name="address" type="string"/>
+        <element label="Connection Port" max_length="40" name="connection_port" type="string"/>
+        <element label="Connection Type" max_length="40" name="connection_type" type="string"/>
+        <element label="Create Spec" max_length="5000" name="create_spec" type="string"/>
+        <element label="Delay Secs" max_length="40" name="delay_secs" type="string"/>
+        <element label="Description" max_length="40" name="description" type="string"/>
+        <element label="Disable Readiness Probe" max_length="40" name="disable_readiness_probe" type="string"/>
+        <element label="Editables" max_length="1000" name="editables" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Environment" max_length="32" name="environment" reference="x_nuta2_nutanix_ca_nutanix_environment" type="reference"/>
+        <element label="Login Credential Local Reference" max_length="1000" name="login_credential_local_reference" type="string"/>
+        <element label="Message List" max_length="1000" name="message_list" type="string"/>
+        <element label="Name" max_length="40" name="name" type="string"/>
+        <element label="OS Type" max_length="40" name="os_type" type="string"/>
+        <element label="Provider State" max_length="40" name="provider_state" type="string"/>
+        <element label="Provider Type" max_length="40" name="provider_type" type="string"/>
+        <element label="UUID" max_length="40" name="uuid" type="string"/>
+        <element label="Variable List" max_length="1000" name="variable_list" type="string"/>
+        <element label="VM Type" max_length="40" name="vm_type" type="string"/>
+        <index name="index">
+            <element name="environment"/>
+        </index>
+    </element>
+</database>

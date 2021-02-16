@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_formatter">
+    <sys_ui_formatter action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <angular_module/>
+        <formatter>Nutanix_logo_on_config.xml</formatter>
+        <name>Data Disk</name>
+        <sys_class_name>sys_ui_formatter</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-12-28 13:55:59</sys_created_on>
+        <sys_id>614e0293db2e630075f47dda8c9619e3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Data Disk</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_formatter_614e0293db2e630075f47dda8c9619e3</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-12-28 13:55:59</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_data_disk</table>
+        <type>formatter</type>
+    </sys_ui_formatter>
+</record_update>

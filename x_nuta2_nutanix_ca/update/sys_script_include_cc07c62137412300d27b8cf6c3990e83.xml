@@ -1,0 +1,1036 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_Calm_Utils</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_Calm_Utils</name>
+        <script><![CDATA[var Nutanix_Calm_Utils = Class.create();
+Nutanix_Calm_Utils.prototype = {
+    initialize: function() {
+        this.logger = new Nutanix_Calm_Logger();
+        /*
+		How to use alias in script
+		1. Add new alias in either of table,api,property
+		2. In respective script includes, instantiate Nutanix_Calm_Utils var apputil
+		3. Referance specific value as apputil.configuration.<api/table/property>.<key-name>
+ 		*/
+        this.version = gs.getProperty('x_nuta2_nutanix_ca.calm_version');
+        this.configuration = {
+
+            "api": {
+                "getProjectList": "/projects/list",
+                "getBlueprintList": "/blueprints/list",
+                "getBlueprintDetail": "/blueprints/",
+                "getAppList": "/apps/list",
+                "getAppDetail": "/apps/",
+                "getMarketplaceItemDetail": "/calm_marketplace_items/",
+                "getCategories": "/categories/AppFamily/list",
+                "getIcon": "/static/app_icons/",
+                "getEnvironment": "/environments/",
+                "getUsersList": "/users/list",
+                "getRolesList": "/roles/list",
+                "projectInternal": "/projects_internal",
+                "directoryServices": "/directory_services/list",
+                "getMarketplaceItem": "/calm_marketplace_items/list",
+                "getGroupsList": "/user_groups/list",
+                "proxyLogin": "/proxy_login",
+                "getSubnets": "/subnets/list"
+            },
+            "table": {
+                "NutanixStagingApplication": "x_nuta2_nutanix_ca_nutanix_staging_application",
+                "NutanixCalmAction": "x_nuta2_nutanix_ca_nutanix_calm_action",
+                "NutanixCalmApplication": "x_nuta2_nutanix_ca_nutanix_calm_application",
+                "ActionWorkflowStaging": "x_nuta2_nutanix_ca_app_action_workflow_trigger",
+                "AppDeployment": "x_nuta2_nutanix_ca_application_deployment",
+                "Blueprint": "x_nuta2_nutanix_ca_nutanix_blueprint",
+                "Project": "x_nuta2_nutanix_ca_nutanix_project",
+                "CalmPluginConfig": "x_nuta2_nutanix_ca_calm_plugin_configuration",
+                "stagingProject": "x_nuta2_nutanix_ca_nutanix_staging_project",
+                "stagingBlueprints": "x_nuta2_nutanix_ca_nutanix_staging_blueprints",
+                "processQueue": "x_nuta2_nutanix_ca_nutanix_process_queue",
+                "applicationProfiles": "x_nuta2_nutanix_ca_application_profile",
+                "varaiblesTable": "item_option_new",
+                "variableSetTable": "io_set_item",
+                "stagingMarketplaceItem": "x_nuta2_nutanix_ca_nutanix_staging_marketplace_items",
+                "catalog": "sc_catalog",
+                "category": "sc_category",
+                "sysUiAction": "sys_ui_action",
+                "catalogProfileRelation": "x_nuta2_nutanix_ca_catalog_item_and_application_profile_relation",
+                "variablesProperties": "x_nuta2_nutanix_ca_catalog_variables_properties",
+                "catalogUserCriteria": "sc_cat_item_user_criteria_mtom",
+                "userCriteria": "user_criteria",
+                "catalogProjectRelation": "x_nuta2_nutanix_ca_nutanix_calm_projects_blueprints_relationship",
+                "Credentials": "x_nuta2_nutanix_ca_nutanix_calm_credential",
+                "appRunlogs": "x_nuta2_nutanix_ca_nutanix_calm_app_runlogs",
+                "stagingEnvironment": "x_nuta2_nutanix_ca_nutanix_staging_environment",
+                "runtimeConfig": "x_nuta2_nutanix_ca_nutanix_runtime_configuration",
+                "catalogClientScript": "catalog_script_client",
+                "catalogUIPolicy": "catalog_ui_policy",
+                "catItem": "sc_cat_item",
+                "awsStorage": "x_nuta2_nutanix_ca_nutanix_storage",
+                "awsTag": "x_nuta2_nutanix_ca_nutanix_aws_tag_list",
+                "StagingGCP": "x_nuta2_nutanix_ca_staging_gcp",
+                "blankDisks": "x_nuta2_nutanix_ca_blank_disks",
+                "networking": "x_nuta2_nutanix_ca_networking",
+                "disks": "x_nuta2_nutanix_ca_disks",
+                "stagingAzure": "x_nuta2_nutanix_ca_staging_azure",
+                "security": "x_nuta2_nutanix_ca_secret",
+                "nw_profiles": "x_nuta2_nutanix_ca_network_profiles",
+                "dataDisk": "x_nuta2_nutanix_ca_data_disk",
+                "subnet": "x_nuta2_nutanix_ca_subnet",
+                "dropDownTable": "x_nuta2_nutanix_ca_generic_table_for_dropdown",
+                "recoveryPoints": "x_nuta2_nutanix_ca_restore_points",
+                "marketplaceItem": "x_nuta2_nutanix_ca_nutanix_marketplaceitems"
+            },
+        };
+    },
+    // Get credentials
+
+    _getApiToken: function() { //Orchestration api token call
+        try {
+            var credential_alias = "";
+            var calmInstanceURL = "";
+            var midApplication = "";
+            var retries = 0;
+
+            var grConfig = new GlideRecord(this.configuration.table.CalmPluginConfig);
+            if (grConfig.get(gs.getProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id') + "")) {
+                grConfig.query();
+                if (grConfig.next()) {
+                    credential_alias = grConfig.credential + "";
+                    calmInstanceURL = grConfig.calm_instance + "";
+                    midApplication = grConfig.mid_application + "";
+
+                }
+            }
+
+            while (retries < 3) {
+
+                var inputs = {};
+                inputs['endpoint'] = calmInstanceURL + gs.getProperty('x_nuta2_nutanix_ca.API_Prefix') + '/users/me';
+                inputs['midapplication'] = midApplication + "";
+                inputs['credentialalias'] = credential_alias + "";
+
+                var outputs = sn_fd.FlowAPI.executeAction('x_nuta2_nutanix_ca.nutanix_refresh_token', inputs, 10000);
+
+                var response = outputs['response'] + "";
+                var statuscode = outputs['statuscode'] + "";
+                var headers = outputs['headers'];
+
+                if (statuscode == '200' || statuscode == '201') {
+                    var parse_headers = JSON.parse(headers);
+                    var cookie = parse_headers["Set-Cookie"][0];
+                    gs.setProperty("x_nuta2_nutanix_ca.nuta_session_token", cookie + "");
+                    this.logger.info("Refreshing Nutanix session.");
+                    break;
+                    //return "200";
+                }
+
+                retries++;
+            }
+            //return "401";
+        } catch (err) {
+            this.logger.error("Failed getting token. Error: " + err);
+        }
+    },
+
+    // Use this method to make Calm API client call to the Nutanix for JSON response
+    makeCalmApiCall: function(httpMethod, endpoint, body) { //Original makeCalmApiCall
+        try {
+            var credential_status = "";
+            var cookie = "";
+
+            var grConfig = new GlideRecord(this.configuration.table.CalmPluginConfig);
+            grConfig.addQuery('sys_id', gs.getProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id'));
+            grConfig.query();
+            if (grConfig.next()) {
+                //this.Catalog = grConfig.service_catalog;
+                this.midServer = (grConfig.mid_server) ? grConfig.mid_server.getDisplayValue() + '' : "";
+                this.midApplicationServer = (grConfig.mid_application) ? grConfig.mid_application.default_mid_server.name + "" : "";
+                this.calmInstanceURL = grConfig.calm_instance + '';
+                this.userName = grConfig.calm_admin_username + "";
+                this.password = grConfig.calm_admin_password.getDecryptedValue() + "";
+                cookie = gs.getProperty("x_nuta2_nutanix_ca.nuta_session_token") + "";
+            }
+
+            var endpointURL = this.calmInstanceURL + gs.getProperty('x_nuta2_nutanix_ca.API_Prefix') + endpoint;
+
+            var request = new sn_ws.RESTMessageV2();
+            request.setEccParameter('skip_sensor', true);
+            request.setRequestHeader("Accept", "application/json");
+            request.setRequestHeader("Content-Type", "application/json");
+
+            if (gs.getProperty("x_nuta2_nutanix_ca.use_external_credential_system") + "" == "false") {
+                request.setBasicAuth(this.userName, this.password);
+				if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow") + "" == "false"){
+					request.setMIDServer(this.midServer + '');
+				}
+            } else {
+                request.setMIDServer(this.midApplicationServer + "");
+
+                if (cookie + "" == "") {
+                    gs.eventQueue("x_nuta2_nutanix_ca.refresh_token", "", "", "");
+                    request.setRequestHeader("Cookie", cookie);
+                } else {
+                    var preset_cookie = cookie + "";
+                    request.setRequestHeader("Cookie", preset_cookie);
+                }
+            }
+
+            request.setHttpMethod(httpMethod);
+            request.setEndpoint(endpointURL);
+
+            if (body)
+                request.setRequestBody(body);
+
+            request.disableForcedVariableSubstitution();
+
+            //if(this.midServer.status =='Up' && this.midServer.validated == 'true') {
+
+            var response = request.execute();
+
+            if (gs.getProperty("x_nuta2_nutanix_ca.use_external_credential_system") + "" == "true" && response.getStatusCode() == "401") {
+                this.logger.info("Nutanix session has expired.");
+                //credential_status = this._getApiToken();
+                gs.eventQueue("x_nuta2_nutanix_ca.refresh_token", "", "", "");
+                //if(credential_status != '401')
+                return this.makeCalmApiCall(httpMethod, endpoint, body);
+            }
+            //this.logger.debug(' MID Server '+this.midServer.getDisplayValue()+''+ ' is Up ');
+			this.logger.debug("makeCalmApiCall \nhttpMethod: "+httpMethod+"\nendpointURL:"+endpointURL+"\nresponse StatusCode: "+response.getStatusCode()+"\n response body:"+response.getBody());
+            return response;
+            //} else {
+            //this.logger.error(' MID Server '+this.midServer.getDisplayValue()+''+ ' is Down / Not Validated ');
+            //return false;
+            //}
+        } catch (err) {
+            this.logger.error("Make Calm API Call [makeCalmApiCall] Error: " + err);
+        }
+    },
+
+    //===========================API call to get CALM version=========================//
+    makeCalmApiVersionCall: function(httpMethod, endpoint, body) {
+        try {
+            var grConfig = new GlideRecord(this.configuration.table.CalmPluginConfig);
+            grConfig.addQuery('sys_id', gs.getProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id'));
+            grConfig.query();
+            if (grConfig.next()) {
+				this.userName = grConfig.calm_admin_username + "";                    //added authentiction check
+                this.password = grConfig.calm_admin_password.getDecryptedValue() + "";
+                //this.Catalog = grConfig.service_catalog;
+                if (gs.getProperty("x_nuta2_nutanix_ca.use_external_credential_system") + "" == "false")
+                    this.midServer = grConfig.mid_server;
+                else
+                    this.midServer = grConfig.mid_application.default_mid_server;
+
+                this.calmInstanceURL = grConfig.calm_instance + '';
+            }
+
+            var endpointURL = this.calmInstanceURL + endpoint;
+
+            var request = new sn_ws.RESTMessageV2();
+            request.setEccParameter('skip_sensor', true);
+            request.setRequestHeader("Accept", "text/html");
+            request.setHttpMethod(httpMethod);
+			if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow") + "" == "false"){
+				request.setMIDServer(this.midServer.getDisplayValue() + '');
+			}
+            request.setEndpoint(endpointURL);
+			request.setBasicAuth(this.userName, this.password);
+            if (body)
+                request.setRequestBody(body);
+
+            if ((this.midServer.status == 'Up' && this.midServer.validated == 'true') && (gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow") + "" == "false")) {
+                var response = request.execute();
+				this.logger.debug("makeCalmApiVersionCall \nhttpMethod: "+httpMethod+"\nendpointURL:"+endpointURL+"\nresponse StatusCode: "+response.getStatusCode()+"\n response body:"+response.getBody());
+                this.logger.debug(' MID Server ' + this.midServer.getDisplayValue() + '' + ' is Up ');
+                return response;
+            }
+			if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow") + "" == "true"){
+			    var response = request.execute();
+				this.logger.debug("makeCalmApiVersionCall \nhttpMethod: "+httpMethod+"\nendpointURL:"+endpointURL+"\nresponse StatusCode: "+response.getStatusCode()+"\n response body:"+response.getBody());
+                return response;
+			}else {
+                this.logger.error(' MID Server ' + this.midServer.getDisplayValue() + '' + ' is Down / Not Validated ');
+                return false;
+            }
+			
+        } catch (err) {
+            this.logger.error("Make Calm API Version Call [makeCalmApiVersionCall] Error: " + err);
+        }
+    },
+    //===========================End of API call to get CALM version==================//
+
+    makeProxyCall: function(httpMethod, endpoint, body, userId) { //API Proxy Call
+        try {
+            var userGr = new GlideRecord('sys_user');
+            if (userGr.get(userId)) {
+                var proxyURL = this.configuration.api.proxyLogin + '';
+                var calmUserName = userGr.email + '';
+                calmUserName = calmUserName.toLowerCase() + '';
+                var proxyBody = {
+                    "proxy_for_username": calmUserName
+                };
+                var proxyResponse = this.makeCalmApiCall('POST', proxyURL, this.stringify(proxyBody));
+            }
+            if (proxyResponse.getStatusCode() == '200' || proxyResponse.getStatusCode() == '201') {
+                var parsedProxyResp = this.parse(proxyResponse.getBody());
+                var sessionId = parsedProxyResp.ntnx_igw_session + '';
+                var idExpiresIn = parsedProxyResp.expires + '';
+                var grConfig = new GlideRecord(this.configuration.table.CalmPluginConfig);
+                grConfig.addQuery('sys_id', gs.getProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id'));
+                grConfig.query();
+                if (grConfig.next()) {
+                    this.midServer = (grConfig.mid_server) ? grConfig.mid_server : grConfig.mid_application.default_mid_server;
+                    this.calmInstanceURL = grConfig.calm_instance + '';
+                }
+
+                var domain = this.calmInstanceURL.replace('https://', '').replace(':9440', '');
+                var cookie = 'NTNX_IGW_SESSION=' + sessionId + '; path=/; domain=' + domain + '; Secure; HttpOnly; Expires=' + this.proxyUTCConverter(idExpiresIn) + ';';
+                var endpointURL = this.calmInstanceURL + gs.getProperty('x_nuta2_nutanix_ca.API_Prefix') + endpoint;
+
+                var proxyRequest = new sn_ws.RESTMessageV2();
+                proxyRequest.setEccParameter('skip_sensor', true);
+                proxyRequest.setRequestHeader("Accept", "application/json");
+                proxyRequest.setRequestHeader("Content-Type", "application/json");
+                proxyRequest.setRequestHeader("Cookie", cookie);
+                proxyRequest.setHttpMethod(httpMethod);
+				if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow") + "" == "false"){
+					proxyRequest.setMIDServer(this.midServer.getDisplayValue() + '');
+				}
+                proxyRequest.setEndpoint(endpointURL);
+                if (body)
+                    proxyRequest.setRequestBody(body);
+
+                proxyRequest.disableForcedVariableSubstitution();
+
+                if (this.midServer.status == 'Up' && this.midServer.validated == 'true') {
+                    proxyResponse = proxyRequest.execute();
+					this.logger.debug("makeProxyCall \nhttpMethod: "+httpMethod+"\nendpointURL:"+endpointURL+"\proxyResponse StatusCode: "+proxyResponse.getStatusCode()+"\n response body:"+proxyResponse.getBody());
+                    this.logger.debug(' MID Server ' + this.midServer.getDisplayValue() + '' + ' is Up ');
+                    return proxyResponse;
+                }
+				if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow") + "" == "true"){
+					proxyResponse = proxyRequest.execute();
+					this.logger.debug("makeProxyCall \nhttpMethod: "+httpMethod+"\nendpointURL:"+endpointURL+"\proxyResponse StatusCode: "+proxyResponse.getStatusCode()+"\n response body:"+proxyResponse.getBody());
+                    return proxyResponse;
+				}
+				else {
+                    this.logger.error(' MID Server ' + this.midServer.getDisplayValue() + '' + ' is Down / Not Validated ');
+                    return false;
+                }
+
+            } else {
+                this.logger.error("Error in makeProxyCall API Call [makeProxyCall] Error: " + proxyResponse.getBody());
+            }
+        } catch (err) {
+            this.logger.error("Make Proxy API Call [makeProxyCall] Error: " + err);
+        }
+    },
+
+    makeIntermediateApiCall: function(httpMethod, endpoint, body, userId) { //API intermediate Proxy Call
+
+        var local_groups_flag = "";
+        var grConfig = new GlideRecord(this.configuration.table.CalmPluginConfig);
+        grConfig.addQuery('sys_id', gs.getProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id'));
+        grConfig.query();
+        if (grConfig.next()) {
+            local_groups_flag = grConfig.use_local_groups + "";
+        }
+
+        if (!this.versionNewCheck() || local_groups_flag == "true") {
+            return this.makeCalmApiCall(httpMethod, endpoint, body);
+        } else {
+
+            var grUser = new GlideRecord('sys_user_has_role');
+            grUser.addEncodedQuery('role.name=x_nuta2_nutanix_ca.calm_admin^ORrole.name=admin^user=' + userId);
+
+            grUser.query();
+
+            if (grUser.next()) //user_name.hasRole("x_nuta2_nutanix_ca.calm_admin")) 
+            {
+                return this.makeCalmApiCall(httpMethod, endpoint, body);
+            } else {
+                return this.makeProxyCall(httpMethod, endpoint, body, userId);
+            }
+        }
+    },
+
+    makeCalmApiCallForIcon: function(httpMethod, endpoint, body, sysId) {
+        try {
+            var grConfig = new GlideRecord(this.configuration.table.CalmPluginConfig);
+            grConfig.addQuery('sys_id', gs.getProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id'));
+            grConfig.query();
+            if (grConfig.next()) {
+                //this.Catalog = grConfig.service_catalog;
+                this.midServer = grConfig.mid_server;
+                this.calmInstanceURL = grConfig.calm_instance + '';
+                this.userName = grConfig.calm_admin_username + '';
+                this.password = grConfig.calm_admin_password.getDecryptedValue() + '';
+            }
+
+            var endpointURL = this.calmInstanceURL + gs.getProperty('x_nuta2_nutanix_ca.API_Prefix') + endpoint;
+            var tablename = 'sc_cat_item';
+            var recordSysId = sysId;
+            var filename = 'picture';
+            var request = new sn_ws.RESTMessageV2();
+            request.setEccParameter('skip_sensor', true);
+            request.setBasicAuth(this.userName, this.password);
+            request.setHttpMethod(httpMethod);
+			if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow") + "" == "false"){
+				request.setMIDServer(this.midServer.getDisplayValue() + '');
+			}
+            request.setEndpoint(endpointURL);
+            request.saveResponseBodyAsAttachment(tablename, recordSysId, filename);
+            if (body)
+                request.setRequestBody(body);
+
+            request.disableForcedVariableSubstitution();
+
+            if (this.midServer.status == 'Up' && this.midServer.validated == 'true') {
+                var response = request.execute();
+				this.logger.debug("makeCalmApiCallForIcon \nhttpMethod: "+httpMethod+"\nendpointURL:"+endpointURL+"\nresponse StatusCode: "+response.getStatusCode()+"\n response body:"+response.getBody());
+                this.logger.debug(' MID Server ' + this.midServer.getDisplayValue() + '' + ' is Up ');
+                return response;
+            }
+			if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow") + "" == "true"){
+					var response = request.execute();
+					this.logger.debug("makeCalmApiCallForIcon \nhttpMethod: "+httpMethod+"\nendpointURL:"+endpointURL+"\nresponse StatusCode: "+response.getStatusCode()+"\n response body:"+response.getBody())
+                    return response;
+			}
+			else {
+                this.logger.error(' MID Server ' + this.midServer.getDisplayValue() + '' + ' is Down / Not Validated ');
+                return false;
+            }
+        } catch (err) {
+            this.logger.error("Make API Call [makeCalmApiCallForIcon] Error: " + err);
+        }
+    },
+
+    ///changes
+
+    generateRequestBody: function(name, version, presetOffset, pageBreaker) {
+
+        if (!this.versionNewCheck()) {
+            var responseBody = "";
+            switch (name) {
+
+                case "startImportMPI":
+                    responseBody = {
+                        "kind": "marketplace_item",
+                        "offset": 0,
+                        "length": 1
+                    };
+                    return responseBody;
+
+                case "importMPIData":
+                    responseBody = {
+                        "kind": "marketplace_item",
+                        "offset": presetOffset,
+                        "length": pageBreaker
+                    };
+                    return responseBody;
+
+                default:
+                    this.logger.error("Inside Nutanix_Calm_Utils.generateRequestBody :: " + name + " not found");
+            }
+        } else {
+            var responseBody = "";
+            switch (name) {
+
+                case "startImportMPI":
+                    responseBody = {
+                        "kind": "marketplace_item",
+                        "offset": 0,
+                        "filter": "app_state==PUBLISHED",
+                        "length": 1
+                    };
+                    return responseBody;
+
+                case "importMPIData":
+                    responseBody = {
+                        "kind": "marketplace_item",
+                        "offset": presetOffset,
+                        "filter": "app_state==PUBLISHED",
+                        "length": pageBreaker
+                    };
+                    return responseBody;
+
+                default:
+                    this.logger.error("Inside Nutanix_Calm_Utils.generateRequestBody :: " + name + " not found");
+
+            }
+        }
+    },
+
+    ///
+    //Show/Hide 'Sync' ui action on authentication success or failure
+    showHideSyncUiAction: function(SyncStatus) {
+        try {
+            var grAction = new GlideRecord(this.configuration.table.sysUiAction);
+            grAction.addQuery('action_name', 'nutanix_sync');
+            grAction.query();
+            if (grAction.next()) {
+                grAction.form_button = SyncStatus;
+                grAction.update();
+            }
+        } catch (e) {
+            this.logger.error("Inside Nutanix_Calm_Utils.showHideSyncUiAction Error: " + e);
+        }
+
+    },
+
+    //Show/Hide 'Save Properties' ui action on MID Server Down/not validated
+    showHideSaveUiAction: function(SaveStatus) {
+        try {
+            var grAction = new GlideRecord(this.configuration.table.sysUiAction);
+            grAction.addQuery('action_name', 'save_properties');
+            grAction.query();
+            if (grAction.next()) {
+                grAction.form_button = SaveStatus;
+                grAction.update();
+            }
+        } catch (e) {
+            this.logger.error("Inside Nutanix_Calm_Utils.showHideSaveUiAction Error: " + e);
+        }
+
+    },
+
+
+    updateCatalogName: function(name) {
+        var gr = new GlideRecord(this.configuration.table.catalog);
+        gr.addQuery('sys_id', gs.getProperty('x_nuta2_nutanix_ca.nutanix_catalog_sysId') + '');
+        gr.query();
+        if (gr.next()) {
+            gr.title = name + '';
+            gr.update();
+        } else {
+            gr.initialize();
+            gr.title = name;
+            //gr.desktop_image = '';   //Image needed to be added.
+            gr.insert();
+        }
+    },
+
+    //('importApplications', 'POST', '/apps/list', 'payload');
+    insertIntoQueue: function(topic, method, parameter, payload, process, desc) {
+        var gr = new GlideRecord(this.configuration.table.processQueue);
+        gr.initialize();
+        gr.topic = topic + '';
+        gr.method = method + '';
+        gr.parameter = parameter + '';
+        gr.payload = payload + '';
+        gr.process_name = process + '';
+        gr.description = desc + '';
+        gr.state = "ready";
+        gr.insert();
+    },
+
+    // Inserts app run logs into App Runlogs table
+    insertAppRunlogs: function(parsedJson) {
+        try {
+            var grRunlogs = new GlideRecord(this.configuration.table.appRunlogs);
+            grRunlogs.initialize();
+
+            //grRunlogs.name = parsedJson.status.action_reference.name;
+            var action_name_vars = ['action_install_ngt', 'action_manage_ngt', 'action_uninstall_ngt', 'action_update'];
+            var action_name = parsedJson.status.action_reference.name + '';
+            if (action_name_vars.indexOf(action_name) != -1) {
+                var action_name_json = {
+                    'action_install_ngt': 'Install NGT',
+                    'action_manage_ngt': 'Manage NGT',
+                    'action_uninstall_ngt': 'Uninstall NGT',
+                    'action_update': 'App Edit'
+                };
+                action_name = action_name_json[action_name];
+            } else {
+                var aname = action_name.replace('action_', '').replace('_', ' ');
+                aname = aname.split(" ");
+                for (var j = 0, x = aname.length; j < x; j++) {
+                    aname[j] = aname[j][0].toUpperCase() + aname[j].substr(1);
+                }
+                action_name = aname.join(" ");
+            }
+            grRunlogs.name = action_name + '';
+
+            grRunlogs.uuid = parsedJson.metadata.uuid;
+            grRunlogs.description = parsedJson.status.description;
+            grRunlogs.app_uuid = parsedJson.status.application_reference.uuid;
+            grRunlogs.app_name = parsedJson.status.application_reference.name;
+            grRunlogs.is_runlog_archived = parsedJson.status.is_runlog_archived;
+            grRunlogs.is_critical = parsedJson.status.is_critical;
+			grRunlogs.state_reason = (parsedJson.status.reason_list).toString();//stringify
+            grRunlogs.state = parsedJson.status.state;
+            grRunlogs.type = parsedJson.status.type;
+            grRunlogs.kind = parsedJson.metadata.kind;
+            grRunlogs.last_update_time = this.calmDateConvertor(parsedJson.metadata.last_update_time);
+            grRunlogs.creation_time = this.calmDateConvertor(parsedJson.metadata.creation_time);
+            grRunlogs.insert();
+
+        } catch (e) {
+            this.logger.error("Error occured while inserting app run logs, Nutanix_Calm_Utils.insertAppRunlogs: " + e);
+        }
+    },
+
+    // Calm "last_update_time", "creation_time" date convertor specific to SNOW datetime format
+    calmDateConvertor: function(getdate) {
+        try {
+            var date = new Date(getdate / 1000);
+            var year = date.getUTCFullYear();
+            var month = date.getUTCMonth() + 1; // getMonth() is zero-indexed, so we'll increment to get the correct month number
+            var day = date.getUTCDate();
+            var hours = date.getUTCHours();
+            var minutes = date.getUTCMinutes();
+            var seconds = date.getUTCSeconds();
+            var lastUpdate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+            return lastUpdate;
+        } catch (e) {
+            this.logger.error("Error occured inside Nutanix_Calm_Utils.calmDateConvertor: " + e);
+        }
+    },
+
+    parse: function(str) {
+        if (str)
+            return JSON.parse(str);
+
+        return '';
+    },
+
+    stringify: function(str) {
+        if (str)
+            return JSON.stringify(str);
+
+        return '';
+    },
+
+    proxyUTCConverter: function(timeStamp) {
+        var d = new Date(timeStamp * 1000);
+        return d.toGMTString();
+    },
+
+    markdown_renderer: function(markdown_string) {
+        try {
+
+            if (markdown_string == '')
+                return '';
+
+            x_nuta2_nutanix_ca.Markdown_lib;
+            var converter = new showdown.Converter();
+            var html_string = converter.makeHtml(markdown_string);
+            var markdown_desc = (html_string + '').replace(/(<h[1-9])/g, '<strong').replace(/(<\/h[1-9]>)/g, '</strong>').replace(/<ul>/g, '<ul style="list-style-position: inside;">');
+
+            return markdown_desc;
+        } catch (e) {
+            this.logger.error(e);
+        }
+    },
+
+    versionNewCheck: function() {
+        var old_version_array = ["2.4", "2.5", "2.6"];
+
+        if (old_version_array.indexOf(this.version + "") == -1)
+            return true;
+        else
+            return false;
+
+    },
+
+    _createMacroArray: function(macro_string) {
+
+        var split_macros = macro_string.split("@@{");
+        var macro_array = [];
+        for (var i = 0; i < split_macros.length; i++) {
+            if (split_macros[i].indexOf("}@@") != -1)
+                macro_array.push(split_macros[i].split("}@@")[0]);
+        }
+
+        return macro_array;
+    },
+
+    getMacroDependencies: function(field) {
+
+        try {
+
+            var field_json = (field) ? JSON.parse(field) : {};
+            var dep_json = {};
+            var all_dep = [];
+
+            var type = field_json.type + "";
+            if (type == "EXEC_LOCAL" || type == "EXEC_SECRET") {
+                var attrs = field_json.options.attrs;
+                dep_json.script = {
+                    "dependencies": this._createMacroArray(attrs.script + ""),
+                    "value": attrs.script
+                };
+                dep_json.all_dep = dep_json.script.dependencies;
+            } else if (type == "HTTP_LOCAL" || type == "HTTP_SECRET") {
+                var supported_fields = {
+                    "content_type": "",
+                    "url": "",
+                    "request_body": ""
+                };
+                var attrs = field_json.options.attrs;
+                for (var i in supported_fields) {
+                    dep_json[i] = {
+                        "dependencies": this._createMacroArray(attrs[i] + ""),
+                        "value": attrs[i]
+                    };
+                    dep_json.all_dep = all_dep.concat(dep_json[i].dependencies);
+                }
+                dep_json.response_paths = {
+                    "dependencies": this._createMacroArray(attrs.response_paths[field_json.name] + ""),
+                    "value": attrs.response_paths[field_json.name]
+                };
+            } else {
+                dep_json["local"] = {
+                    "dependencies": this._createMacroArray(field_json.value + ""),
+                    "value": field_json.value+""
+                };
+                dep_json.all_dep = dep_json.local.dependencies;
+            }
+
+            return dep_json;
+        } catch (e) {
+            gs.info(e);
+        }
+    },
+
+    createPreMap: function(field, type) {
+
+		try{
+        var pre_array = [];
+
+        if (type == "LOCAL" || type == "SECRET")
+            return field.local.dependencies;
+
+        if (type == "EXEC_LOCAL" || type == "EXEC_SECRET") {
+            return field.script.dependencies;
+        }
+
+        if (type == "HTTP_LOCAL" || type == "HTTP_SECRET") {
+            var supported_fields = {
+                "content_type": "",
+                "url": "",
+                "request_body": "",
+                "response_paths": ""
+            };
+            for (var i in supported_fields) {
+                var sup_array = field[i].dependencies;
+                for (var j = 0; j < sup_array.length; j++) {
+                    if (pre_array.indexOf(sup_array[j]) == -1)
+                        pre_array.push(sup_array[j]);
+                }
+            }
+            return pre_array;
+        }
+		} catch(e){gs.error(type);}
+    },
+
+    createDependencyMap: function(var_array) {
+        var arr = JSON.stringify(var_array);
+        arr = JSON.parse(arr);
+        return this._tsort(arr);
+    },
+
+    _tsort: function(map) {
+		
+        var error_map = {};
+		
+        function tsort(edges) {
+            var nodes = {},
+                sorted = [],
+                visited = {};
+
+            var Node = function Node(id) {
+                this.id = id;
+                this.afters = [];
+            };
+
+            edges.forEach(function(v) {
+                var from = v[0],
+                    to = v[1];
+                if (!nodes[from]) nodes[from] = new Node(from);
+                if (!nodes[to]) nodes[to] = new Node(to);
+                nodes[from].afters.push(to);
+            });
+            Object.keys(nodes).forEach(function visit(idstr, ancestors) {
+                var node = nodes[idstr],
+                    id = node.id;
+                if (visited[idstr]) return;
+                if (!Array.isArray(ancestors)) ancestors = [];
+                ancestors.push(id);
+                visited[idstr] = true;
+                node.afters.forEach(function(afterID) {
+                    if (ancestors.indexOf(afterID) >= 0) error_map[afterID] = id;
+                    visit(afterID.toString(), ancestors.map(function(v) {
+                        return v;
+                    }));
+                });
+                sorted.unshift(id);
+            });
+            return sorted;
+        }
+
+        var createEdges = function createEdges(dep) {
+            var result = [];
+            Object.keys(dep).forEach(function(key) {
+                dep[key].forEach(function(n) {
+                    result.push([n, key]);
+                });
+            });
+            return result;
+        };
+		
+        var list = createEdges(map);
+		
+		var sorted_array = tsort(list);
+		
+		for(var i in map){
+			if(!map[i].length && sorted_array.indexOf(i) == -1)
+				sorted_array.unshift(i);
+		}
+		
+        return {
+            "Dep_array": sorted_array,
+            "error_map": error_map
+        };
+    },
+
+    _tsort2: function(map) {
+		var error = "";
+        function topologicalSortHelper(node, visited, temp, graph, result) {
+            temp[node] = true;
+
+            var neighbors = graph[node];
+
+            for (var i = 0; i < neighbors.length; i += 1) {
+
+                var n = neighbors[i];
+
+                if (temp[n]) {
+					error = 'Circular dependency detected for variable: '+n;
+                    this.logger.error(error);
+					return;
+                }
+
+                if (!visited[n]) {
+
+                    topologicalSortHelper(n, visited, temp, graph, result);
+
+                }
+
+            }
+
+            temp[node] = false;
+
+            visited[node] = true;
+
+            result.push(node);
+
+        }
+
+        function topsort(graph) {
+
+            var result = [];
+            var visited = [];
+
+            var temp = [];
+
+            for (var node in graph) {
+
+                if (!visited[node] && !temp[node]) {
+
+                    topologicalSortHelper(node, visited, temp, graph, result);
+
+                }
+
+            }
+
+            return result;
+
+        }
+		
+		return {
+            "Dep_array": topsort(map),
+            "error_map": [error]
+        };
+    },
+	migrateV1_4_3 : function(){
+	try {
+		var delete_blueprint = {};
+		var str = [];
+		var answer = '';
+
+		var blueprint = new GlideRecord('x_nuta2_nutanix_ca_nutanix_blueprint');
+		blueprint.addQuery('state', 'ACTIVE');
+		blueprint.query();
+		while (blueprint.next()) {
+			var final_var_list = [];
+			var response = this.makeCalmApiCall("get", '/blueprints/' + blueprint.uuid, "");
+			if (response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+				var app_profile_list = JSON.parse(response.getBody()).spec.resources.app_profile_list;
+				if (app_profile_list.length < 1)
+					continue;
+
+				for (var i in app_profile_list) {
+					var variable_list = app_profile_list[i].variable_list;
+					if (variable_list.length < 1)
+						continue;
+
+					for (var j in variable_list) {
+						var var_index = final_var_list.indexOf(variable_list[j].name);
+						(var_index == -1) ? final_var_list.push(variable_list[j].name): delete_blueprint[blueprint.name] = {
+							"sys_id": blueprint.sys_id + '',
+							"variables": variable_list[j].name + ''
+						};
+					}
+				}
+			}
+		}
+		gs.info("V1_4_3 migration , blueprint to be deleted : " + JSON.stringify(delete_blueprint));
+
+
+		var delete_mpi = {};
+		var mpi = new GlideRecord('x_nuta2_nutanix_ca_nutanix_marketplaceitems');
+		mpi.addQuery('state', 'active');
+		mpi.query();
+		while (mpi.next()) {
+			var final_var_list = [];
+			var response = this.makeCalmApiCall("get", '/calm_marketplace_items/' + mpi.uuid, "");
+			if (response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+				response = JSON.parse(response.getBody());
+				var app_profile = (response.status.resources.app_blueprint_template.status.resources.app_profile_list);
+				if (app_profile.length < 1)
+					continue;
+				for (var i in app_profile) {
+					var variable_list = app_profile[i].variable_list;
+					if (variable_list.length < 1)
+						continue;
+					for (var j in variable_list) {
+						var var_index = final_var_list.indexOf(variable_list[j].name);
+						(var_index == -1) ? final_var_list.push(variable_list[j].name): delete_mpi[mpi.name + " " + mpi.version] = {
+							"sys_id": mpi.sys_id + '',
+							"variables": variable_list[j].name + ''
+						};
+					}
+				}
+			}
+			
+		}
+		gs.info("V1_4_3 migration, MPI to be deleted : : " + JSON.stringify(delete_mpi));
+
+		var str = [];
+		for (var z in delete_blueprint) {
+					
+			var count = 0;
+			var cat_item = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+			cat_item.addQuery('blueprint', delete_blueprint[z].sys_id);
+			cat_item.query();
+            
+			while (cat_item.next()) {
+				count++;
+				cat_item.state = 'deleted';
+				cat_item.update();
+		//		gs.info(" Deactivated catalog " + cat_item.item_name.name + " in V1_4_3 migration ");
+				var catItem = cat_item.item_name.getRefRecord();
+				catItem.active = false;
+				catItem.update();
+				gs.info(" Deactivated catalog " + cat_item.item_name.name + " in V1_4_3 migration ");
+			}
+			
+			var variable = new GlideRecord('item_option_new');
+			variable.addQuery('cat_item', delete_blueprint[z].sys_id + '');
+			variable.query();
+		//	gs.info("deleted blueprint " + variable.cat_item.name + " in V1_4_3 migration ");
+			while (variable.next()) {
+				variable.cat_item = "";
+				variable.update();
+			}
+			var variables_properties  = new GlideRecord('x_nuta2_nutanix_ca_catalog_variables_properties');
+			variables_properties.addQuery('catalog_item', delete_blueprint[z].sys_id+'');
+			variables_properties.query();
+			while(variables_properties.next()){
+				variables_properties.deleteRecord();
+			}
+			if(count > 0)
+				str.push(z);
+			gs.info("Blueprint "+z+" is migrated to V1.4.3");
+		}
+		for (var k in delete_mpi) {
+			var count = 0;
+			var cat_item = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+			cat_item.addQuery('blueprint',delete_mpi[k].sys_id + '');
+			cat_item.query();
+
+			while (cat_item.next()) {
+				count++;
+				cat_item.state = 'deleted';
+				cat_item.update();
+		//		gs.info(" Deactivated catalog " + cat_item.item_name.name + " in V1_4_3 migration ");
+				var catItem = cat_item.item_name.getRefRecord();
+				catItem.active = false;
+				catItem.update();
+				gs.info(" Deactivated catalog " + cat_item.item_name.name + " in V1_4_3 migration ");
+			}
+			var mpi = new GlideRecord('item_option_new');
+			mpi.addQuery('cat_item', delete_mpi[k].sys_id + '');
+			mpi.query();
+	//		gs.info("deleted MPI " + mpi.cat_item.name + " in V1_4_3 migration ");
+			while (mpi.next()) {
+				mpi.cat_item = "";
+				mpi.update();
+			}
+			var variables_properties  = new GlideRecord('x_nuta2_nutanix_ca_catalog_variables_properties');
+			variables_properties.addQuery('catalog_item', delete_mpi[k].sys_id+'');
+			variables_properties.query();
+			while(variables_properties.next()){
+				variables_properties.deleteRecord();
+			}
+	//		gs.info("deleted blueprint " + mpi.name + " in V1_4_3 migration ");
+			if(count > 0)
+				str.push(k);
+			gs.info("MPI "+k+" is migrated to V1.4.3")
+		}
+		gs.info(str);
+		
+
+		gs.setProperty('x_nuta2_nutanix_ca.1_4_3', "1");
+		str.length > 0 ? gs.setProperty('x_nuta2_nutanix_ca.1_4_3_bp', str) : '';
+		
+		var var_property = new GlideRecord('x_nuta2_nutanix_ca_catalog_variables_properties'); 
+		var_property.addEncodedQuery('isprofilevariable=true');
+		var_property.query();
+		while(var_property.next()){
+			 var base_var = new GlideRecord('item_option_new');
+             base_var.get(var_property.variable);
+             base_var.description = var_property.uuid;
+			 base_var.update();
+	//		gs.info(var_property.variable.name+"updated in V1_4_3 migration");
+		}
+		this.insertIntoQueue('startInventorySync', '', '', '', 'Start inventory sync', 'This process is invoking the import of all the inventories.');
+	} 
+	catch (err) {
+		gs.info("V1_4_3 migration ," + err);
+	}
+	},
+
+    type: 'Nutanix_Calm_Utils'
+	
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-10-09 13:20:11</sys_created_on>
+        <sys_id>cc07c62137412300d27b8cf6c3990e83</sys_id>
+        <sys_mod_count>278</sys_mod_count>
+        <sys_name>Nutanix_Calm_Utils</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_cc07c62137412300d27b8cf6c3990e83</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-02-04 07:53:29</sys_updated_on>
+    </sys_script_include>
+</record_update>

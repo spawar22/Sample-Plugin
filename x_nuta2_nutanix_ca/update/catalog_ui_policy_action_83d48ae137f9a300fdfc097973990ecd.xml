@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="catalog_ui_policy_action">
+    <catalog_ui_policy_action action="INSERT_OR_UPDATE">
+        <catalog_item display_value="General Settings">d4d3da7f37d12300fdfc097973990e11</catalog_item>
+        <catalog_variable>IO:2d4ef63437fd2300fdfc097973990e1e</catalog_variable>
+        <cleared>false</cleared>
+        <disabled>ignore</disabled>
+        <field/>
+        <mandatory>false</mandatory>
+        <order>100</order>
+        <sys_class_name>catalog_ui_policy_action</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-15 19:57:43</sys_created_on>
+        <sys_id>83d48ae137f9a300fdfc097973990ecd</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>create_catalog</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>catalog_ui_policy_action_83d48ae137f9a300fdfc097973990ecd</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-03 07:54:21</sys_updated_on>
+        <table/>
+        <ui_policy display_value="Hide catalog question">14648ea137f9a300fdfc097973990e6e</ui_policy>
+        <variable>create_catalog</variable>
+        <variable_set/>
+        <visible>false</visible>
+    </catalog_ui_policy_action>
+</record_update>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_metadata_link">
+    <sys_metadata_link action="INSERT_OR_UPDATE">
+        <directory>update</directory>
+        <documentkey>ec3a981d373d6300fdfc097973990e67</documentkey>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="wf_stage">
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Processing</name>
+        <ola>1970-01-01 00:00:00</ola>
+        <order>100</order>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-14 17:32:53</sys_created_on>
+        <sys_id>ec3a981d373d6300fdfc097973990e67</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-11-14 17:35:13</sys_updated_on>
+        <value>processing</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">203a981d373d6300fdfc097973990e66</workflow_version>
+    </wf_stage>
+</record_update>
+]]></payload>
+        <sys_class_name>sys_metadata_link</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-14 17:35:33</sys_created_on>
+        <sys_id>bfcadc1d373d6300fdfc097973990eeb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Processing</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_metadata_link_bfcadc1d373d6300fdfc097973990eeb</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-11-14 17:35:33</sys_updated_on>
+        <tablename>wf_stage</tablename>
+    </sys_metadata_link>
+</record_update>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="calm_saas_and_servicenow" label="Calm SaaS and ServiceNow" language="en" table="x_nuta2_nutanix_ca_calm_plugin_configuration">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>calm_saas_and_servicenow</element>
+            <help/>
+            <hint/>
+            <label>Calm SaaS and ServiceNow</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_calm_plugin_configuration</name>
+            <plural>Calm SaaS and ServiceNows</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2021-02-02 08:51:37</sys_created_on>
+            <sys_id>8444cf4a2f866410152959ab2799b6dd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Calm SaaS and ServiceNow</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_calm_plugin_configuration_calm_saas_and_servicenow_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2021-02-02 08:51:37</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

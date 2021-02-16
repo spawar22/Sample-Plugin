@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_map">
+    <sys_transform_map action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copy_empty_fields>false</copy_empty_fields>
+        <create_new_record_on_empty_coalesce_fields>false</create_new_record_on_empty_coalesce_fields>
+        <enforce_mandatory_fields>No</enforce_mandatory_fields>
+        <name>Nutanix Transform Projects</name>
+        <order>100</order>
+        <run_business_rules>false</run_business_rules>
+        <run_script>true</run_script>
+        <script><![CDATA[(function transformRow(source, target, map, log, isUpdate) {
+	
+	// Add your code here
+	//log.info("source="+source);
+	var logger = new Nutanix_Calm_Logger();
+	var appUtil = new Nutanix_Calm_Utils();
+	logger.info("Transform map ["+ map.name+"]. started.");
+	if( source.owner_reference ){
+		logger.info("Parsed owner reference.");
+		var parsed = JSON.parse(source.owner_reference);
+		//log.info("parsed.uuid="+parsed.uuid);
+		target.owner_uuid = parsed.uuid;
+		target.owner_name = parsed.name;
+		//var user_id = parsed.uuid;
+		/*var gr = new GlideRecord('sys_user');
+		gr.addQuery('uuid', user_id);
+		gr.query();
+		if(gr.next())
+			target.owner = gr.sys_id;
+ 		*/
+	}
+	if(source.environment_reference_list){
+		logger.info("Parsed environment reference.");
+		var parsed = JSON.parse(source.environment_reference_list);
+		var env_list = "";
+		for(var i in parsed){
+			var env = parsed[i];
+			env_list = env_list + env.uuid ;
+			if(i != parsed.length-1) env_list = env_list + ",";
+		}
+		target.environment_uuid = env_list;
+	}
+	
+	if(source.subnet_reference_list){
+		logger.info("Parsed Subnet reference.");
+		var parsed = JSON.parse(source.subnet_reference_list);
+		var subnet_list = "";
+		for(var i in parsed ){
+			var subnet = parsed[i];
+			var grSubnet = new GlideRecord(appUtil.configuration.table.subnet+'');
+			grSubnet.addQuery('uuid',subnet.uuid);
+			grSubnet.query();
+			if(grSubnet.next()){
+				subnet_list += grSubnet.sys_id;
+				if(i != parsed.length-1) subnet_list = subnet_list + ",";
+			}
+			
+		}
+		target.subnet = subnet_list;
+	}
+	
+	if(source.external_network_list){
+		logger.info("Parsed External Subnet reference.");
+		var parsed = JSON.parse(source.external_network_list);
+		var external_subnet_list = "";
+		for(var i in parsed ){
+			var external_subnet = parsed[i];
+			var grSubnet = new GlideRecord(appUtil.configuration.table.subnet+'');
+			grSubnet.addQuery('uuid',external_subnet.uuid);
+			grSubnet.query();
+			if(grSubnet.next()){
+				external_subnet_list += grSubnet.sys_id;
+				if(i != parsed.length-1) external_subnet_list = external_subnet_list + ",";
+			}
+			
+		}
+		if(!external_subnet_list=='')
+			target.subnet = external_subnet_list;
+		
+	}
+	logger.info("Transform map ["+ map.name+"]. completed.");
+	
+})(source, target, map, log, action==="update");]]></script>
+        <source_table>x_nuta2_nutanix_ca_nutanix_staging_project</source_table>
+        <sys_class_name>sys_transform_map</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-10 09:03:49</sys_created_on>
+        <sys_id>4aa55235db81230084249235ca961908</sys_id>
+        <sys_mod_count>42</sys_mod_count>
+        <sys_name>Nutanix Transform Projects</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_map_4aa55235db81230084249235ca961908</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-19 15:34:50</sys_updated_on>
+        <target_table>x_nuta2_nutanix_ca_nutanix_project</target_table>
+    </sys_transform_map>
+</record_update>

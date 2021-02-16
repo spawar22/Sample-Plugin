@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_nuta2_nutanix_ca_calm_plugin_configuration</collection>
+        <condition>(gs.hasRole("admin") || gs.hasRole("x_nuta2_nutanix_ca.calm_admin") ) &amp;&amp; (current.mid_server!="" || current.mid_application!="")</condition>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Show/hide Authentication Status</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+	// Add your code here
+	g_scratchpad.calmInstance = current.calm_instance;
+	g_scratchpad.blueprint_name = gs.getProperty('x_nuta2_nutanix_ca.1_4_3_bp');
+	//current.show_help_text = true;
+	
+	var mid_status = "";
+	var mid_validated = "";
+	
+	if(gs.getProperty("x_nuta2_nutanix_ca.use_external_credential_system") + "" == "false") {
+		mid_status = current.mid_server.status + "";
+		mid_validated = current.mid_server.validated + "";
+	}
+	else {
+		mid_status = current.mid_application.default_mid_server.status + "";
+		mid_validated = current.mid_application.default_mid_server.validated + "";
+	}
+	
+	try{
+		var logger = new Nutanix_Calm_Logger();
+		var utils = new Nutanix_Calm_Utils();
+		if((mid_status == 'Up' && mid_validated == 'true') && (gs.getProperty('x_nuta2_nutanix_ca.check.authentication') == 'true')){
+			
+			gs.addInfoMessage("Authentication Successful.");
+			logger.info("Authentication Successful.");
+			
+			utils.showHideSyncUiAction('true');
+			utils.showHideSaveUiAction('true');
+			
+		} else if((mid_status == 'Up' && mid_validated == 'true') && (gs.getProperty('x_nuta2_nutanix_ca.check.authentication') == 'false')){
+			
+			gs.addErrorMessage("Authentication failed.");
+			logger.info("Authentication failed.");
+			
+			utils.showHideSyncUiAction('false');
+			utils.showHideSaveUiAction('true');
+			
+		} else {
+			if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow")+"" == "false"){
+				if(mid_status == 'Paused' || mid_status == 'Down' || mid_status == 'false' || mid_status == 'validating' || mid_status == 'validation_failed' || mid_status == 'rekey'){				
+					gs.addErrorMessage("MID Server is Down/Not validated. Please verify if a mid server is up and validated before proceeding.");
+					logger.error("MID Server is Down/Not validated.");
+					/*
+					var mid_flag;
+					var gr = new GlideRecord('ecc_agent');
+					gr.query();
+					while(gr.next()) {
+						if(gr.status == 'Up' && gr.validated == 'true') {
+							mid_flag=1;
+							break;
+						}
+						else 
+							mid_flag=0;
+					}
+
+					if(mid_flag)
+						utils.showHideSaveUiAction('true');
+					else {
+						utils.showHideSaveUiAction('false');
+					}*/
+					utils.showHideSyncUiAction('false');		
+				}
+			}
+			if(gs.getProperty("x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow")+"" == "true" && (gs.getProperty('x_nuta2_nutanix_ca.check.authentication') == 'true')){
+				gs.addInfoMessage("Authentication Successful.");
+				logger.info("Authentication Successful.");
+				
+				utils.showHideSaveUiAction('true');
+				utils.showHideSyncUiAction('true');
+			}
+			
+		}
+	} catch(e){
+		logger.error("Error inside Business Rule[Show/hide Authentication Status], Error: "+e);
+	}
+	
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-11-26 11:57:38</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>51bf7445370ea300d27b8cf6c3990e4f</sys_id>
+        <sys_mod_count>88</sys_mod_count>
+        <sys_name>Show/hide Authentication Status</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_51bf7445370ea300d27b8cf6c3990e4f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-02-04 10:26:48</sys_updated_on>
+        <template/>
+        <when>before_display</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=51bf7445370ea300d27b8cf6c3990e4f"/>
+</record_update>

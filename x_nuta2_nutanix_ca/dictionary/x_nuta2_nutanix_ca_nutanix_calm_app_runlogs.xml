@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Runlogs" max_length="40" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" type="collection">
+        <element label="App Name" max_length="100" name="app_name" type="string"/>
+        <element label="App UUID" max_length="100" name="app_uuid" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Creation Time" max_length="100" name="creation_time" type="glide_date_time"/>
+        <element label="Description" max_length="200" name="description" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Is Critical" max_length="50" name="is_critical" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" label="Is Runlog Archived" max_length="50" name="is_runlog_archived" type="boolean"/>
+        <element label="Kind" max_length="100" name="kind" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Last Update Time" max_length="100" name="last_update_time" type="glide_date_time"/>
+        <element label="Name" max_length="100" name="name" type="string"/>
+        <element label="State" max_length="50" name="state" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="State Reason" max_length="300" name="state_reason" type="string"/>
+        <element label="Type" max_length="50" name="type" type="string"/>
+        <element label="UUID" max_length="100" name="uuid" type="string"/>
+    </element>
+</database>

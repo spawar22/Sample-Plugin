@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_form_sections form_id="8404ca401b9b4490ac43877ddc4bcb86" sys_domain="global" table="x_nuta2_nutanix_ca_service" version="3">
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 09:59:14</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>88044e401b9b4490ac43877ddc4bcbcb</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_nuta2_nutanix_ca_service" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">8404ca401b9b4490ac43877ddc4bcb86</sys_ui_form>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">c404ca401b9b4490ac43877ddc4bcb89</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 09:59:14</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 10:10:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>4f9682041b9b4490ac43877ddc4bcbe8</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_nuta2_nutanix_ca_service" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">8404ca401b9b4490ac43877ddc4bcb86</sys_ui_form>
+            <sys_ui_section caption="Spec" display_value="Spec" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">079682041b9b4490ac43877ddc4bcbe7</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 10:10:38</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>x_nuta2_nutanix_ca_service</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 09:59:14</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>8404ca401b9b4490ac43877ddc4bcb86</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_nuta2_nutanix_ca_service</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_form_sections_8404ca401b9b4490ac43877ddc4bcb86</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 09:59:14</sys_updated_on>
+            <sys_user/>
+            <view display_value="Nutanix" name="nutanix_view">f340ac98374ea700fdfc097973990e93</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>

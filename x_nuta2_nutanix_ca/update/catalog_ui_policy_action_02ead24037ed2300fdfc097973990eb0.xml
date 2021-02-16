@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="catalog_ui_policy_action">
+    <catalog_ui_policy_action action="INSERT_OR_UPDATE">
+        <catalog_item display_value="Credentials">12f00e3337d12300fdfc097973990e35</catalog_item>
+        <catalog_variable>IO:5c2381bb37112300fdfc097973990e16</catalog_variable>
+        <cleared>false</cleared>
+        <disabled>true</disabled>
+        <field/>
+        <mandatory>ignore</mandatory>
+        <order>100</order>
+        <sys_class_name>catalog_ui_policy_action</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-29 19:27:36</sys_created_on>
+        <sys_id>02ead24037ed2300fdfc097973990eb0</sys_id>
+        <sys_mod_count>17</sys_mod_count>
+        <sys_name>application_profile</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>catalog_ui_policy_action_02ead24037ed2300fdfc097973990eb0</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-04 20:18:57</sys_updated_on>
+        <table/>
+        <ui_policy display_value="To Hide Variables">d8ba5a0037ed2300fdfc097973990e03</ui_policy>
+        <variable>application_profile</variable>
+        <variable_set/>
+        <visible>false</visible>
+    </catalog_ui_policy_action>
+</record_update>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Application Profile" max_length="40" name="x_nuta2_nutanix_ca_application_profile" type="collection">
+        <element label="Description" max_length="500" name="description" type="string"/>
+        <element label="Name" max_length="40" name="name" type="string"/>
+        <element label="UUID" max_length="40" name="uuid" type="string" unique="true"/>
+        <index name="index">
+            <element name="uuid"/>
+        </index>
+    </element>
+</database>

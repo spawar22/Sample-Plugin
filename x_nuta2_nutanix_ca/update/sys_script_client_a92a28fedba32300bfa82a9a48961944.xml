@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>calm_instance</field>
+        <global>true</global>
+        <isolate_script>false</isolate_script>
+        <messages/>
+        <name>Instance Change Warning</name>
+        <order/>
+        <script><![CDATA[function onSubmit() {
+	/*var cinst = g_scratchpad.calmInstance;
+	if(g_form.getValue('calm_instance')!='' && cinst!='') {
+		if(cinst==g_form.getValue('calm_instance'))
+			return true;
+		else
+			{
+			var abc = confirm('Do you want to cleanup the existing data?');
+			if(abc) {
+				var gax = new GlideAjax('Nutanix_ClientServerScriptBridge');
+				gax.addParam('sysparm_name','cleanInstance');
+				gax.getXML(cleanResp);
+				return true;
+			}
+			else {
+				g_form.setValue('calm_instance',cinst);
+				return false;
+			}
+		}
+	}
+	return true;*/
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-14 10:33:24</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a92a28fedba32300bfa82a9a48961944</sys_id>
+        <sys_mod_count>149</sys_mod_count>
+        <sys_name>Instance Change Warning</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_client_a92a28fedba32300bfa82a9a48961944</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-04-04 06:01:18</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_calm_plugin_configuration</table>
+        <type>onSubmit</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

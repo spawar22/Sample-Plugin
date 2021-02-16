@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category/>
+        <format/>
+        <height/>
+        <image/>
+        <name>vmware.svg</name>
+        <size_bytes>1122</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:51:04</sys_created_on>
+        <sys_id>4def50c0db332300bfa82a9a48961960</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>vmware.svg</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>db_image_4def50c0db332300bfa82a9a48961960</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-28 10:00:44</sys_updated_on>
+        <thumbnail/>
+        <width/>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color/>
+        <chunk_size_bytes/>
+        <compressed>true</compressed>
+        <content_type>image/svg+xml</content_type>
+        <file_name>image</file_name>
+        <hash/>
+        <image_height/>
+        <image_width/>
+        <size_bytes>1122</size_bytes>
+        <size_compressed>581</size_compressed>
+        <state/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:51:10</sys_created_on>
+        <sys_id>5cff50c0db332300bfa82a9a48961963</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-18 06:51:10</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>4def50c0db332300bfa82a9a48961960</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="5cff50c0db332300bfa82a9a48961963">5cff50c0db332300bfa82a9a48961963</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:51:10</sys_created_on>
+        <sys_id>9cff50c0db332300bfa82a9a48961963</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>nVNtb9MwEP6+X2HMJyTbsR3nrTSbWDfWSSAhIeUrKqnXRoSkSty0BfHfuXNSVCGGEJHsS+5897y4nd8cv9ZksF1ftU1OlZCU2KZs11WzyenePfGU3lxfzV9wTh5sY7uVa7sZebNuP1vyWNf73vkUUZmQQjHysXgg98dd2znyod5v+GNDhE8WI8aMxEJKcruv6jWRrwjhHMb3w+aShKKkWuf03epku0/wARybPqdb53azIDgcDuIQirbbBFpKGUDzdGR2rKvmy58OqizLAl+lVwSfobKH2/aYU0kkUVJov1Hk4k61Je60szl19uiCsu8hj01iKG3jbMd7J78/VXU9e5mFi9To1z9+r6up/vb+Tuk7qM8DPxgANuOw+W7ltqSsVz1IuxhMCUh/H4mEIaOlLjkYwiTXXIoMdl0YkZYSsoZJkXItNNMixLhVIirMEr4W8MYMwzMG6mNMh1CYUT48pYT2cFrxeW1DkZSAy7AaA2TkoypiEcJ4M8DgRQLkUpGxWKSeJDuz/UaDfxGXQC/MWCZ+qkQ5KIYpjr8hhYILDRKB27Ti81oaYRYGT0FHiPgAjVEDsxCkm0JfSBy9Q98YOAfi0tJnmMYs7Bo80QsvIoZJGbiB6iaGXs88gBt7RpAaBYG3cDwF+KTk3j3YDb5N0RSRCL0iBPZZNlW2cHG/HMesnqIZoOK1LCJIIq0IUdiENpL7K68Erg96lwj+DC+k/N+8kE0EfnpunqPHm2yDP+b11U+hDjSRYgQAAA==</data>
+        <length>764</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="5cff50c0db332300bfa82a9a48961963">5cff50c0db332300bfa82a9a48961963</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:51:10</sys_created_on>
+        <sys_id>10ff50c0db332300bfa82a9a48961964</sys_id>
+    </sys_attachment_doc>
+</record_update>

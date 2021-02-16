@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_script">
+    <sys_transform_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <map display_value="Nutanix Calm Application - Map">a3243fc637c12300d27b8cf6c3990e6b</map>
+        <order>100</order>
+        <script><![CDATA[(function runTransformScript(source, map, log, target /*undefined onStart*/ ) {
+	
+	var utils = new Nutanix_Calm_Utils();
+	var logger = new Nutanix_Calm_Logger();
+	
+	var parent_app_sys_id = target.sys_id + '';
+	var deployment_list = (source.deployment_list) ? JSON.parse(source.deployment_list) : [];
+	
+	for(var i = 0; i < deployment_list.length; i++) {
+		
+		var element_list = (deployment_list[i].substrate_configuration && deployment_list[i].substrate_configuration.element_list) ? deployment_list[i].substrate_configuration.element_list : [];
+		
+		var isK8s = (deployment_list[i].substrate_configuration && deployment_list[i].substrate_configuration.type + '' == 'K8S_POD');
+		
+		if(isK8s) {
+			
+			add_pods(parent_app_sys_id, deployment_list[i], element_list);
+		}
+		else {
+			add_services(parent_app_sys_id, element_list);
+		}
+	}
+	
+	function add_services(parent_app, elements) {
+		
+		for(var j = 0; j < elements.length; j++) {
+			
+			var service_name = (elements[j].name) ? elements[j].name + '' : '';
+			var ip_address = (elements[j].address) ? elements[j].address + '' : '';
+			var elements_uuid = (elements[j].uuid) ? elements[j].uuid + '' : '';
+			var elements_state = (elements[j].state) ? elements[j].state + '' : '';
+			var provider = (elements[j].type + '').replace('_VM', '').replace('_POD', '') + '';
+			var vcpus = (elements[j].create_spec && elements[j].create_spec.resources && elements[j].create_spec.resources.num_sockets) ? elements[j].create_spec.resources.num_sockets : '';
+			var cores_per_vcpu = (elements[j].create_spec && elements[j].create_spec.resources && elements[j].create_spec.resources.num_vcpus_per_socket) ? elements[j].create_spec.resources.num_vcpus_per_socket : '';
+			var memory_in_mib = (elements[j].create_spec && elements[j].create_spec.resources && elements[j].create_spec.resources.memory_size_mib) ? elements[j].create_spec.resources.memory_size_mib : '';
+			
+			var child_service_sys_id = "";
+			
+			var services_gr = new GlideRecord('x_nuta2_nutanix_ca_service');
+			services_gr.addQuery('uuid', elements_uuid);
+			services_gr.query();
+			
+			if(services_gr.next()) {
+				services_gr.ip_address = ip_address + '';
+				services_gr.state = elements_state + '';
+				services_gr.cpus = vcpus + '';
+				services_gr.cores_per_cpu = cores_per_vcpu + '';
+				services_gr.memory = memory_in_mib + '';
+				child_service_sys_id = services_gr.update();
+				//make_rel(parent, child_service_sys_id);
+			}
+			else {
+				services_gr.name = service_name + '';
+				services_gr.uuid = elements_uuid + '';
+				services_gr.ip_address = ip_address + '';
+				services_gr.state = elements_state + '';
+				services_gr.provider = provider + '';
+				services_gr.cpus = vcpus + '';
+				services_gr.cores_per_cpu = cores_per_vcpu + '';
+				services_gr.memory = memory_in_mib + '';
+				child_service_sys_id = services_gr.insert();
+				logger.info('App-Service rel');
+				make_rel(parent_app, child_service_sys_id);
+				add_ip(child_service_sys_id, ip_address);
+			}
+		}
+	}
+	
+	function add_pods(parent_app, deployment, element_list) {
+		
+		var service_list = (deployment_list[i].service_list) ? deployment_list[i].service_list : [];
+		
+		for(var pod_element = 0; pod_element < element_list.length; pod_element++) {
+			
+			var elements = element_list[pod_element];
+			var pod_name = (elements.name) ? elements.name + '' : '';
+			var os_type = (deployment.substrate_configuration && deployment.substrate_configuration.os_type) ? deployment.substrate_configuration.os_type + '' : '';
+			var pod_uuid = (elements.uuid) ? elements.uuid + '' : '';
+			var ip_address = (elements.address) ? elements.address + "" : "";
+			
+			var pod_sys_id = "";
+			
+			var pod_gr = new GlideRecord('x_nuta2_nutanix_ca_pod');
+			pod_gr.addQuery('uuid', pod_uuid);
+			pod_gr.query();
+			if(pod_gr.next()) {
+				pod_gr.name = pod_name + '';
+				pod_gr.uuid = pod_uuid + '';
+				pod_gr.os = os_type + '';
+				pod_gr.provider = 'K8S';
+				pod_gr.namespace = (elements.create_spec && elements.create_spec.metadata && elements.create_spec.metadata.namespace) ? elements.create_spec.metadata.namespace + '' : '';
+				pod_sys_id = pod_gr.update();
+				//make_rel(parent, pod_sys_id);
+			}
+			else {
+				pod_gr.name = pod_name + '';
+				pod_gr.uuid = pod_uuid + '';
+				pod_gr.os = os_type + '';
+				pod_gr.provider = 'K8S';
+				pod_gr.namespace = (elements.create_spec && elements.create_spec.metadata && elements.create_spec.metadata.namespace) ? elements.create_spec.metadata.namespace + '' : '';
+				pod_sys_id = pod_gr.insert();
+				logger.info('App-Pod rel');
+				add_ip(pod_sys_id, ip_address);
+				make_rel(parent_app, pod_sys_id);
+			}
+			
+			add_containers(pod_sys_id, service_list, pod_element);
+		}
+	}
+	
+	function add_containers(parent_pod, service_list, pod_element) {
+		
+		for(var k = 0; k < service_list.length; k++) {
+			
+			var sv_ele_list = (service_list[k].element_list) ? service_list[k].element_list : [];
+			var container_sys_id = "";
+			var container_gr = new GlideRecord('x_nuta2_nutanix_ca_container');
+			container_gr.addQuery('uuid', sv_ele_list[pod_element].uuid + "");
+			container_gr.query();
+			if(container_gr.next()) {
+					//container_gr.status = (sv_ele_list[index].state) ? sv_ele_list[index].state + '' : "";
+				container_sys_id = container_gr.update();
+				make_rel(parent_pod, container_sys_id);
+			}
+			else {
+				container_gr.name = (sv_ele_list[pod_element].name) ? sv_ele_list[pod_element].name + '' : "";
+				container_gr.uuid = (sv_ele_list[pod_element].uuid) ? sv_ele_list[pod_element].uuid + '' : "";
+				container_gr.status = (sv_ele_list[pod_element].state) ? sv_ele_list[pod_element].state + '' : "";
+				container_sys_id = container_gr.insert();
+				make_rel(parent_pod, container_sys_id);
+			}
+		}
+	}
+	
+	function add_ip(parent_sys_id , ip_address) {
+		
+		if(ip_address + "" == "")
+			return;
+		
+		var cmdb_ip = new GlideRecord('cmdb_ci_ip_address');
+		cmdb_ip.initialize();
+		cmdb_ip.ip_address = ip_address + '';
+		var child_ip_sys_id = cmdb_ip.insert();
+		make_rel(parent_sys_id, child_ip_sys_id);
+		logger.info('IP linked to parent');
+	}
+	
+	function make_rel(parent_sys_id, child_sys_id) {
+		logger.info('Inside Make-rel');
+		var ci_rel_gr = new GlideRecord("cmdb_rel_ci");
+		ci_rel_gr.addQuery("parent", parent_sys_id + '');
+		ci_rel_gr.addQuery("child", child_sys_id + '');
+		ci_rel_gr.addQuery("type", gs.getProperty('x_nuta2_nutanix_ca.cmdb_nutanix_relation') + '');
+		ci_rel_gr.query();
+		if(!ci_rel_gr.next()) {
+			ci_rel_gr.initialize();
+			ci_rel_gr.parent = parent_sys_id + '' ;
+			ci_rel_gr.child = child_sys_id + '';
+			ci_rel_gr.type = gs.getProperty('x_nuta2_nutanix_ca.cmdb_nutanix_relation') + '';
+			ci_rel_gr.insert();
+		}
+	}
+	
+})(source, map, log, target);]]></script>
+        <sys_class_name>sys_transform_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-12-16 11:18:19</sys_created_on>
+        <sys_id>f7632bb81b7dc010ac43877ddc4bcbe0</sys_id>
+        <sys_mod_count>45</sys_mod_count>
+        <sys_name>onAfter</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_script_f7632bb81b7dc010ac43877ddc4bcbe0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-02-26 09:32:45</sys_updated_on>
+        <when>onAfter</when>
+    </sys_transform_script>
+</record_update>

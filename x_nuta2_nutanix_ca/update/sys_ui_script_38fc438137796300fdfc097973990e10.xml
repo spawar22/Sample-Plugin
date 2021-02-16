@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <name>x_nuta2_nutanix_ca.Calm_Catalog_Cred_Con</name>
+        <script><![CDATA[var $j = jQuery.noConflict();
+
+function showDropdown(checked){
+	g_form.setValue('environment_mapping', checked);
+	if(checked){
+		document.getElementById("credShowHide").setAttribute('style', 'display:none');
+		document.getElementById("envCredDropdown").setAttribute('style', 'display:block;width:70%;margin:4px');
+	} else {
+		document.getElementById("credShowHide").setAttribute('style', 'flex-basis: 33.3%;');
+		document.getElementById("envCredDropdown").setAttribute('style', 'display:none');
+	}
+}
+
+function getDropDownValue(){
+	
+	var credetialMap = g_form.getValue('environment_mapping');
+	
+	if(credetialMap && credetialMap+''=='true'){
+		$j('#credetialMap').attr('checked', true);//.click();
+		showDropdown('true');
+	}
+	
+	var loadingDialog = new GlideModal("loader", true);
+	loadingDialog.setTitle('Mapping Credentials...'); 
+	loadingDialog.renderWithContent('<div class="loading-container"><div class="loading-indicator icon-loading icon-lg"></div></div>');
+	
+	var project = g_form.getValue('multiple_project');
+	var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+	ga.addParam('sysparm_name', 'mappedCredentials');
+	ga.addParam('sysparm_project', project);
+	ga.getXML(dropDownOption);
+}
+
+function dropDownOption(response){
+	
+	var jsonData = response.responseXML.documentElement.getAttribute("answer");//'[{"label":"CENTOS","value":"3234"},{"label":"TestCENTOS","value":"123"},{"label":"Test","value":"1237899"}]';
+
+	g_form.setValue('credentials_mapping', jsonData);
+
+	fecthCredentials();
+	
+	new GlideModal().get("loader").destroy();
+}
+	
+function selectedDropdown (id, text, value, parent) {
+	$j("#"+id).text(text);
+	var credential_data = JSON.parse(g_form.getValue('credentials_data'));
+	credential_data[parent].credential_reference.label = text;
+	credential_data[parent].credential_reference.value = value;
+	g_form.setValue('credentials_data', JSON.stringify(credential_data));
+
+}
+	
+function printRow(parent, value){
+	var credential_data = JSON.parse(g_form.getValue('credentials_data'));
+	credential_data[parent].runtime = value+'';
+	g_form.setValue('credentials_data', JSON.stringify(credential_data));
+}
+	
+function renderMappedCred(jsonStr){
+	//console.log("insuide renderMappedCred:- "+jsonStr);
+	var credHTML = '';
+	//if(jsonStr){
+		jslog("### jsonStr"+jsonStr);
+		var idCount = 0;
+		var jsonObj = JSON.parse(jsonStr);
+		for(var i in jsonObj){
+			var entity = jsonObj[i];
+
+			var parsedJSON = JSON.parse(g_form.getValue('credentials_mapping'));
+
+			var dropDownString = '';
+			var parsedJSONLength = parsedJSON.length;
+			jslog("parsedJSONLength :"+parsedJSONLength);
+			for ( var n = 0; n < parsedJSONLength; n++ ) {
+//				if(entity.secret_type.value == parsedJSON[n].type){
+					var dropDownStr  = '<div class="dropdown-container" onclick=\'selectedDropdown( "envCredOption'+idCount+'" , "'+parsedJSON[n].label+'", "'+parsedJSON[n].value+'", "'+entity.credential_name.value+'");\'><div class="row"><div class="col-md-6 credential-dropdown-menu-label">'+parsedJSON[n].label+'</div><div class="col-md-6 credential-dropdown-type">'+parsedJSON[n].type+'</div></div><div class="row"><div class="col-md-6"><div class="credential-dropdown-secondrow">USERNAME:&nbsp;'+parsedJSON[n].username+'</div></div></div></div>';
+					dropDownString += dropDownStr;
+//				}
+			}
+			var checked = (entity.runtime === "true") ? "checked='true'" : "";
+
+			var defaultMsg = (entity.credential_reference && entity.credential_reference.label) ? entity.credential_reference.label+'' : 'Please select a Credential';
+
+			var entityRow = '<div class="row" style="margin-top:10px;margin-bottom:10px;"><div class="col-md-3" style="padding-left:0px;"><p style="margin-bottom:0px;">' + entity.credential_name.value + '</p><p>USERNAME:  ' + entity.username.value + '</p></div><div class="col-md-7"><div class="dropdown"><button class="btn btn-default dropdown-toggle credential-dropdown" data-toggle="dropdown" ><span class="credential-dropdown-label" id="envCredOption'+idCount+'">'+defaultMsg+'</span><span class="caret credential-caret"></span></button><div class="dropdown-menu credential-dropdown-menu" style="padding: 5px;">'+dropDownString+'</div></div></div><div class="col-md-2"><input type="checkbox" name="" onchange="printRow(\''+entity.credential_name.value+'\',this.checked)" '+checked+' >Runtime</input></div></div>';
+			credHTML = credHTML + entityRow;
+
+			idCount++;
+		}
+	//}
+	// 		else {
+
+	// 			credHTML = "<p>No credentials are defined for this blueprint</p>";
+	// 		}
+	$j(".mappedCredential").html('');
+	$j(".mappedCredential").append(credHTML);
+}
+
+function dropDownOptionId(idCount, key){
+
+	var jsonData = g_form.getValue('credentials_mapping');
+	var payload = JSON.parse(jsonData);
+	var select = document.getElementById("envCredOption"+idCount);
+
+	for(var i=0; i < payload.length ;i++){
+		var entity = payload[i];
+		if(key == entity.type){
+
+			var dropDownStr = '<div class="dropdown"><button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown button</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><div class="dropdown-item" style="border-bottom: 1px solid #d0d0d0;"><div class="row"><div class="col-md-6">CentOS<p>Username</p></div><div class="col-md-6">PASSWORD</div></div></div><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div></div>';
+			select = document.getElementById("envCredOption"+idCount);
+
+			$j('#envCredOption'+idCount).html('');
+			$j('#envCredOption'+idCount).append(dropDownStr);
+		}
+	}
+
+}
+
+function printConsole(name, value, parent){
+	alert(name+"\n"+value+"\n"+parent);
+}
+
+function fecthCredentials(){
+
+	var type = g_form.getValue('type_of_blueprint');
+	if(type == 'published'){
+		document.getElementById('mappedCred').style.display = 'block';
+	}else{
+		document.getElementById('mappedCred').style.display = 'none';
+	}
+
+	var val = g_form.getValue('credentials_data');
+	if(val){
+		renderCredentials(val);
+		renderMappedCred(val);
+		return;
+	}
+
+	var type = g_form.getValue('type');
+	var project = g_form.getValue('multiple_project');
+
+	var blueprint = (g_form.getValue('cat_item'))?g_form.getValue('cat_item'):g_form.getValue('blueprint');
+	var application_profile = g_form.getValue('application_profile');
+
+	var loadingDialog = new GlideModal("loader", true);
+	loadingDialog.setTitle('Getting Credentials details...'); 
+	loadingDialog.renderWithContent('<div class="loading-container"><div class="loading-indicator icon-loading icon-lg"></div></div>');
+	
+	var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+	ga.addParam('sysparm_name', 'getCrendentialsDetails');
+	ga.addParam('sysparm_project', project);
+	ga.addParam('sysparm_blueprint', blueprint);
+	ga.addParam('sysparm_application_profile', application_profile);
+	ga.getXML(responseParse);
+}
+
+function responseParse(response) {
+	var answer = response.responseXML.documentElement.getAttribute("answer");
+	g_form.setValue('credentials_data', answer);
+	renderCredentials(answer);
+	renderMappedCred(answer);
+	
+	new GlideModal().get("loader").destroy();
+}
+
+function renderCredentials(jsonObjStr){
+
+	var credHTML="";
+	var isLaunch = "";
+	//console.log("insuide renderCredentials:- "+jsonObjStr);
+
+	if(jsonObjStr && jsonObjStr!="{}"){
+
+		var jsonObject = JSON.parse(jsonObjStr);
+		var k = 0;
+		for(var i in jsonObject){
+			var headerArrSvg='<a href="#" style="display:inline-block;padding-left:10px;"><svg onclick="showRow('+k+')" xmlns="http://www.w3.org/2000/svg" version="1.1"  id="leftArrow'+ k +'" x="0px" y="0px" width="12px" height="12px" viewBox="0 -6 24.948 54.465" enable-background="new 0 0 24.948 43.572" xml:space="preserve"><g><path d=" M0.927,5.396c-1.235-1.235-1.235-3.235,0-4.471l0,0c1.233-1.233,3.235-1.234,4.47,0l0,0l18.625,18.625c1.234,1.233,1.233,3.235-0.001,4.47l0,0c-1.234,1.234-3.235,1.234-4.47,0.001l0,0L0.927,5.396L0.927,5.396z"></path></g><g><path d="M5.397,42.646c-1.234,1.234-3.236,1.234-4.471-0.001l0,0c-1.235-1.234-1.234-3.235,0.001-4.47l0,0L19.55,19.551c1.235-1.234,3.236-1.236,4.471-0.001l0,0c1.235,1.234,1.235,3.236,0,4.472l0,0L5.397,42.646L5.397,42.646z"></path></g></svg></a><a href="#" style="display:inline-block;padding-left:0px;" onclick="hideRow('+k+')"  ><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="12px" height="12px" id="downArrow'+ k +'" viewBox="-25 -30 500 500" style="enable-background:new 0 0 451.847 451.847;display:none;" xml:space="preserve"><g><path d="M225.923,354.706c-8.098,0-16.195-3.092-22.369-9.263L9.27,151.157c-12.359-12.359-12.359-32.397,0-44.751c12.354-12.354,32.388-12.354,44.748,0l171.905,171.915l171.906-171.909c12.359-12.354,32.391-12.354,44.744,0c12.365,12.354,12.365,32.392,0,44.751L248.292,345.449C242.115,351.621,234.018,354.706,225.923,354.706z"></path></g></svg></a>';
+			var disabledVal = '';
+			var usernameCheck = '';
+			var readonly = '';
+			var readonly2 = '';
+			var readonly3 = '';
+			var selectedSsh = '';
+			var selectedPassword = '';
+			var Checkfield = '';
+			var fieldValue2 = '';
+			var setDisplay = 'display:none';
+			var setDisplay2 = 'display:none';
+			var fieldValue = '';
+			var setDisplayCheckbox = '';
+			var credential = jsonObject[i];
+			var header = headerArrSvg+'<h1 class="header" style="padding-left:5px;display:inline-block;" >' + i + '</h1>';
+			if(isLaunch){
+				readonly = readonly2 = readonly3  = 'readonly';
+				disabledVal = 'disabled';
+				setDisplayCheckbox = 'display:none';
+			}
+			var onchangeField = 'onchange="changeValue(\''+i+'\',\''+credential.credential_name.name+'\',value)"';
+			var onchangeCheckbox = '';
+			var credetnialNameStr = '<div style="padding: 10px;  width:100%;float:left;"> <div style="padding:1px 1px 12px 1px;"> <span class="nameField">Credential Name</span> </div> <div style="padding-top:14px;"> <input '+ onchangeField +' class="inputText" type="text" '+readonly+' value=" ' + credential.credential_name.value + '" disabled></input> </div> </div>';
+
+			if(credential.username.runtime_config == true || credential.username.runtime_config == 'true'){
+				usernameCheck = 'checked="true"';
+				readonly2 = '';
+			}
+
+			var usernameisDisabled = (credential.username_isdisabled+''=='true')?'disabled':'';
+
+			onchangeField = 'onchange="changeValue(\''+i+'\',\''+credential.username.name+'\',value)"';
+			onchangeCheckbox = ' onchange="changeCheckboxValue(\''+i+'\',\''+credential.username.name+'\',\'runtime_config\', this.checked)"';
+			var usernameStr = '<div style="padding: 10px;  width:100%;float:left;"> <div style="padding:1px 1px 12px 1px;">  <span class="nameField">Username</span> <span style="float:right;"> <input '+ readonly2 + onchangeCheckbox +' class="inputCheckbox" style="margin-right:2px;'+'" type="checkbox" '+usernameCheck +' '+usernameisDisabled+'><span style="color: #9aa8b1; '+ '">Runtime</span></input></span> </div> <div style="padding-top:14px;"> <input '+onchangeField+' class="inputText" '+ readonly2 +' type="text" value="'+ credential.username.value +'" '+usernameisDisabled+'></input> </div> </div>';
+
+			if(credential.secret_type.value == 'PASSWORD') selectedPassword = 'selected = "true"';
+			if(credential.secret_type.value == 'KEY') selectedSsh = 'selected = "true"';
+			onchangeField = 'onchange="changeValue(\''+i+'\',\''+credential.secret_type.name+'\',value)"';
+			var secretTypeStr = '<div style="padding: 10px; width:100% ;float:left;"><div style="padding:1px 1px 12px 1px;"><span class="nameField">Secret Type</span></div><div style="padding-top:14px;"><select disabled '+ disabledVal +' class="inputText" id="inputText" onchange="showSelectedKey(this.options[this.selectedIndex].value,\''+k+'\'); changeValue(\''+i+'\',\''+credential.secret_type.name+'\',value)" ><option value="KEY" '+ selectedSsh +'>SSH Private Key</option><option value="PASSWORD" '+ selectedPassword +'>Password</option></select></div></div>';
+
+			usernameCheck='';
+
+			readonly2 = (isLaunch) ? 'readonly' : '';
+			onchangeField = '';
+			onchangeCheckbox = '';
+			if(credential.secret_type.value == 'PASSWORD') {
+				if(credential.password.runtime_config == true || credential.password.runtime_config == 'true'){
+					usernameCheck = 'checked="true"';
+					readonly2 = '';
+				}
+				else
+					readonly2 = 'disabled=""';
+				
+				fieldValue = credential.password.value;
+				setDisplay = "display:block";
+
+			}
+
+			var usernameisDisabled = (credential.secret_isdisabled+''=='true')?'disabled':'';
+
+			onchangeField = 'onchange="changeValue(\''+i+'\',\'password\',value)"';
+			onchangeCheckbox = ' onchange="changeCheckboxValue(\''+i+'\',\'password\',\'runtime_config\', this.checked)"';
+			var passwordStr = '<div style="padding: 10px;  width:100%;float:left;'+ setDisplay +'" id="option2'+k+'" ><div style="padding:1px 1px 12px 1px;"><span class="nameField">Password</span><span style="float:right;"><input  class="inputCheckbox" '+ readonly2 +'style="margin-right:2px;" '+ onchangeCheckbox + ' type="checkbox" '+ usernameCheck +' '+usernameisDisabled+'><span style="color: #9aa8b1; '+ '">Runtime</span></input></span></div><div style="padding-top:14px;"><input '+ onchangeField + readonly2 +' class="inputText field2" type="PASSWORD" '+usernameisDisabled+'></input></div><span class="field-icon toggle-password glyphicon glyphicon-eye-open spanField2" onclick="tooglePassword(\'field2\', \'spanField2\')"></span></div>';
+			usernameCheck=''; fieldValue = ""; setDisplay = 'display:none';readonly2 = (isLaunch) ? 'readonly' : '';
+			onchangeField = '';
+			onchangeCheckbox = '';
+			if(credential.secret_type.value == 'KEY'){
+
+				setDisplay = 'display:block';
+				fieldValue = credential.ssh_private_key.value;
+				if(credential.ssh_private_key.runtime_config == true || credential.ssh_private_key.runtime_config == 'true'){
+					usernameCheck = 'checked="true"';
+					readonly2 = '';
+				}
+				else
+					readonly2 = 'disabled';
+				
+				if(credential.passphrase){
+					setDisplay2 = 'display:block';
+					fieldValue2 = credential.passphrase.value;
+					if(credential.passphrase.runtime_config == true || credential.passphrase.runtime_config == 'true'){
+						Checkfield = 'checked="true"';
+						readonly3 = '';
+					}
+					else
+						readonly3 = 'disabled';
+				}
+			}
+
+			var usernameisDisabled = (credential.ssh_private_key_isdisabled+''=='true')?'disabled':'';
+			
+			var private_key_option = '<a href="#" onclick="showPara('+k+')">+ Add Passphrase</a>';
+
+			onchangeField = 'onchange="changeValue(\''+i+'\',\'ssh_private_key\',value)"';
+			onchangeCheckbox = ' onchange="changeCheckboxValue(\''+i+'\',\'ssh_private_key\',\'runtime_config\', this.checked)"';
+			var sshPrivateKeyStr = '<div style="padding: 10px;width:100%;float:left;'+ setDisplay +'" id="option1'+k+'"><div style="padding:1px 1px 12px 1px;"><span class="nameField">SSH Private Key</span><span style="float:right;"><input '+onchangeCheckbox+ readonly2 +' class="inputCheckbox" style="margin-right:2px;'+ '" type="checkbox" '+ usernameCheck +' '+usernameisDisabled+'><span style="color: #9aa8b1;'+ '">Runtime</span></input></span></div><div style="padding-top:14px;"><textarea '+ onchangeField + readonly2 +' class="inputText " style="width:100%; height:32px;padding-top:12px;padding-bottom:12px;" id="txtID" '+usernameisDisabled+'>'+ fieldValue +'</textarea><p>'+private_key_option+'</p></div></div>';
+
+			var usernameisDisabled = (credential.passphrase_isdisabled+''=='true')?'disabled':'';
+
+			onchangeField = 'onchange="changeValue(\''+i+'\',\'passphrase\',value)"';
+			onchangeCheckbox = ' onchange="changeCheckboxValue(\''+i+'\',\'passphrase\',\'runtime_config\', this.checked)"';
+			var passphraseStr = '<div style="padding: 10px;  width:100%;float:left;'+ setDisplay2 +'" id="para'+k+'"><div style="padding:1px 1px 12px 1px;"><span class="nameField">Passphrase</span><span style="float:right;"><input class="inputCheckbox" '+readonly3+' style="margin-right:2px;" '+ onchangeCheckbox+' type="checkbox" '+ Checkfield +' '+usernameisDisabled+'><span style="color: #9aa8b1; '+'">Runtime</span></input></span></div><div style="padding-top:14px;"><input '+ onchangeField + readonly3 +' class="inputText field1" type="password"  '+usernameisDisabled+' ></input><span class="field-icon toggle-password glyphicon glyphicon-eye-open spanField1" onclick="tooglePassword(\'field1\', \'spanField1\')"></span><p style="float:right"><a href="#" onclick="delPara('+k+')">Delete</a></p></div></div>';
+			var rowstr="";
+
+
+			rowstr = header +'<div id="rowId'+ k +'" style="display:none;">'+ credetnialNameStr + usernameStr + secretTypeStr +passwordStr+ sshPrivateKeyStr + passphraseStr+'</div>';
+
+			credHTML = credHTML + '<div style="padding: 4px; flex-basis:33%"><div style="display: flow-root; border: 1px solid #dfe5e6; border-radius: 3px;">' + rowstr + '</div></div>';
+			k++;
+		}
+	} else {
+
+		//$j('#credetialMap').attr('disabled','disabled');
+		document.getElementById('mappedCred').style.display = 'none';
+		credHTML = "<p style='padding-bottom:20px'>No credentials are defined for this blueprint.</p>";
+	}
+	$j(".bodyData").html('');
+	$j(".bodyData").append(credHTML);
+}
+
+function changeValue(i, key, value){
+
+	var fieldChange = 'credentials_data';
+	var credentials_data = JSON.parse(g_form.getValue(fieldChange));
+
+	if(!credentials_data[i][key]){
+		credentials_data[i][key]={};
+		credentials_data[i][key].name=key+'';
+		credentials_data[i][key].question_text=key+'';
+	}
+
+	credentials_data[i][key].value = value;
+	g_form.setValue(fieldChange, JSON.stringify(credentials_data));
+}
+
+function changeCheckboxValue(i,parent,key,value){
+
+	var fieldChange = 'credentials_data';
+	var credentials_data = JSON.parse(g_form.getValue(fieldChange));
+
+	if(!credentials_data[i][parent]){
+		credentials_data[i][parent]={};
+		credentials_data[i][parent].name=parent+'';
+		credentials_data[i][parent].question_text=parent+'';
+	}
+
+	credentials_data[i][parent].runtime_config = value;
+	g_form.setValue(fieldChange, JSON.stringify(credentials_data));
+}
+
+function showSelectedKey(option,i) {
+
+	if (option === "KEY") {
+		document.getElementById("option1"+i).setAttribute('style', 'padding: 10px;  width:100%;float:left;');
+		document.getElementById("option2"+i).setAttribute('style', 'display:none');
+
+	} else {
+		if(option === "PASSWORD") {
+
+			document.getElementById("option2"+i).setAttribute('style', 'padding: 10px;  width:100%;float:left;');
+			document.getElementById("option1"+i).setAttribute('style', 'display:none');
+			document.getElementById("para"+i).setAttribute('style', 'display:none');
+		}
+	}
+}
+
+function showRow(i){
+
+	$j('#downArrow'+i).css({'display': 'block'});
+	$j('#rowId'+i).css({'display': 'block', 'height': '375px'});
+	$j('#leftArrow'+i).css({'display': 'none'});
+}
+
+function hideRow(i){
+
+	$j('#downArrow'+i).css({'display': 'none'});
+	$j('#rowId'+i).css({'display': 'none'});
+	$j('#leftArrow'+i).css({'display': 'block'});
+}
+
+function showPara(i) {
+	document.getElementById("para"+i).setAttribute('style', 'padding: 10px;  width:100%;float:left;');
+}
+
+function delPara(i) {
+	document.getElementById("para"+i).setAttribute('style', 'display:none');
+}
+
+function tooglePassword(field, fieldspan){
+	var input = $j('.'+field);
+
+	if (input.attr("type") == "password") {
+		input.attr("type", "text");
+	} else {
+		input.attr("type", "password");
+	}
+}
+]]></script>
+        <script_name>Calm_Catalog_Cred_Config_Script</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>nikita.kumari</sys_created_by>
+        <sys_created_on>2018-11-14 14:29:24</sys_created_on>
+        <sys_id>38fc438137796300fdfc097973990e10</sys_id>
+        <sys_mod_count>421</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.Calm_Catalog_Cred_Con</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_script_38fc438137796300fdfc097973990e10</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-10-01 11:06:04</sys_updated_on>
+        <ui_type>0</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

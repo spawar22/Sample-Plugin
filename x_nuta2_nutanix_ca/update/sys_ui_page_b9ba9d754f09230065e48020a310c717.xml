@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script/>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Calm_Support_Page.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	
+	<g:evaluate var="jvar_log_user" object="true">
+
+     </g:evaluate>
+	 <g:evaluate var="jvar_not" object="true">
+		 
+		 this.appUtil= new Nutanix_Calm_Utils();
+		 
+		 var not = new GlideRecordSecure(this.appUtil.configuration.table.CalmPluginConfig);
+		 not.query();
+		 
+		 var supURL = '';
+		 
+		 if(not.next())
+			 supURL = not.support_url+'';
+		
+		 supURL;
+		 
+	</g:evaluate>
+	
+	
+	<body onload="onLoad()">
+	<style>
+		table {
+              border-collapse: collapse;
+              width: 100%;
+		}
+		th,tr{
+		     padding: 2px;
+             text-align: left;
+             border-bottom: 1px solid #ddd;	
+		}
+		.details{
+		font-size:14px;
+		}
+		.tabHead{
+		 font-size:15px;
+		 background-color: #dcdcdc;
+		}
+		
+		.details:hover {background-color:#E6E6FA;}
+		
+
+	</style>
+	<h2>Contact Support ${jvar_support_url}</h2>
+	<h4>Nutanix</h4>
+	<div style="color:#FF5733"><h5>Important:- Perform action mentioned against your role.</h5></div>
+	<table>	
+		<thead>			
+			<th class="tabHead">&#160;&#160;Your Role</th>		
+			<th class="tabHead">Action</th>			
+		</thead>
+		
+		<tr class="details">			
+			<td><div id="username">&#160;&#160;Non-Admin Users</div></td>
+			<td><div id="targetuser">Report to Admin Users.</div></td>
+		</tr>
+		<tr class="details">			
+			<td><div style="color:#FFFFFF">&#160;</div></td>
+			<td></td>
+		</tr>
+		<tr class="details">
+			<td>&#160;&#160;Admin Users</td>
+			<td colspan="2" ><div id="Portal" style="width: 50em;word-wrap: break-word;">Check The Error Logs and Consult The Documentation. If issue is not Resolved or not mentioned in the Document</div></td>		
+		</tr>				
+		<j:if test="${jvar_not != ''}">
+		<tr class="details">
+			<td></td>
+			<td><div id="email">Contact us by visiting The Portal at&#160;<a href="${jvar_not}" target="_blank" rel="noopener noreferrer nofollow">Nutanix ServiceNow Plugin support website </a></div></td>			
+		</tr>
+		</j:if>
+	</table>
+	
+	<br />
+	<div style="color:#FF5733">Note:- Use This Option Only When Required.</div>
+	</body>
+	
+</j:jelly>]]></html>
+        <name>Calm_Support_Page</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>nitin</sys_created_by>
+        <sys_created_on>2018-10-10 04:45:14</sys_created_on>
+        <sys_id>b9ba9d754f09230065e48020a310c717</sys_id>
+        <sys_mod_count>107</sys_mod_count>
+        <sys_name>Calm_Support_Page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_b9ba9d754f09230065e48020a310c717</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-23 10:07:59</sys_updated_on>
+    </sys_ui_page>
+</record_update>

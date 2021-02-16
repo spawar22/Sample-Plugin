@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_metadata_link">
+    <sys_metadata_link action="INSERT_OR_UPDATE">
+        <directory>unload</directory>
+        <documentkey>32fe0ea73785a300fdfc097973990ead</documentkey>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="x_nuta2_nutanix_ca_calm_plugin_configuration">
+    <x_nuta2_nutanix_ca_calm_plugin_configuration action="INSERT_OR_UPDATE">
+        <calm_admin_password/>
+        <calm_admin_username/>
+        <calm_instance/>
+        <create_alerts>true</create_alerts>
+        <log_verbosity>1</log_verbosity>
+        <mid_server/>
+        <name/>
+        <service_catalog/>
+        <show_published_blueprints>false</show_published_blueprints>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-15 19:02:22</sys_created_on>
+        <sys_id>32fe0ea73785a300fdfc097973990ead</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-10-15 19:02:22</sys_updated_on>
+        <update_servicenow_cmdb>false</update_servicenow_cmdb>
+    </x_nuta2_nutanix_ca_calm_plugin_configuration>
+</record_update>
+]]></payload>
+        <sys_class_name>sys_metadata_link</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-15 20:16:45</sys_created_on>
+        <sys_id>9800ae6337c5a300fdfc097973990e13</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_metadata_link_9800ae6337c5a300fdfc097973990e13</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-10-15 20:16:45</sys_updated_on>
+        <tablename>x_nuta2_nutanix_ca_calm_plugin_configura</tablename>
+    </sys_metadata_link>
+</record_update>

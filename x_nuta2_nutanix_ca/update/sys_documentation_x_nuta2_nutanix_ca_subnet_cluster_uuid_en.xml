@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="cluster_uuid" label="Cluster UUID" language="en" table="x_nuta2_nutanix_ca_subnet">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>cluster_uuid</element>
+            <help/>
+            <hint/>
+            <label>Cluster UUID</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_subnet</name>
+            <plural>Cluster UUIDs</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-07-08 11:52:27</sys_created_on>
+            <sys_id>a67366094fa23300d8494ebf9310c7fe</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Cluster UUID</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_subnet_cluster_uuid_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-07-08 11:52:27</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

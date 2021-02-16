@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="cmdb_ci_oslv_container" label="Container" max_length="40" name="x_nuta2_nutanix_ca_container" type="collection">
+        <element label="UUID" max_length="32" name="uuid" type="string"/>
+    </element>
+</database>

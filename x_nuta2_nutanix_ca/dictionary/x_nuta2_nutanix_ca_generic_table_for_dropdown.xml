@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Generic Table for Dropdown" max_length="40" name="x_nuta2_nutanix_ca_generic_table_for_dropdown" type="collection">
+        <element display="true" label="Name" max_length="40" name="name" type="string"/>
+        <element label="Value" max_length="40" name="value" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Variable" max_length="32" name="variable" reference="item_option_new" type="reference"/>
+        <index name="index">
+            <element name="variable"/>
+        </index>
+    </element>
+</database>

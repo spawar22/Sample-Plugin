@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="cmdb_ci_vm_instance" label="Service" max_length="40" name="x_nuta2_nutanix_ca_service" type="collection">
+        <element label="Cores per CPU" max_length="8" name="cores_per_cpu" type="string"/>
+        <element label="Operating System" max_length="64" name="operating_system" type="string"/>
+        <element label="Provider" max_length="64" name="provider" type="string"/>
+        <element label="UUID" max_length="36" name="uuid" type="string"/>
+    </element>
+</database>

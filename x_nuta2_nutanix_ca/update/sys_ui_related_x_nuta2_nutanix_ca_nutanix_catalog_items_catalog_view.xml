@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_related sys_domain="global" table="x_nuta2_nutanix_ca_nutanix_catalog_items" version="2" view="catalog_view">
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Catalog Items - Catalogs" name="x_nuta2_nutanix_ca_nutanix_catalog_items" related_list="NULL" sys_domain="global" view="cd669128dba623000462fe1b68961911">2370a264db6a23000462fe1b68961916</list_id>
+            <order_by/>
+            <position>0</position>
+            <related_list/>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-12-20 02:11:17</sys_created_on>
+            <sys_id>6f70a264db6a23000462fe1b68961916</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-12-20 02:11:17</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list action="INSERT_OR_UPDATE">
+            <calculated_name>Catalog Items - Catalogs</calculated_name>
+            <filter/>
+            <name>x_nuta2_nutanix_ca_nutanix_catalog_items</name>
+            <order_by/>
+            <position/>
+            <related_list/>
+            <sys_class_name>sys_ui_related_list</sys_class_name>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-12-20 02:11:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>2370a264db6a23000462fe1b68961916</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Catalog Items - Catalogs</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_related_x_nuta2_nutanix_ca_nutanix_catalog_items_catalog_view</sys_update_name>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-12-20 02:11:17</sys_updated_on>
+            <sys_user/>
+            <view display_value="Catalogs" name="catalog_view">cd669128dba623000462fe1b68961911</view>
+            <view_name/>
+        </sys_ui_related_list>
+    </sys_ui_related>
+</record_update>

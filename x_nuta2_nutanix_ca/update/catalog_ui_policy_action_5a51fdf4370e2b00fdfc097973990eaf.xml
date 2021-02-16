@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="catalog_ui_policy_action">
+    <catalog_ui_policy_action action="INSERT_OR_UPDATE">
+        <catalog_item display_value="General Settings">d4d3da7f37d12300fdfc097973990e11</catalog_item>
+        <catalog_variable>IO:ba4d6934370e2b00fdfc097973990eb0</catalog_variable>
+        <cleared>false</cleared>
+        <disabled>true</disabled>
+        <field/>
+        <mandatory>ignore</mandatory>
+        <order>100</order>
+        <sys_class_name>catalog_ui_policy_action</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-25 20:52:34</sys_created_on>
+        <sys_id>5a51fdf4370e2b00fdfc097973990eaf</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>is_duplicate</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>catalog_ui_policy_action_5a51fdf4370e2b00fdfc097973990eaf</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-03 07:54:20</sys_updated_on>
+        <table/>
+        <ui_policy display_value="To Hide Variables">a5bade0037ed2300fdfc097973990e14</ui_policy>
+        <variable>is_duplicate</variable>
+        <variable_set/>
+        <visible>false</visible>
+    </catalog_ui_policy_action>
+</record_update>

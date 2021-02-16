@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section caption="" section_id="b68b27d24f01a30065e48020a310c7da" sys_domain="global" table="x_nuta2_nutanix_ca_calm_plugin_configuration" version="3" view="calm_instance">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>service_catalog</element>
+            <position>0</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>f28b27d24f01a30065e48020a310c7db</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>calm_instance</element>
+            <position>1</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>768b27d24f01a30065e48020a310c7db</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>calm_admin_username</element>
+            <position>2</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>f68b27d24f01a30065e48020a310c7db</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>calm_admin_password</element>
+            <position>3</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>7a8b27d24f01a30065e48020a310c7db</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>4</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>fa8b27d24f01a30065e48020a310c7db</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>mid_server</element>
+            <position>5</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>7e8b27d24f01a30065e48020a310c7db</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>log_verbosity</element>
+            <position>6</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>fe8b27d24f01a30065e48020a310c7db</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.end_split</element>
+            <position>7</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>728b27d24f01a30065e48020a310c7dc</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type>.end_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.begin_split</element>
+            <position>8</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>f28b27d24f01a30065e48020a310c7dc</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type>.begin_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>show_published_blueprints</element>
+            <position>9</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>768b27d24f01a30065e48020a310c7dc</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element/>
+            <position>10</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>f68b27d24f01a30065e48020a310c7dc</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>11</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>7a8b27d24f01a30065e48020a310c7dc</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>create_alerts</element>
+            <position>12</position>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_id>fa8b27d24f01a30065e48020a310c7dc</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_calm_plugin_configuration" sys_domain="global" view="368beb924f01a30065e48020a310c780">b68b27d24f01a30065e48020a310c7da</sys_ui_section>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption/>
+            <header>false</header>
+            <name>x_nuta2_nutanix_ca_calm_plugin_configuration</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-12 04:34:22</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>b68b27d24f01a30065e48020a310c7da</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_nuta2_nutanix_ca_calm_plugin_configuration</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_section_b68b27d24f01a30065e48020a310c7da</sys_update_name>
+            <sys_updated_by>nitin</sys_updated_by>
+            <sys_updated_on>2018-10-12 04:34:22</sys_updated_on>
+            <sys_user/>
+            <title>false</title>
+            <view display_value="CALM instance" name="calm_instance">368beb924f01a30065e48020a310c780</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

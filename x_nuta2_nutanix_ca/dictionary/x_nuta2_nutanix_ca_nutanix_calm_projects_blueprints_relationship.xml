@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Projects Blueprints Relationship" max_length="40" name="x_nuta2_nutanix_ca_nutanix_calm_projects_blueprints_relationship" type="collection">
+        <element attributes="edge_encryption_enabled=true" label="Blueprints" max_length="32" name="catalog_item" reference="sc_cat_item" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" label="Projects" max_length="32" name="projects" reference="x_nuta2_nutanix_ca_nutanix_project" type="reference"/>
+        <element label="Version" max_length="40" name="version" type="string"/>
+        <index name="index">
+            <element name="projects"/>
+        </index>
+        <index name="index2">
+            <element name="catalog_item"/>
+        </index>
+    </element>
+</database>

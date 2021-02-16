@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="workflows_for_system_actions" label="System Action Workflow" language="en" table="x_nuta2_nutanix_ca_calm_plugin_configuration">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>workflows_for_system_actions</element>
+            <help/>
+            <hint>ServiceNow will trigger this workflow on any system action triggered by the user</hint>
+            <label>System Action Workflow</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_calm_plugin_configuration</name>
+            <plural>System Action Workflows</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-10-07 05:44:47</sys_created_on>
+            <sys_id>0008fd5edb9c80100a41ab7dca961901</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_name>System Action Workflow</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_calm_plugin_configuration_workflows_for_system_actions_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-04 08:19:55</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

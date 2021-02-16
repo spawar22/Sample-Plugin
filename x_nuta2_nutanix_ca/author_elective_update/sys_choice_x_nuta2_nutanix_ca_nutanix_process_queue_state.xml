@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="state" table="x_nuta2_nutanix_ca_nutanix_process_queue" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>state</element>
+            <name>x_nuta2_nutanix_ca_nutanix_process_queue</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-10-14 17:09:28</sys_created_on>
+            <sys_id>a0e462662f162010962a877cf699b669</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>state</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_choice_x_nuta2_nutanix_ca_nutanix_process_queue_state</sys_update_name>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-10-14 17:09:28</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>state</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Waiting</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_process_queue</name>
+            <sequence>0</sequence>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-10-14 17:09:59</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>e4ab6c9737496300fdfc097973990ecb</sys_id>
+            <sys_mod_count>3</sys_mod_count>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-10-14 17:10:25</sys_updated_on>
+            <value>waiting</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>state</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Ready</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_process_queue</name>
+            <sequence>1</sequence>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-10-14 17:09:28</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>647be89737496300fdfc097973990e55</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-10-14 17:10:09</sys_updated_on>
+            <value>ready</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>state</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Processing</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_process_queue</name>
+            <sequence>2</sequence>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-10-14 17:09:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1f8b60d737496300fdfc097973990e52</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-10-14 17:10:11</sys_updated_on>
+            <value>processing</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>state</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Complete</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_process_queue</name>
+            <sequence>3</sequence>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-10-14 17:10:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>07ab24d737496300fdfc097973990e0a</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-10-14 17:10:39</sys_updated_on>
+            <value>complete</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>state</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Error</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_process_queue</name>
+            <sequence>4</sequence>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-10-14 17:09:49</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>bd9be0d737496300fdfc097973990eb3</sys_id>
+            <sys_mod_count>3</sys_mod_count>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-10-14 17:10:28</sys_updated_on>
+            <value>error</value>
+        </sys_choice>
+    </sys_choice>
+</record_update>

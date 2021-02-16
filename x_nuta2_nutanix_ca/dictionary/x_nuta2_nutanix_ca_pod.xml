@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="cmdb_ci" label="Pod" max_length="40" name="x_nuta2_nutanix_ca_pod" type="collection">
+        <element label="Namespace" max_length="128" name="namespace" type="string"/>
+        <element label="UUID" max_length="32" name="uuid" type="string"/>
+    </element>
+</database>

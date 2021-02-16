@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_ImportProjects</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_ImportProjects</name>
+        <script><![CDATA[var Nutanix_ImportProjects = Class.create();
+Nutanix_ImportProjects.prototype = {
+    initialize: function() {
+        this.appUtil = new Nutanix_Calm_Utils();
+        this.logger = new Nutanix_Calm_Logger();
+        this.pageBreaker = 20;
+        this.activeProject = [];
+    },
+
+    _deactivateDeletedProject: function() {
+        try {
+            this.logger.debug("Inside Nutanix_Importproject._deactivateDeletedProject");
+
+            var activeProjectQuery = 'state=COMPLETE';
+
+            for (var i in this.activeProject) {
+                activeProjectQuery += '^uuid!=' + this.activeProject[i];
+            }
+
+            var inactiveProjectSysID = [];
+
+            var project = new GlideRecord(this.appUtil.configuration.table.Project + "");
+            project.addEncodedQuery(activeProjectQuery);
+            project.query();
+
+            while (project.next()) {
+                project.state = 'INACTIVE';
+                inactiveProjectSysID.push(project.update());
+            }
+			this.logger.debug("Nutanix_Importproject._deactivateDeletedProject Deactivated: "+inactiveProjectSysID.length+" "+JSON.stringify(inactiveProjectSysID)+" Projects.");
+            var inactiveCatItems = [];
+
+//             var catGr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig + '');
+//             catGr.addEncodedQuery('state!=inactive^state!=deleted^multiple_projectsIN' + inactiveProjectSysID.toString());
+//             catGr.query();
+
+//             while (catGr.next()) {
+
+//                 inactiveCatItems.push(catGr.item_name.name);
+
+//                 catGr.state = 'inactive';
+//                 catGr.update();
+// 				this.logger.debug("Nutanix_Importproject._deactivateDeletedProject Deactivated catalog item "+catGr.item_name.name+" Logic, associated project mark as inactive.");
+//             }
+
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs. Error :- " + e);
+        }
+    },
+
+    _multiPCSubnet: function(accounts) {
+        try {
+			this.logger.debug("Inside Nutanix_ImportProjects._multiPCSubnet");
+            for (var account in accounts) {
+                var body = {
+                    "entity_type": "virtual_network",
+                    "group_member_attributes": [{
+                            "attribute": "name"
+                        },
+                        {
+                            "attribute": "cluster_uuid"
+                        },
+                        {
+                            "attribute": "cluster_name"
+                        },
+                        {
+                            "attribute": "vlan_id"
+                        }
+                    ],
+                    "filter_criteria": "account_uuid==" + accounts[account],
+                    "group_member_offset": 0,
+                    "group_member_count": 100
+                };
+                var response = this.appUtil.makeCalmApiCall("POST", "/nutanix/v1/groups/list", this.appUtil.stringify(body));
+                if (response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+                    var parsedJSON = this.appUtil.parse(response.getBody());
+                    var total_entity = parseInt(parsedJSON.total_entity_count);
+                    for (var i = 0; i < total_entity; i++) {
+                        var data = parsedJSON.group_results[0].entity_results[i].data;
+                        var cluster_uuid = '';
+                        var cluster_name = '';
+                        var subnetName = '';
+                        var subnetUUID = JSON.stringify(parsedJSON.group_results[0].entity_results[i].entity_id);
+                        for (var j in data) {
+                            if (data[j].name == 'cluster_uuid') {
+                                cluster_uuid = JSON.stringify(data[j].values[0].values[0]);
+                            }
+                            if (data[j].name == 'cluster_name') {
+                                cluster_name = JSON.stringify(data[j].values[0].values[0]);
+                            }
+                            if (data[j].name == 'name') {
+                                subnetName = JSON.stringify(data[j].values[0].values[0]);
+                            }
+                        }
+
+                        this.logger.debug('Nutanix_ImportProjects._multiPCSubnet i ' + i + 'subnetUUID ' + subnetUUID + ' subnetName ' + subnetName + ' cluster_uuid ' + cluster_uuid + ' cluster_name ' + cluster_name);
+                        var grSubnet = new GlideRecord(this.appUtil.configuration.table.subnet);
+                        grSubnet.addEncodedQuery('uuid=' + JSON.parse(subnetUUID));
+                        grSubnet.query();
+                        if (grSubnet.next()) {
+                            grSubnet.name = JSON.parse(subnetName);
+                            grSubnet.cluster_name = JSON.parse(cluster_name);
+                            grSubnet.cluster_uuid = JSON.parse(cluster_uuid);
+                            grSubnet.update();
+                        } else {
+                            grSubnet.initialize();
+                            grSubnet.name = JSON.parse(subnetName);
+                            grSubnet.uuid = JSON.parse(subnetUUID);
+                            grSubnet.cluster_name = JSON.parse(cluster_name);
+                            grSubnet.cluster_uuid = JSON.parse(cluster_uuid);
+                            grSubnet.insert();
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            this.logger.debug("Nutanix_ImportProjects._multiPCSubnet :- Exception caught during retrieval of projects. Error: " + e);
+        }
+    },
+
+    startImportProjects: function() {
+        try {
+            this.logger.debug("Inside Nutanix_ImportProjects.startImportProjects");
+            var body = {
+                "kind": "project",
+                "offset": 0,
+                "length": 1
+            };
+            var response = this.appUtil.makeCalmApiCall("POST", this.appUtil.configuration.api.getProjectList + "", this.appUtil.stringify(body));
+            if (response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+                this.logger.info("Connection established to " + this.appUtil.configuration.api.getProjectList);
+                var parsed = this.appUtil.parse(response.getBody());
+                var records = parsed.metadata.total_matches;
+                var pages = parseInt(records / this.pageBreaker);
+                this.logger.debug("Number of Project JSON pages " + (pages + 1));
+                for (var i = 0, k = 0; i <= pages; i++, k += 19) {
+                    body = {
+                        "kind": "project",
+                        "offset": i + k,
+                        "length": this.pageBreaker
+                    };
+                    this.logger.debug("Call number to importProjectData:" + (i + 1));
+                    //this.appUtil.insertIntoQueue("importProjectData", "POST", this.appUtil.stringify(body), this.appUtil.configuration.api.getProjectList+"", 'Import project data', 'This process invokes the import of project data.');
+                    var answer = {
+                        "method": "POST",
+                        "parameter": this.appUtil.stringify(body),
+                        "payload": this.appUtil.configuration.api.getProjectList + ""
+                    };
+                    this.importProjectData(answer);
+                }
+                this.logger.info("Completed importing and processing of Projects.");
+                this._deactivateDeletedProject();
+            } else {
+                this.logger.debug("Nutanix_ImportProjects.startImportProjects :- Connection to projects/list not established :- " + response.haveError() + " Status code :- " + response.getStatusCode());
+            }
+        } catch (e) {
+            this.logger.debug("Nutanix_ImportProjects.startImportProjects :- Exception caught during retrieval of projects. Error: " + e);
+            this.logger.error("Exception caught during retrieval of projects. Error: " + e);
+        }
+    },
+
+    importProjectData: function(current) {
+        try {
+            this.logger.debug("Inside Nutanix_ImportProjects.importProjectData");
+            var response = this.appUtil.makeCalmApiCall(current.method + '', current.payload + '', current.parameter + '');
+            if (response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+                var parsedJSON = this.appUtil.parse(response.getBody());
+                var entities = parsedJSON.entities;
+                this.logger.info("Number of imported Project:" + entities.length);
+                for (var i = 0; i < entities.length; i++) {
+                    var entity = entities[i];
+                    var metadata = entity.metadata;
+                    var uuid = metadata.uuid;
+                    this.activeProject.push(uuid + '');
+                    this.appUtil.insertIntoQueue("processImportProjectData", "", '', this.appUtil.stringify(entity), 'Process project data', 'This job processes the imported project data.');
+                }
+            } else {
+                this.logger.debug("Nutanix_ImportProjects.importProjectData :- Connection projects/list not established :- " + response.haveError() + " Status code :- " + response.getStatusCode());
+            }
+        } catch (e) {
+            this.logger.debug("Nutanix_ImportProjects.importProjectData :- Exception caught during retrieval of projects. Error:- " + e);
+            this.logger.error("Exception caught during retrieval of projects. Error :- " + e);
+        }
+    },
+
+    processImportProjectData: function(current) {
+        try {
+            this.logger.debug("Inside Nutanix_ImportProjects.processImportProjectData");
+            var accounts = [];
+            var insertData = new GlideRecord(this.appUtil.configuration.table.stagingProject + "");
+            var entity = this.appUtil.parse(current.payload);
+            var status = entity.status;
+            var resource = entity.status.resources;
+            var metadata = entity.metadata;
+            var spec_resources = entity.spec.resources;
+            insertData.initialize();
+            var field;
+            //To insert status data
+            for (var key in status) {
+                field = status[key];
+                if (key != 'resources')
+                    insertData[key] = (field.constructor === Object || field.constructor === Array) ? JSON.stringify(field) : field + '';
+            }
+            //To insert resources data
+            for (var key in resource) {
+                field = resource[key];
+                insertData[key] = (field.constructor === Object || field.constructor === Array) ? JSON.stringify(field) : field + '';
+                if (key + '' == 'account_reference_list') {
+                    for (var i in field) {
+                        accounts.push(field[i].uuid);
+                    }
+                }
+            }
+            this._multiPCSubnet(accounts);
+            //To insert metadata
+            for (var key in metadata) {
+                field = metadata[key];
+                insertData[key] = (field.constructor === Object || field.constructor === Array) ? JSON.stringify(field) : field + '';
+            }
+            //To insert external_network_list
+            for (var key in spec_resources) {
+                if (key + '' == 'external_network_list') {
+                    field = spec_resources[key];
+                    insertData[key] = (field.constructor === Object || field.constructor === Array) ? JSON.stringify(field) : field + '';
+                }
+            }
+            insertData.insert();
+        } catch (e) {
+            this.logger.debug("Nutanix_ImportProjects.processImportProjectData :- Exception caught during retrieval of projects. Error :- " + e);
+            this.logger.error("Exception caught during retrieval of projects. Error :- " + e);
+        }
+    },
+    MapCatItemToProject: function(current) {
+        try {
+            var rel = new GlideRecord(this.appUtil.configuration.table.catalogProjectRelation + "");
+            rel.addQuery('catalog_item', (current.parameter + "").split(',')[0]);
+            rel.deleteMultiple();
+
+            var gr = new GlideRecord(this.appUtil.configuration.table.Project + "");
+            gr.addQuery('state', 'COMPLETE');
+            var obj = {};
+            gr.query();
+            while (gr.next()) {
+                obj[gr.uuid + ""] = gr.sys_id + "";
+            }
+            var projectList = JSON.parse(current.payload + '');
+
+            if (projectList.constructor === Object)
+                projectList = JSON.parse('[' + current.payload + ']');
+
+            var activeProjectList = [];
+
+            var relGR = new GlideRecord(this.appUtil.configuration.table.catalogProjectRelation + "");
+
+            for (var i in projectList) {
+                var proj = projectList[i];
+				
+				if(obj[proj.uuid + ''] == undefined || !obj[proj.uuid + ''] || obj[proj.uuid + ''] == null || typeof obj[proj.uuid + ''] == undefined ){
+					this.appUtil.insertIntoQueue("MapCatItemToProject", '', current.parameter+'', current.payload+'', 'Map catalog items to project', 'This job maps the catalog items to their respective projects.');
+							return;
+				}else{
+                relGR.initialize();
+                relGR.catalog_item = (current.parameter + "").split(',')[0];
+                relGR.version = (current.parameter + "").split(',')[1];
+				relGR.projects = obj[proj.uuid + ''] + "";
+                relGR.insert();
+				}
+				
+                activeProjectList.push(obj[proj.uuid + ''] + '');
+            }
+
+            var inactiveCatItems = [];
+            var queryString = 'state!=inactive^state!=deleted^state!=draft^blueprintIN' + (current.parameter + "").split(',')[0];
+
+
+            for (var i in activeProjectList)
+                queryString = queryString + '^multiple_projects!*' + activeProjectList[i];
+
+            var catGr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig + '');
+            catGr.addEncodedQuery(queryString);
+            catGr.query();
+
+            while (catGr.next()) {
+
+                inactiveCatItems.push(catGr.item_name.name);
+
+                catGr.state = 'inactive';
+                catGr.update();
+            }
+            this.logger.info("Deactivated " + catGr.getRowCount() + " catalog items (" + inactiveCatItems.toString() + ") as there Projects got removed.");
+
+            var reactiveCatItems = [];
+
+            var catGr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig + '');
+            catGr.addEncodedQuery('item_name.category=88bfbad237512300fdfc097973990e06^state=inactive^blueprint=' + (current.parameter + "").split(',')[0] + '^multiple_projectsIN' + activeProjectList.toString());
+            catGr.query();
+
+            while (catGr.next()) {
+
+                reactiveCatItems.push(catGr.item_name.name);
+
+                catGr.state = 'active';
+                catGr.update();
+            }
+            this.logger.info("Re-activated " + catGr.getRowCount() + " catalog items (" + reactiveCatItems.toString() + ") as project got re-attached.");
+        } catch (e) {
+            this.logger.error("Exception caught while mapping Catalog Item to Project. Error :- " + e);
+        }
+    },
+
+    type: 'Nutanix_ImportProjects'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-10 09:48:23</sys_created_on>
+        <sys_id>a2e91eb5db81230084249235ca9619eb</sys_id>
+        <sys_mod_count>221</sys_mod_count>
+        <sys_name>Nutanix_ImportProjects</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_a2e91eb5db81230084249235ca9619eb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-09-29 10:52:04</sys_updated_on>
+    </sys_script_include>
+</record_update>

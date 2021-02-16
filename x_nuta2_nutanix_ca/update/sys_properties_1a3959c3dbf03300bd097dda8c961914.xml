@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>List of variables that need to be disabled from plugin.</description>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.disabled.fields</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>disabled.fields</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-04-18 11:48:55</sys_created_on>
+        <sys_id>1a3959c3dbf03300bd097dda8c961914</sys_id>
+        <sys_mod_count>14</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.disabled.fields</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_1a3959c3dbf03300bd097dda8c961914</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-08-30 08:39:46</sys_updated_on>
+        <type>string</type>
+        <value>,machineType,image_id,vpc_id,security_group_list,host,template,datastore,instance_type,region,availability_zone,key_name,subnet_id,resource_group,availability_set_id,location,zone,security_groups,instance_profile_name,connection_type,address,storage_type,network_tags,scopes,predefined_guest_customization,install_type,type,cluster,storage_pod,drs_mode,</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=1a3959c3dbf03300bd097dda8c961914"/>
+</record_update>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_form_sections form_id="e7c8ce92dbd9230084249235ca9619ac" sys_domain="global" table="x_nuta2_nutanix_ca_nutanix_project" version="3">
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-10-24 07:38:40</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>e3c8ce92dbd9230084249235ca9619af</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_nuta2_nutanix_ca_nutanix_project" name="x_nuta2_nutanix_ca_nutanix_project" sys_domain="global" view="Default view">e7c8ce92dbd9230084249235ca9619ac</sys_ui_form>
+            <sys_ui_section caption="Projects" display_value="Projects" name="x_nuta2_nutanix_ca_nutanix_project" sys_domain="global" view="Default view">27c8ce92dbd9230084249235ca9619ab</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-10-24 07:38:40</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>x_nuta2_nutanix_ca_nutanix_project</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-10-24 07:38:40</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>e7c8ce92dbd9230084249235ca9619ac</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_nuta2_nutanix_ca_nutanix_project</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_form_sections_e7c8ce92dbd9230084249235ca9619ac</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-10-24 07:38:40</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>

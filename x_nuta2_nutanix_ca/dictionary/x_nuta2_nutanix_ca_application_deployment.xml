@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Deployments" max_length="40" name="x_nuta2_nutanix_ca_application_deployment" type="collection">
+        <element attributes="edge_encryption_enabled=true" label="Current Replicas" max_length="32" name="current_replicas" type="integer"/>
+        <element label="Description" max_length="200" name="description" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Max Replicas" max_length="32" name="max_replicas" type="integer"/>
+        <element attributes="edge_encryption_enabled=true" label="Min Replicas" max_length="32" name="min_replicas" type="integer"/>
+        <element label="Name" max_length="100" name="name" type="string"/>
+        <element label="Parent Name" max_length="100" name="parent_name" type="string"/>
+        <element label="Parent UUID" max_length="100" name="parent_uuid" type="string"/>
+        <element label="UUID" max_length="100" name="uuid" type="string"/>
+    </element>
+</database>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script/>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Calm_Catalog_Variable_Configure_Page.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"></link>
+	
+	<style>
+		
+		.containerStart{
+			display: -webkit-box;
+		}
+		
+		input[type=checkbox] {
+			margin: 0px 5px 0px 0px;
+			width: 16px;
+			height: 16px;
+		}
+		
+		.inputText{
+			width: 100%;
+			border:1px solid #bdc0c4;
+			border-radius:3px;
+			
+			height:32px;
+			padding: 6px 9px 6px 9px;
+			font-size: 13px;
+			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); 
+		}
+		
+		.field-icon {
+			cursor: pointer;
+			float: right;
+			margin-right: .5%;
+			padding-right: 5px;
+			margin-top: -24px;
+			position: relative;
+			z-index: 2;
+		}
+		
+	</style>
+	<div class="error_body"></div>
+	<div class="bodyData">
+		</div>
+	
+	<!--<div style="display: -webkit-box"> 
+			<div style="padding: 10px; width: 50%">
+			<div style="padding:1px 1px 12px 1px;">	
+				<span style="float:left;">Name</span><span style="float:right;"><input class="inputCheckbox" style="margin-right:2px" type="checkbox" checked="true" onchange="myFunction('asdf')"></input>Runtime</span>
+			</div>
+			<div style="padding-top:14px;">
+				<input class="inputText field1" type="text" ></input>
+			</div>
+				<span class="field-icon toggle-password spanField1" onclick="tooglePassword('field1', 'spanField1')"> SHOW </span>
+		</div>
+		
+			<div style="padding: 10px; width: 50%">
+			<div style="padding:1px 1px 12px 1px;">	
+				<span style="float:left;">Name</span><span style="float:right;"><input class="inputCheckbox" style="margin-right:2px" type="checkbox" checked="true" onchange="myFunction('asdf')"></input>Runtime</span>
+			</div>
+			<div style="padding-top:14px;">
+				<input class="inputText field1" type="text" ></input>
+			</div>
+				<span class="field-icon toggle-password spanField1" onclick="tooglePassword('field1', 'spanField1')"> SHOW </span>
+		</div>
+	
+	</div>-->
+	<body onload="getProfileVariableData()">
+	</body>
+	
+	<g:requires name="x_nuta2_nutanix_ca.Calm_Catalog_Variable.jsdbx"/>
+	
+</j:jelly>]]></html>
+        <name>Calm_Catalog_Variable_Configure_Page</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-30 06:00:04</sys_created_on>
+        <sys_id>e7ab28dc37256300fdfc097973990eb2</sys_id>
+        <sys_mod_count>218</sys_mod_count>
+        <sys_name>Calm_Catalog_Variable_Configure_Page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_e7ab28dc37256300fdfc097973990eb2</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-18 12:19:32</sys_updated_on>
+    </sys_ui_page>
+</record_update>

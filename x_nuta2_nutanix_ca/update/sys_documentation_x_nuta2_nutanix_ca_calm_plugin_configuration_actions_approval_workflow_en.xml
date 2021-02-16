@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="actions_approval_workflow" label="Enable/Disable workflow for actions" language="en" table="x_nuta2_nutanix_ca_calm_plugin_configuration">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>actions_approval_workflow</element>
+            <help/>
+            <hint>You can enable or disable workflow for all Apps managed through Calm and hence ServiceNow</hint>
+            <label>Enable/Disable workflow for actions</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_calm_plugin_configuration</name>
+            <plural>Enable/Disable workflow for actions</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-10-07 05:42:56</sys_created_on>
+            <sys_id>0197f55edb9c80100a41ab7dca9619b4</sys_id>
+            <sys_mod_count>3</sys_mod_count>
+            <sys_name>Enable/Disable workflow for actions</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_calm_plugin_configuration_actions_approval_workflow_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-04 08:20:34</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

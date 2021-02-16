@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_view">
+    <sys_ui_view action="INSERT_OR_UPDATE">
+        <group/>
+        <hidden>false</hidden>
+        <name>catalog_view</name>
+        <roles/>
+        <sys_class_name>sys_ui_view</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-12-19 20:47:32</sys_created_on>
+        <sys_id>cd669128dba623000462fe1b68961911</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Catalogs</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_view_cd669128dba623000462fe1b68961911</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-19 21:00:05</sys_updated_on>
+        <title>Catalogs</title>
+        <user/>
+    </sys_ui_view>
+</record_update>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>apps_last_runtime</field>
+        <global>true</global>
+        <isolate_script>false</isolate_script>
+        <messages/>
+        <name>Delete_Warning</name>
+        <order/>
+        <script><![CDATA[function onLoad() {
+	var delAjax = new GlideAjax('Nutanix_ClientServerScriptBridge');
+	delAjax.addParam('sysparm_name', 'deleteFlagState');
+	delAjax.getXML(flagResponse);
+}
+function flagResponse(response) {
+	var answer = response.responseXML.documentElement.getAttribute("answer");
+	if(answer == 'deleting')
+		g_form.addErrorMessage('Inventory deletion is in progress.');
+	if(answer == 'syncing')
+		g_form.addInfoMessage('Inventory sync is in progress.');
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-04-10 13:20:00</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>10e1a464db34730014622bfa4b961944</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Delete_Warning</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_client_10e1a464db34730014622bfa4b961944</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-06-11 11:40:39</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_calm_plugin_configuration</table>
+        <type>onLoad</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

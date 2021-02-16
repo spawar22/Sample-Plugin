@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_view">
+    <sys_ui_view action="INSERT_OR_UPDATE">
+        <group/>
+        <hidden>false</hidden>
+        <name>calm_incident</name>
+        <roles/>
+        <sys_class_name>sys_ui_view</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-11-28 12:11:07</sys_created_on>
+        <sys_id>a3c61b2537022300d27b8cf6c3990e54</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Calm Incident</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_view_a3c61b2537022300d27b8cf6c3990e54</sys_update_name>
+        <sys_updated_by>mumtaz.ansari</sys_updated_by>
+        <sys_updated_on>2018-11-28 12:11:07</sys_updated_on>
+        <title>Calm Incident</title>
+        <user/>
+    </sys_ui_view>
+</record_update>

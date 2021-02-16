@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysauto_script">
+    <sysauto_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <business_calendar/>
+        <condition/>
+        <conditional>false</conditional>
+        <entered_time/>
+        <name>Nutanix_Import Inventories Job</name>
+        <run_as/>
+        <run_as_tz/>
+        <run_dayofmonth>1</run_dayofmonth>
+        <run_dayofweek>1</run_dayofweek>
+        <run_period/>
+        <run_start>2018-10-15 20:23:09</run_start>
+        <run_time>1970-01-01 09:00:00</run_time>
+        <run_type>daily</run_type>
+        <script><![CDATA[var appUtil;
+if(current.active+'' == 'false'){
+	appUtil = new Nutanix_Calm_Logger();
+	appUtil.error(current.name+' schedule job is in active false state. Please activate it before executing the same.');
+}else{
+	updateCalmVersion();
+	if(new x_nuta2_nutanix_ca.Migration_Script().isMigrationNeeded()){
+		appUtil = new Nutanix_Calm_Utils();
+		appUtil.insertIntoQueue('startMigration', '', '', '', 'Migrating to v1.4', 'This process is migrating v1.3 to v1.4.');
+	}
+	if(gs.getProperty('x_nuta2_nutanix_ca.1_4_3')+'' == '0'){
+		var appUtil = new Nutanix_Calm_Utils();
+		appUtil.migrateV1_4_3();
+	}
+    else{
+		appUtil = new Nutanix_Calm_Utils();
+		appUtil.insertIntoQueue('startInventorySync', '', '', '', 'Start inventory sync', 'This process is invoking the import of all the inventories.');
+	}
+}
+//to update the calm version on the execution of every Scheduled Job.
+function updateCalmVersion(){
+	gs.setProperty('x_nuta2_nutanix_ca.calm_version', '');
+	
+	var plug_property = new GlideRecord('x_nuta2_nutanix_ca_calm_plugin_configuration');
+	plug_property.get(gs.getProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id'));
+	
+	var logger = new Nutanix_Calm_Logger();
+    var utils = new Nutanix_Calm_Utils();
+
+    var authResp = utils.makeCalmApiCall("post", "/projects/list", '{"kind" : "project"}');
+    var statusCode = authResp.getStatusCode();
+   
+    if (authResp.getStatusCode() == '200' || authResp.getStatusCode() == '201') {
+
+        var verResp = utils.makeCalmApiVersionCall("get", "/apps/version", '');
+        if (verResp.getStatusCode() == '200' || verResp.getStatusCode() == '201') {
+            var response = verResp.getBody();
+            plug_property.calm_version = response.split('.')[0] + '.' + response.split('.')[1];
+            gs.setProperty('x_nuta2_nutanix_ca.calm_version', plug_property.calm_version);    
+            plug_property.update();
+			logger.info('Schedule Job Calm Version updated->' + plug_property.calm_version);
+        } else {
+            plug_property.calm_version = '';
+            plug_property.update();
+
+            gs.addErrorMessage('Nutanix Calm Version cannot be detected.Please check the logs and retry saving properties.');
+            logger.error('Schedule Job Calm Version cannot be detected. Error->' + verResp.getBody());
+        }
+}
+}]]></script>
+        <sys_class_name>sysauto_script</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-15 20:23:44</sys_created_on>
+        <sys_id>86712ae337c5a300fdfc097973990eec</sys_id>
+        <sys_mod_count>47</sys_mod_count>
+        <sys_name>Nutanix_Import Inventories Job</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sysauto_script_86712ae337c5a300fdfc097973990eec</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-18 14:16:32</sys_updated_on>
+        <time_zone/>
+        <upgrade_safe>false</upgrade_safe>
+    </sysauto_script>
+</record_update>

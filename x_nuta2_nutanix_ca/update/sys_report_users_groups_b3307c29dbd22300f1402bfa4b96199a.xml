@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_report_users_groups">
+    <sys_report_users_groups action="INSERT_OR_UPDATE">
+        <group_id/>
+        <report_id display_value="App Launches">5727c50837c22300d27b8cf6c3990eff</report_id>
+        <sys_class_name>sys_report_users_groups</sys_class_name>
+        <sys_created_by>bharat.vajj</sys_created_by>
+        <sys_created_on>2018-12-10 10:19:06</sys_created_on>
+        <sys_id>b3307c29dbd22300f1402bfa4b96199a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>5727c50837c22300d27b8cf6c3990eff</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_report_users_groups_b3307c29dbd22300f1402bfa4b96199a</sys_update_name>
+        <sys_updated_by>bharat.vajj</sys_updated_by>
+        <sys_updated_on>2018-12-10 10:19:06</sys_updated_on>
+        <user_id/>
+    </sys_report_users_groups>
+</record_update>

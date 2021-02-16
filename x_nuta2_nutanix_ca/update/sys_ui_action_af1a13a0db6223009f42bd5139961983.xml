@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_action">
+    <sys_ui_action action="INSERT_OR_UPDATE">
+        <action_name>toggle_view_dummy</action_name>
+        <active>true</active>
+        <client>true</client>
+        <client_script_v2><![CDATA[function onClick(g_form) {
+
+}]]></client_script_v2>
+        <comments/>
+        <condition>(gs.hasRole('asset') || gs.hasRole('itil')) &amp;&amp; ( ( gs.getSession().getProperty('user_agent_browser') == 'ie' &amp;&amp; gs.getSession().getProperty('user_agent_version') &gt;= 9 ) || ( gs.getSession().getProperty('user_agent_browser') != 'ie' ) )</condition>
+        <form_action>false</form_action>
+        <form_button>false</form_button>
+        <form_button_v2>false</form_button_v2>
+        <form_context_menu>false</form_context_menu>
+        <form_link>false</form_link>
+        <form_menu_button_v2>false</form_menu_button_v2>
+        <form_style/>
+        <hint/>
+        <isolate_script>false</isolate_script>
+        <list_action>false</list_action>
+        <list_banner_button>false</list_banner_button>
+        <list_button>false</list_button>
+        <list_choice>false</list_choice>
+        <list_context_menu>false</list_context_menu>
+        <list_link>false</list_link>
+        <list_save_with_form_button>false</list_save_with_form_button>
+        <list_style/>
+        <name>Disable dashboard_form</name>
+        <onclick/>
+        <order>-1000</order>
+        <script><![CDATA[	(function setupDashboardNavigation() {
+			// Abort if no global NOW object
+			if(window.NOW) {
+				// Check for or set up CMDB state tracking
+				if(!window.NOW.cmdb)
+					window.NOW.cmdb = {};
+
+				// Check if CMDB form toggle was already set up or not, if so, just remove any other matching elemnt
+				if(!window.NOW.cmdb.formToggleSetup) {
+					// Flag as set up
+					window.NOW.cmdb.formToggleSetup = true;
+
+					// Get the button we are going to hot swap
+					var button = document.getElementById('toggle_view_dummy');
+
+					// Get the button's parent element
+					var parent = button.parentNode;
+
+					// Create some navigation UI to swap with the button
+					var temp = document.createElement('div');
+					var html = '' +
+						'<ul id="toggle_view" class="nav nav-segmented sn-tabs-basic" style="margin: 0 4px;">' +
+						'    <li' +
+						'      onclick="goToDashboard()"' +
+						'      title="' + getMessage('Switch to the dashboard view') + '"' +
+						'      tabindex="0"' +
+						'      aria-label="' + getMessage('Switch to the dashboard view') + '"' +
+						'    >' +
+						'        <a style="text-transform: capitalize;">'+ getMessage('Dashboard') + '</a>' +
+						'    </li>' +
+						'    <li' +
+						'      class="active"' +
+						'      onclick="goToNOOP(event)"' +
+						'      title="' + getMessage('You are currently on the form view') + '"' +
+						'      tabindex="0"' +
+						'      aria-label="' + getMessage('You are currently on the form view') + '"' +
+						'    >' +
+						'        <a style="text-transform: capitalize;">' + getMessage('Form') + '</a>' +
+						'    </li>' +
+						'</ul>';
+					temp.innerHTML = html;
+
+					// Swap the UI content
+					parent.replaceChild(temp.childNodes[0], button);
+				} else {
+					var button = document.getElementById('toggle_view_dummy');
+					if(button)
+						button.parentNode.removeChild(button);
+				}
+			} else {
+				// Since we could not swap, attempt to remove the element
+				var button = document.getElementById('toggle_view_dummy');
+				if(button)
+					button.parentNode.removeChild(button);
+			}
+		
+		
+		})();
+		
+		// Function to go to dashboard view
+		function goToDashboard() {
+			// Dim view
+			jQuery('body').addClass('submitted');
+			
+			// Get sys_id and table
+			var sys_id = g_form.getUniqueValue();
+		    var table = g_form.getTableName();
+			
+			// Get the current URL parameters
+			var params = document.location.search;
+			params = params.substring(1, params.length);
+			
+			// Build a redirect URL
+			var url = '/cmdb_dashboard.do?sysparm_record=' + sys_id + '&sysparm_table=' + table +  '&sysparm_view=ci_dashboard&sysparm_stack=no&sysparm_doctype=true&sysparm_editable=true';
+			url += '&sysparm_form_params=' + encodeURIComponent(params);
+			
+			// Redirect to CI dashboard
+			window.location.replace(url);
+		}
+		
+		// Function to perform a noop click
+		function goToNOOP(event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}]]></script>
+        <show_insert>false</show_insert>
+        <show_multiple_update>false</show_multiple_update>
+        <show_query>false</show_query>
+        <show_update>true</show_update>
+        <sys_class_name>sys_ui_action</sys_class_name>
+        <sys_created_by>bharat.vajj</sys_created_by>
+        <sys_created_on>2018-12-20 06:23:54</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>af1a13a0db6223009f42bd5139961983</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>Disable dashboard_form</sys_name>
+        <sys_overrides display_value="View Toggle">d4c9a743d74302002f6d69418e6103aa</sys_overrides>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_action_af1a13a0db6223009f42bd5139961983</sys_update_name>
+        <sys_updated_by>shivraj</sys_updated_by>
+        <sys_updated_on>2020-03-31 10:29:27</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_nutanix_calm_application</table>
+        <ui11_compatible>true</ui11_compatible>
+        <ui16_compatible>false</ui16_compatible>
+    </sys_ui_action>
+</record_update>

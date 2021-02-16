@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_ImportUsers</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_ImportUsers</name>
+        <script><![CDATA[var Nutanix_ImportUsers = Class.create();
+Nutanix_ImportUsers.prototype = {
+    initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+		
+		// Role x_nuta2_nutanix_ca.user : 3376fd254f452b001200e5201310c717
+		// Role itil : 282bf1fac6112285017366cb5f867469
+		// Role mid_server : e76b74ba0ab3015700a3263b26e5e9d5
+		// Role catalog : e098ecf6c0a80165002aaec84d906014
+		
+		this.endUserRoles = ['3376fd254f452b001200e5201310c717'];
+		
+		
+		var grProp = new GlideRecord('x_nuta2_nutanix_ca_calm_plugin_configuration');
+		if (grProp.get(gs.getProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id')))
+			{
+		/*if(grProp.use_external_credential_system)
+		  this.endUserRoles.push('e76b74ba0ab3015700a3263b26e5e9d5');*/
+		
+	//	this.endUserRoles = ['3376fd254f452b001200e5201310c717','282bf1fac6112285017366cb5f867469'];
+		
+				this.pageBreaker = 20;
+			}
+    },
+
+	getConsumerSysId: function(){
+		try{
+			this.logger.debug("Inside Nutanix_ImportUsers.getConsumerSysId");
+			var body = { 
+				"kind": "role", 
+				"filter": "name==Consumer"
+			};
+			var response = this.appUtil.makeCalmApiCall("POST", this.appUtil.configuration.api.getRolesList+"", this.appUtil.stringify(body));
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				
+				var parsed = this.appUtil.parse(response.getBody());
+				var entities = parsed.entities;
+				
+				for(var i in entities){
+					var entity = entities[i];
+					
+					if(entity.status.name == "Consumer"){
+						gs.setProperty('x_nuta2_nutanix_ca.cosumer.role.uuid', entity.metadata.uuid);
+						break;
+					}
+				}
+				
+			} else {
+				this.logger.debug("Nutanix_ImportUsers.getConsumerSysId :- Connection to roles/list not established :- "+response.haveError()+" Status code :- "+response.getStatusCode());
+			}
+		
+		} catch(e) {
+			this.logger.debug("Nutanix_ImportUsers.getConsumerSysId :- Exception caught during retrieval of Consumer SysId. Error: "+e);
+			this.logger.error("Exception caught during retrieval of Consumer SysId. Error: "+e);
+		}
+	},
+	
+	startUsersImport: function(){
+		try{
+			this.getConsumerSysId();
+			this.logger.debug("Inside Nutanix_ImportUsers.startUsersImport");
+			var body = {
+				"kind": "user",
+				"offset": 0,
+				"length": 1
+			};
+			var response = this.appUtil.makeCalmApiCall("POST", this.appUtil.configuration.api.getUsersList+"", this.appUtil.stringify(body));
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				this.logger.info("Connection established to "+this.appUtil.configuration.api.getUsersList);
+				var parsed = this.appUtil.parse(response.getBody());
+				var records = parsed.metadata.total_matches;
+				var pages = parseInt(records/this.pageBreaker);
+				this.logger.debug("Number of Project JSON pages "+(pages+1));
+				for(var i=0, k=0 ; i <= pages; i++, k+=19) {
+					body = {
+						"kind": "user",
+						"offset": i+k,
+						"length": this.pageBreaker
+					};
+					this.appUtil.insertIntoQueue("importUsers", "POST", this.appUtil.stringify(body), this.appUtil.configuration.api.getUsersList+"", 'Import users', 'This job invokes the import of users from LDAP.');
+				}
+			}
+			else{
+				this.logger.debug("Nutanix_ImportUsers.startUsersImport :- Connection to users/list not established :- "+response.haveError()+" Status code :- "+response.getStatusCode());
+			}
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportUsers.startUsersImport :- Exception caught during retrieval of projects. Error: "+e);
+			this.logger.error("Exception caught during retrieval of projects. Error: "+e);
+		}
+	},
+	
+	importUsers: function(current){
+		try{
+			this.logger.debug("Inside Nutanix_ImportUsers.importUsers");
+			var response = this.appUtil.makeCalmApiCall(current.method+'', current.payload+'', current.parameter+'');
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				var parsedJSON = this.appUtil.parse(response.getBody());
+				var entities = parsedJSON.entities;
+				for(var i=0; i<entities.length; i++){
+					var entity = entities[i];
+					var userName = entity.status.name+'';
+					var uuid = entity.metadata.uuid+'';
+					
+					var userGR = new GlideRecord('sys_user');
+					userGR.addQuery(gs.getProperty('x_nuta2_nutanix_ca.user.table.field.to.map')+'', userName);
+					userGR.query();
+					
+					if(userGR.next()){
+						userGR.x_nuta2_nutanix_ca_nutanix_uuid = uuid;
+						userGR.update();
+						
+						this._updateUsersWithRoles(userGR.sys_id+'', userGR.user_name+'');
+						
+					}
+				}
+			}
+			else{
+				this.logger.debug("Nutanix_ImportUsers.importUsers:- Connection users/list not established :- "+response.haveError()+" Status code :- "+response.getStatusCode());
+			}
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportUsers.importUsers:- Exception caught during retrieval of users. Error:- "+e);
+			this.logger.error("Exception caught during retrieval of users. Error :- "+e);
+		}
+	},
+	
+	_updateUsersWithRoles: function(userSysID, userName){
+		try{
+			this.logger.debug("Inside Nutanix_ImportUsers._updateUsersWithRoles.");		
+
+			var roles = this.endUserRoles;
+
+			for(var i=0; i<roles.length; i++){
+
+				var grd = new GlideRecord('sys_user_has_role');
+				grd.addQuery('user', userSysID);
+				grd.addQuery('role', roles[i]);
+				grd.query();
+
+				if(!grd.hasNext()){
+					grd.user = userSysID;
+					grd.role = roles[i];
+					grd.insert();
+				}
+			}
+
+			this.logger.info("Updated user " + userName + " with Calm Plugin End Users roles.");			
+		}catch(e){
+			this.logger.error("Exception caught inside Nutanix_ImportUsers._updateUsersWithRoles. Error:- "+e);
+		}
+	},	
+	
+	startGroupsImport: function(){
+		try{
+			this.getConsumerSysId();
+			this.logger.debug("Inside Nutanix_ImportUsers.startGroupsImport");
+			var body = {
+				"kind": "user_group",
+				"offset": 0,
+				"length": 1
+			};
+			var response = this.appUtil.makeCalmApiCall("POST", this.appUtil.configuration.api.getGroupsList+"", this.appUtil.stringify(body));
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				this.logger.info("Connection established to "+this.appUtil.configuration.api.getGroupsList);
+				var parsed = this.appUtil.parse(response.getBody());
+				var records = parsed.metadata.total_matches;
+				var pages = parseInt(records/this.pageBreaker);
+				this.logger.debug("Number of Groups JSON pages "+(pages+1));
+				for(var i=0, k=0 ; i <= pages; i++, k+=19) {
+					body = {
+						"kind": "user_group",
+						"offset": i+k,
+						"length": this.pageBreaker
+					};
+					this.appUtil.insertIntoQueue("importGroups", "POST", this.appUtil.stringify(body), this.appUtil.configuration.api.getGroupsList+"", 'Import groups', 'This job invokes the import of groups from LDAP.');
+				}
+			}
+			else{
+				this.logger.debug("Nutanix_ImportUsers.startGroupsImport :- Connection to user_groups/list not established :- "+response.haveError()+" Status code :- "+response.getStatusCode());
+			}
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportUsers.startGroupsImport :- Exception caught during retrieval of groups. Error: "+e);
+			this.logger.error("Exception caught during retrieval of groups. Error: "+e);
+		}
+	},
+	
+	importGroups: function(current){
+		try{
+			this.logger.debug("Inside Nutanix_ImportUsers.importGroups");
+			var response = this.appUtil.makeCalmApiCall(current.method+'', current.payload+'', current.parameter+'');
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				//gs.error("Groups body :: "+response.getBody());
+				var parsedJSON = this.appUtil.parse(response.getBody());
+				var entities = parsedJSON.entities;
+				for(var i=0; i<entities.length; i++){
+					var entity = entities[i];
+					var userName = entity.status.resources.display_name+'';
+					var uuid = entity.metadata.uuid+'';
+					
+					var userGR = new GlideRecord('sys_user_group');
+					userGR.addQuery(gs.getProperty('x_nuta2_nutanix_ca.group.table.field.to.map')+'', userName);
+					userGR.query();
+					
+					if(userGR.next()){
+						//gs.error("Inside Groups body :: "+userGR.name);
+						userGR.x_nuta2_nutanix_ca_nutanix_group_uuid = uuid;
+						userGR.update();
+						
+						this._updateGroupWithRoles(userGR.sys_id+'', userGR.name+'');
+						
+					}
+				} 
+			}
+			else{
+				this.logger.debug("Nutanix_ImportUsers.importGroups:- Connection user_groups/list not established :- "+response.haveError()+" Status code :- "+response.getStatusCode());
+			}
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportUsers.importGroups:- Exception caught during retrieval of groups. Error:- "+e);
+			this.logger.error("Exception caught during retrieval of groups. Error :- "+e);
+		}
+	},
+	
+	_updateGroupWithRoles: function(groupSysID, groupName){
+		try{
+			this.logger.debug("Inside Nutanix_ImportUsers._updateGroupWithRoles.");		
+
+			var roles = this.endUserRoles;
+
+			for(var i=0; i<roles.length; i++){
+
+				var grd = new GlideRecord('sys_group_has_role');
+				grd.addQuery('group', groupSysID);
+				grd.addQuery('role', roles[i]);
+				grd.query();
+
+				if(!grd.hasNext()){
+					grd.group = groupSysID;
+					grd.role = roles[i];
+					grd.insert();
+				}
+			}
+
+			this.logger.info("Updated group " + groupName + " with Calm Plugin End Users roles.");
+		}catch(e){
+			this.logger.error("Exception caught inside Nutanix_ImportUsers._updateGroupWithRoles. Error:- "+e);
+		}
+	},
+	
+    type: 'Nutanix_ImportUsers'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-12-03 08:07:11</sys_created_on>
+        <sys_id>031dc0d33702a300fdfc097973990ee4</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>Nutanix_ImportUsers</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_031dc0d33702a300fdfc097973990ee4</sys_update_name>
+        <sys_updated_by>shivraj</sys_updated_by>
+        <sys_updated_on>2020-04-22 13:02:43</sys_updated_on>
+    </sys_script_include>
+</record_update>

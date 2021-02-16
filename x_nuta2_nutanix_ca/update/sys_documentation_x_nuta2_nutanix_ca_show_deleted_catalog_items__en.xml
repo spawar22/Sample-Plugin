@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="" label="Deleted Catalog Items" language="en" table="x_nuta2_nutanix_ca_show_deleted_catalog_items">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element/>
+            <help/>
+            <hint/>
+            <label>Deleted Catalog Items</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_show_deleted_catalog_items</name>
+            <plural>Deleted Catalog Items</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2019-06-14 14:33:28</sys_created_on>
+            <sys_id>9b22639ddb06b300cf390d53ca9619ad</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_name>Deleted Catalog Items</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_show_deleted_catalog_items__en</sys_update_name>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2019-06-14 14:35:57</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

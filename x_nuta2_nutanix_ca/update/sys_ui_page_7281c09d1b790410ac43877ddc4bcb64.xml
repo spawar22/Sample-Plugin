@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var $j = jQuery.noConflict();
+
+new GlideModal().get("dialog_loading").destroy();
+
+$j("input").click( function(){ $j(".error_body").html(''); } );
+
+$j('#snapshotSave').mousedown(validateForm);
+$j('#cancelAct').mousedown(cancelDialog);
+
+function cancelDialog() {
+	GlideModal.get().destroy();
+}
+
+function validateForm() {
+	if($j('#ami_name').val())
+		runAction();
+	else {
+		$j(".error_body").html('<div class="notification notification-danger">Snapshot name is required!</div>');
+	}
+}
+
+function runAction() {
+	
+	$j('#snapshotSave').prop("disabled", true);
+	$j('#cancelAct').prop("disabled", true);
+	
+	var snapshotName = $j('#ami_name').val();
+	var snapshotDescription = $j('#ami_description').val();
+	var reboot_check = $j("#reboot_check").is(":checked").toString();
+	
+	var actSysId = "${JS:sysparm_sysId}";
+	var modVarString = [{"name":"ami_name","value":snapshotName},{"name":"ami_description","value":snapshotDescription},{"name":"no_reboot","value":reboot_check}];
+	
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'runAction');
+	gajax.addParam('sysparm_actionsysid', actSysId+'');
+	gajax.addParam('sysparm_actionVars', JSON.stringify(modVarString));
+	gajax.getXML(getResponse);
+		
+	function getResponse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		g_form.addInfoMessage(answer);
+		GlideModal.get().destroy();
+	}
+}]]></client_script>
+        <description>Save AMIs for AWS instances</description>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Save_snapshot_aws.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	
+	<body>
+		<div class="error_body"></div>
+		<div>
+			<div class="form-group">
+				<div class="info-message" style="padding: 5px 16px; background-color: #e8f0fa; color: #5f96e3; position: relative;">An Amazon Machine Image(AMI) is created from the current VM.<p/>Ensure that the AMI name is unique.</div>
+				<label class="modal_label"><strong>AMI Name</strong></label>
+				<input type="text" class="form-control" name="ami_name" id="ami_name" placeholder="AMI Name" maxlength="64" value=""/>
+				<label class="modal_label"><strong>AMI Description</strong></label>
+				<input class="form-control" name="ami_description" id="ami_description" placeholder="AMI Description" value=""/>
+			</div>
+			<div class="form-group">
+				<span class="input-group-checkbox">
+					<input id="reboot_check" class="checkbox" type="checkbox"/>
+					<label for="reboot_check" class="checkbox-label"><strong>No Reboot</strong></label>
+				</span>
+			</div>
+		</div>
+		<div>AMI will be available under "AMIs".</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-sm-9 pull-right" style="width: max-content;">
+					<button class="btn btn-default" id="cancelAct">Cancel</button>
+					<button class="btn btn-primary" id="snapshotSave">Save</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<style>
+		.modal_label {
+		margin: 4px 30px 6px 0px;
+		}
+		input[type="radio"]  {
+			margin: 2px auto auto 0px;
+		}
+	</style>
+</j:jelly>]]></html>
+        <name>Save_snapshot_aws</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-12-17 08:12:36</sys_created_on>
+        <sys_id>7281c09d1b790410ac43877ddc4bcb64</sys_id>
+        <sys_mod_count>17</sys_mod_count>
+        <sys_name>Save_snapshot_aws</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_7281c09d1b790410ac43877ddc4bcb64</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-01-07 09:48:31</sys_updated_on>
+    </sys_ui_page>
+</record_update>

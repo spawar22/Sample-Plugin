@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_ImportBlueprints</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_ImportBlueprints</name>
+        <script><![CDATA[var Nutanix_ImportBlueprints = Class.create();
+Nutanix_ImportBlueprints.prototype = {
+	initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+		this.pageBreaker = 20;
+		
+		this.activeBP = [];
+	},
+	
+	_deactivateDeletedBPandcatalogs: function(){
+		
+		try{
+			this.logger.debug("Inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs");
+			
+			var queryString = 'state=ACTIVE';
+
+			for(var i in this.activeBP)
+				queryString += '^uuid!='+this.activeBP[i];
+
+			var inactiveBPSysID = [];
+			
+			var gr = new GlideRecord(this.appUtil.configuration.table.Blueprint+"");
+			gr.addEncodedQuery(queryString);
+			gr.query();		
+
+			while(gr.next()){
+				gr.state = 'INACTIVE';
+				inactiveBPSysID.push(gr.update());
+				this.logger.debug("Inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs Deactivated Blueprint "+gr.sys_id);
+			}
+			
+			var inactiveCatItems = [];
+
+			var catGr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig+'');
+			catGr.addEncodedQuery('state!=inactive^state!=deleted^blueprintIN' + inactiveBPSysID.toString());
+			catGr.query();
+			
+			while(catGr.next()){
+				
+				inactiveCatItems.push(catGr.item_name.name);
+				
+				catGr.state = 'inactive';
+				catGr.update();	
+				this.logger.debug("Inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs Deactivated catalog item "+catGr.item_name.name+" logic associated blueprint deactivated");
+			}
+			
+			this.logger.info("Deactivated " + catGr.getRowCount() + " catalog items (" + inactiveCatItems.toString() + ") as there Blueprint got into a Non-Active State.");
+		}catch(e){
+			this.logger.error("Exception caught inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs. Error :- "+e);
+		}		
+	},
+	
+	startImportBlueprints : function(){
+		try{
+			this.logger.debug("Inside Nutanix_ImportBlueprints.startImportBlueprints");
+			var body = {
+				"kind": "blueprint",
+				"offset": 0,
+				"length": 1,
+				"filter" : "state==ACTIVE"
+			};
+			var response = this.appUtil.makeCalmApiCall("POST", this.appUtil.configuration.api.getBlueprintList+"", this.appUtil.stringify(body));
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				
+				this.logger.info("Connection established to "+this.appUtil.configuration.api.getBlueprintList);
+				var parsed = this.appUtil.parse(response.getBody());
+				var records = parsed.metadata.total_matches;
+				var pages = parseInt(records/this.pageBreaker);
+				this.logger.debug("Number of Blueprint JSON pages "+(pages+1));
+				for(var i=0 , k=0 ; i <= pages; i++, k+=19) {
+					body = {
+						"kind": "blueprint",
+						"offset": i+k,
+						"length": this.pageBreaker,
+						"filter" : "state==ACTIVE"
+					};
+					this.logger.debug("Call number to importBlueprintData:"+(i+1) );
+					
+					//this.appUtil.insertIntoQueue("importBlueprintData", "POST", this.appUtil.stringify(body), this.appUtil.configuration.api.getBlueprintList+"", 'Import blueprint data', 'This process invokes the import of blueprint data.');
+					
+					var answer = {
+						"method": "POST",
+						"parameter": this.appUtil.stringify(body),
+						"payload": this.appUtil.configuration.api.getBlueprintList+""
+					};
+					
+					this.importBlueprintData(answer);
+				}
+				this.logger.info("Completed importing and processing of Blueprints.");
+				this._deactivateDeletedBPandcatalogs();				
+			}
+			else{
+				this.logger.debug("Nutanix_ImportBlueprints.startImportBlueprints :- Connection to blueprints/list not established :- "+response.haveError()+" Status code :- "+response.getStatusCode());
+			}
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportBlueprints.startImportBlueprints :- Exception caught during retrieval of blueprints. Error :- "+e);
+			this.logger.error("Exception caught during retrieval of blueprints. Error :- "+e);
+		}
+	},
+	
+	importBlueprintData: function(current){
+		try{
+			this.logger.debug("Inside Nutanix_ImportBlueprints.importBlueprintData");
+			var response = this.appUtil.makeCalmApiCall(current.method+'', current.payload+'', current.parameter+'');
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				var parsedJSON = this.appUtil.parse(response.getBody());
+				var entities = parsedJSON.entities;
+				this.logger.info("Number of imported Blueprint:"+entities.length);
+				for(var i=0; i<entities.length; i++){
+					var entity = entities[i];
+					var status = entity.status;
+					var uuid = status.uuid;
+					
+					//this.activeBP[uuid+''] = true;
+					this.activeBP.push(uuid+'');
+					
+					this.appUtil.insertIntoQueue("importBlueprintDataByUUID", "get", this.appUtil.stringify(entity)+'', this.appUtil.configuration.api.getBlueprintDetail+''+uuid, 'Import Detailed Blueprint Data', 'This process invokes the import of blueprint data by UUID.');
+				}
+			}
+			else{
+				this.logger.debug("Nutanix_ImportBlueprints.importBlueprintData :- Connection to blueprints/list not established :- "+response.haveError()+" Status code :- "+response.getStatusCode());
+			}
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportBlueprints.importBlueprintData :- Exception caught during retrieval of blueprints. Error :- "+e);
+			this.logger.error("Exception caught during retrieval of blueprints. Error :- "+e);
+		}
+	},
+	
+	importBlueprintDataByUUID: function( current ){
+		
+		try{
+			this.logger.debug("Inside Nutanix_ImportBlueprints.importBlueprintData");
+		
+			var response = this.appUtil.makeCalmApiCall("get", current.payload+'', "");
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				this.appUtil.insertIntoQueue("processImportBlueprintData", "", response.getBody(), current.parameter, 'Process blueprint data', 'This job processes the imported blueprint data.');
+			}else{
+				this.logger.debug("Error while retrieving Blueprints  " + this.appUtil.configuration.api.getBlueprintDetail+uuid + " :"+response.getBody());
+				this.logger.error("Error while retrieving Blueprints  " + this.appUtil.configuration.api.getBlueprintDetail+uuid);
+				return response.getStatusCode();
+			}
+			
+		}catch(e){
+			this.logger.debug("Nutanix_ImportBlueprints.importBlueprintData :- Exception caught during retrieval of blueprints. Error :- "+e);
+			this.logger.error("Exception caught during retrieval of blueprints. Error :- "+e);
+		}		
+	},
+	
+	processImportBlueprintData: function(current){
+		try{
+			this.logger.debug("Inside Nutanix_ImportBlueprints.processImportBlueprintData");
+			var insertData = new GlideRecord(this.appUtil.configuration.table.stagingBlueprints+"");
+			var entity = this.appUtil.parse(current.payload);//containing BP list JSON
+			var parsed = this.appUtil.parse(current.parameter);//containing BP UUID JSON
+			var status = entity.status;
+			var metadata = entity.metadata;
+			insertData.initialize();
+			var field;
+			//To insert status data
+			for(var key in status){
+				field = status[key];
+				//	if( key!='resources')
+				insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+			}
+			//To insert metadata
+			for(var key in metadata){
+				field = metadata[key];
+				if(key == 'categories') {
+					insertData.template_type = (field.TemplateType == "Vm") ? "Single Vm" : "Multi Vm/Pod"; //field.TemplateType+'';
+				}
+				else {
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+				}
+			}
+			var field=parsed.status.is_cloned;
+			insertData['is_cloned'] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+			var resources = parsed.status.resources;
+			for(var key in resources){
+				var field = resources[key];
+				insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+			}
+			insertData.insert();
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportBlueprints.processImportBlueprintData :- Exception caught during processing of blueprint. Error :- "+e);
+			this.logger.error("Exception caught during processing of blueprint. Error :- "+e);
+		}
+	},
+	
+	
+	
+	/*createUserCriteria: function(current){
+	
+		try{
+			
+			var parsed = JSON.parse(current.payload+'');
+			
+			var blueprint = parsed.sys_id+'';
+			var blueprint_name = parsed.name+'';
+			
+			var assignCriteria = new GlideRecord('sc_cat_item_user_criteria_mtom');
+			assignCriteria.addQuery('sc_cat_item', blueprint);
+			assignCriteria.query();
+			
+			if(assignCriteria.next()){
+				var user_criteria = assignCriteria.user_criteria.getRefRecord();
+				
+				var name = user_criteria.name+'';
+				
+				if(name.indexOf('Nutanix')>-1){
+					user_criteria.name = "Nutanix_"+blueprint_name+"_Entitlement";
+					user_criteria.active = true;
+					user_criteria.advanced = true;
+					user_criteria.match_all = false;
+					user_criteria.script = "answer = false;";//checkEntitlement('"+blueprint+"');function checkEntitlement(sysId) { var a = new x_nuta2_nutanix_ca.Nutanix_EntitlementUtil();var c = a.checkEntitlementServices(sysId); return c;}";
+
+					user_criteria.update();
+				}
+		
+			}else{
+				
+				var user_criteria = new GlideRecord('user_criteria');
+				user_criteria.initialize();
+				//user_criteria.user = users;
+				
+				user_criteria.name = "Nutanix_"+blueprint_name+"_Entitlement";
+				user_criteria.active = true;
+				user_criteria.advanced = true;
+				user_criteria.match_all = false;
+				user_criteria.script = "answer = false;";//checkEntitlement('"+blueprint+"');function checkEntitlement(sysId) { var a = new x_nuta2_nutanix_ca.Nutanix_EntitlementUtil();var c = a.checkEntitlementServices(sysId); return c;}";
+				
+				var sys_id = user_criteria.insert();
+
+				assignCriteria.initialize();
+				assignCriteria.sc_cat_item = blueprint;
+				assignCriteria.user_criteria = sys_id;
+				assignCriteria.insert();
+			}	
+		}catch(e){
+			gs.error(e);
+		}
+		
+	},*/
+	
+	type: 'Nutanix_ImportBlueprints'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-14 13:00:15</sys_created_on>
+        <sys_id>66e0f30737c56300fdfc097973990e01</sys_id>
+        <sys_mod_count>57</sys_mod_count>
+        <sys_name>Nutanix_ImportBlueprints</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_66e0f30737c56300fdfc097973990e01</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-16 09:21:22</sys_updated_on>
+    </sys_script_include>
+</record_update>

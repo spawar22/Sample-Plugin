@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="user_reference_list" label="User Reference List" language="en" table="x_nuta2_nutanix_ca_nutanix_staging_project">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>user_reference_list</element>
+            <help/>
+            <hint/>
+            <label>User Reference List</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_staging_project</name>
+            <plural>User Reference Lists</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-10-10 06:06:20</sys_created_on>
+            <sys_id>2e6d6575db01230084249235ca961992</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>User Reference List</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_nutanix_staging_project_user_reference_list_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-10-10 06:06:20</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

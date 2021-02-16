@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="sys_import_set_row" label="Nutanix Staging Application" max_length="40" name="x_nuta2_nutanix_ca_nutanix_staging_application" type="collection">
+        <element label="Action_List" max_length="4000" name="action_list" type="string"/>
+        <element label="Applicatoin Created By" max_length="100" name="applicatoin_created_by" type="string"/>
+        <element label="App_Blueprint_Config_Reference" max_length="4000" name="app_blueprint_config_reference" type="string"/>
+        <element label="App_Blueprint_Reference" max_length="4000" name="app_blueprint_reference" type="string"/>
+        <element label="App Metadata" max_length="8000" name="app_metadata" type="string"/>
+        <element label="App_Profile_Config_Reference" max_length="4000" name="app_profile_config_reference" type="string"/>
+        <element label="Client_Attrs" max_length="4000" name="client_attrs" type="string"/>
+        <element label="Cloned from Reference" max_length="1200" name="cloned_from_reference" type="string"/>
+        <element label="creation_time" max_length="100" name="creation_time" type="string"/>
+        <element label="Credential_List" max_length="4000" name="credential_list" type="string"/>
+        <element label="Dependency_List" max_length="4000" name="dependency_list" type="string"/>
+        <element label="Deployment_List" max_length="4000" name="deployment_list" type="string"/>
+        <element label="Description" max_length="4000" name="description" type="string"/>
+        <element label="kind" max_length="100" name="kind" type="string"/>
+        <element label="last_update_time" max_length="100" name="last_update_time" type="string"/>
+        <element label="name" max_length="100" name="name" type="string"/>
+        <element label="Owner_Reference" max_length="4000" name="owner_reference" type="string"/>
+        <element label="Project_Reference" max_length="4000" name="project_reference" type="string"/>
+        <element label="source_marketplace_name" max_length="100" name="source_marketplace_name" type="string"/>
+        <element label="source_marketplace_version" max_length="100" name="source_marketplace_version" type="string"/>
+        <element label="state" max_length="100" name="state" type="string"/>
+        <element label="uuid" max_length="100" name="uuid" type="string"/>
+        <element label="Variable_List" max_length="4000" name="variable_list" type="string"/>
+    </element>
+</database>

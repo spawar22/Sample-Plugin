@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var $j = jQuery.noConflict();
+
+$j("textarea#snapshot_description").val("");
+
+new GlideModal().get("dialog_loading").destroy();
+
+$j("input").click( function(){ $j(".error_body").html(''); } );
+
+$j(".vmware_snap_services").change(function() {
+	$j(".vmware_snap_services").not(this).prop('checked', false);
+});
+
+$j('#snapshotSave').mousedown(validateForm);
+$j('#cancelAct').mousedown(cancelDialog);
+
+function cancelDialog() {
+	GlideModal.get().destroy();
+}
+
+function validateForm() {
+	if($j('#snapshot_name').val())
+		runAction();
+	else {
+		$j(".error_body").html('<div class="notification notification-danger">Snapshot name is required!</div>');
+	}
+}
+
+function runAction() {
+	
+	$j('#snapshotSave').prop("disabled", true);
+	$j('#cancelAct').prop("disabled", true);
+	
+	var snapshotName = $j('#snapshot_name').val();
+	var snapshotDescription = $j('#snapshot_description').val();
+	var vm_memory_snapshot_enabled = $j("#vm_memory_snapshot_enabled").is(":checked").toString();
+	var snapshot_quiesce_enabled = $j("#snapshot_quiesce_enabled").is(":checked").toString();
+	
+	var actSysId = "${JS:sysparm_sysId}";
+	var modVarString = [{"name":"snapshot_name","value":snapshotName},{"name":"snapshot_description","value":snapshotDescription},{"name":"vm_memory_snapshot_enabled","value":vm_memory_snapshot_enabled},{"name":"snapshot_quiesce_enabled","value":snapshot_quiesce_enabled}];
+	
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'runAction');
+	gajax.addParam('sysparm_actionsysid', actSysId+'');
+	gajax.addParam('sysparm_actionVars', JSON.stringify(modVarString));
+	gajax.getXML(getResponse);
+		
+	function getResponse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		g_form.addInfoMessage(answer);
+		GlideModal.get().destroy();
+	}
+}]]></client_script>
+        <description>VMWare Snapshot page</description>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Save_snapshot_vmware.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	
+	<body>
+		<div class="error_body"></div>
+		<div>
+			<div class="form-group">
+				<label class="modal_label"><strong>Snapshot Name</strong></label>
+				<input type="text" class="form-control" name="snapshot_name" id="snapshot_name" placeholder="Snapshot Name" maxlength="64" value=""/>
+				<label class="modal_label"><strong>Snapshot Description</strong></label>
+				<textarea class="form-control" name="snapshot_description" id="snapshot_description" placeholder="Snapshot Description" value=""/>
+			</div>
+			<div class="form-group">
+				<div class="info-message" style="padding: 5px 16px; background-color: #e8f0fa; color: #5f96e3; position: relative; margin: 5px 0px;">Only one of the below options can be true</div>
+				<span class="input-group-checkbox">
+					<input id="vm_memory_snapshot_enabled" class="checkbox vmware_snap_services" type="checkbox" checked=""/>
+					<label for="vm_memory_snapshot_enabled" class="checkbox-label">Snapshot VM's Memory</label>
+				</span>
+				<span class="input-group-checkbox">
+					<input id="snapshot_quiesce_enabled" class="checkbox vmware_snap_services" type="checkbox"/>
+					<label for="snapshot_quiesce_enabled" class="checkbox-label">Enable Snapshot Quiesce</label>
+				</span>
+			</div>
+		</div>
+		<div>Your snapshots will be available in the "Recovery Points" tab.</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-sm-9 pull-right" style="width: max-content;">
+					<button class="btn btn-default" id="cancelAct">Cancel</button>
+					<button class="btn btn-primary" id="snapshotSave">Save</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<style>
+		.modal_label {
+		margin: 4px 30px 6px 0px;
+		}
+		input[type="radio"]  {
+			margin: 2px auto auto 0px;
+		}
+	</style>
+</j:jelly>]]></html>
+        <name>Save_snapshot_vmware</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-12-16 11:13:50</sys_created_on>
+        <sys_id>52526b781b7dc010ac43877ddc4bcb88</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>Save_snapshot_vmware</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_52526b781b7dc010ac43877ddc4bcb88</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-01-28 11:11:29</sys_updated_on>
+    </sys_ui_page>
+</record_update>

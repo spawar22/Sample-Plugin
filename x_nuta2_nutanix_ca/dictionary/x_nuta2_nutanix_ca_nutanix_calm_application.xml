@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="cmdb_ci_appl" label="Applications" max_length="40" name="x_nuta2_nutanix_ca_nutanix_calm_application" type="collection">
+        <element label="Action Flag" max_length="40" name="action_flag" type="string"/>
+        <element label="Application Type" max_length="120" name="application_type" type="string"/>
+        <element label="Application Created By" max_length="32" name="applicatoin_created_by" type="string"/>
+        <element label="Blueprint Name" max_length="100" name="blueprint_name" type="string"/>
+        <element label="Blueprint UUID" max_length="100" name="blueprint_uuid" type="string"/>
+        <element label="Cloned From" max_length="60" name="cloned_from" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Creation Time" max_length="50" name="creation_time" type="glide_date_time"/>
+        <element attributes="edge_encryption_enabled=true" label="Description" max_length="8000" name="description_html" type="translated_html"/>
+        <element label="Kind" max_length="50" name="kind" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Last Update Time" max_length="100" name="last_update_time" type="glide_date_time"/>
+        <element label="NGT State" max_length="50" name="ngt_state" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="IP Address" max_length="4000" name="nutanix_ip_address" type="simple_name_values"/>
+        <element attributes="edge_encryption_enabled=true" label="Owner Reference" max_length="32" name="owner_reference" reference="sys_user" type="reference"/>
+        <element label="Project UUID" max_length="100" name="project_uuid" type="string"/>
+        <element label="Services Enabled" max_length="128" name="services_enabled" type="string"/>
+        <element label="Source Marketplace Name" max_length="50" name="source_marketplace_name" type="string"/>
+        <element label="Source Marketplace Version" max_length="50" name="source_marketplace_version" type="string"/>
+        <element label="Application State" max_length="50" name="state" type="string"/>
+        <element label="UUID" max_length="100" name="uuid" type="string"/>
+    </element>
+</database>

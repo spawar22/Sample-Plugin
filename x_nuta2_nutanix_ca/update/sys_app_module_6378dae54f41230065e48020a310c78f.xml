@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_app_module">
+    <sys_app_module action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <application display_value="Nutanix Calm">7776fd254f452b001200e5201310c714</application>
+        <assessment/>
+        <device_type/>
+        <filter/>
+        <hint/>
+        <homepage/>
+        <image/>
+        <link_type>DIRECT</link_type>
+        <map_page/>
+        <mobile_title>Support</mobile_title>
+        <mobile_view_name>Mobile</mobile_view_name>
+        <name/>
+        <order>720</order>
+        <override_menu_roles>false</override_menu_roles>
+        <query>x_nuta2_nutanix_ca_Calm_Support_Page.do</query>
+        <report/>
+        <roles>x_nuta2_nutanix_ca.user</roles>
+        <sys_class_name>sys_app_module</sys_class_name>
+        <sys_created_by>nitin</sys_created_by>
+        <sys_created_on>2018-10-09 14:36:28</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>6378dae54f41230065e48020a310c78f</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>Contact Support</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_app_module_6378dae54f41230065e48020a310c78f</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-11-24 11:07:54</sys_updated_on>
+        <timeline_page/>
+        <title>Contact Support</title>
+        <uncancelable>false</uncancelable>
+        <view_name/>
+        <window_name/>
+    </sys_app_module>
+</record_update>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section caption="" section_id="eb2550dc37e16300fdfc097973990ef6" sys_domain="global" table="x_nuta2_nutanix_ca_catalog_variables_properties" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>x_nuta2_nutanix_ca_Nutanix_logo_on_config.xml</element>
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>f80642dd2fd694102dda57892799b647</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter display_value="Catalog Variables Properties">bf7ec83337356700fdfc097973990e09</sys_ui_formatter>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type>formatter</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.begin_split</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>340642dd2fd694102dda57892799b648</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type>.begin_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>variable</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>b40642dd2fd694102dda57892799b648</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>catalog_item</element>
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>380642dd2fd694102dda57892799b648</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>category_name</element>
+            <position>4</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>b80642dd2fd694102dda57892799b648</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>application_profile</element>
+            <position>5</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>3c0642dd2fd694102dda57892799b648</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>6</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>bc0642dd2fd694102dda57892799b648</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>uuid</element>
+            <position>7</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>300642dd2fd694102dda57892799b649</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>default_value</element>
+            <position>8</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>b00642dd2fd694102dda57892799b649</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>isprofilevariable</element>
+            <position>9</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>340642dd2fd694102dda57892799b649</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>service_name</element>
+            <position>10</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>b40642dd2fd694102dda57892799b649</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>runtime_config</element>
+            <position>11</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-07-28 10:28:48</sys_created_on>
+            <sys_id>380642dd2fd694102dda57892799b649</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-07-28 10:28:48</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>dependencies</element>
+            <position>12</position>
+            <sys_created_by>bharat</sys_created_by>
+            <sys_created_on>2020-08-11 04:21:57</sys_created_on>
+            <sys_id>af4870352faa90502dda57892799b665</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_catalog_variables_properties" sys_domain="global" view="Default view">eb2550dc37e16300fdfc097973990ef6</sys_ui_section>
+            <sys_updated_by>bharat</sys_updated_by>
+            <sys_updated_on>2020-08-11 04:21:57</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption/>
+            <header>false</header>
+            <name>x_nuta2_nutanix_ca_catalog_variables_properties</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-10-30 04:21:22</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>eb2550dc37e16300fdfc097973990ef6</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_nuta2_nutanix_ca_catalog_variables_properties</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_section_eb2550dc37e16300fdfc097973990ef6</sys_update_name>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-10-30 04:21:22</sys_updated_on>
+            <sys_user/>
+            <title>true</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

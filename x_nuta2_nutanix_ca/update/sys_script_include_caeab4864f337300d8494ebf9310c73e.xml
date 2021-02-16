@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Migration_Script</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description/>
+        <name>Migration_Script</name>
+        <script><![CDATA[var Migration_Script = Class.create();
+Migration_Script.prototype = {
+
+    initialize: function() {
+        this.appUtil = new Nutanix_Calm_Utils();
+        this.logger = new Nutanix_Calm_Logger();
+        this.createVariable = new Nutanix_CreateCatalogVariables();
+        this.appScriptInstance = new Nutanix_ImportApplicationProfiles();
+    },
+
+    isMigrationNeeded: function() {
+        var cat_items = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+        cat_items.addEncodedQuery('multiple_application_profileISEMPTY^multiple_projectsISEMPTY^state=active^ORstate=draft');
+        cat_items.query();
+        if (cat_items.hasNext()) {
+            this.logger.info("Migration to V 1_4 require");
+            return true;
+        }
+        this.logger.info("Migration to V 1_4 not require");
+        return false;
+    },
+
+    updateCatalog: function() {
+        this.logger.info("Migration to V1_4 Started");
+
+        gs.setProperty('x_nuta2_nutanix_ca.migration.script.ran', 'true');
+		
+        this.catalogItem_1_4();
+        var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+        gr.query();
+        while (gr.next()) {
+            try {
+                this.clientScript_1_4(gr.item_name);
+                this.logger.info(gr.item_name.name + " Catalog client script succesfully migrated.");
+            } catch (e) {
+                this.logger.error(gr.item_name.name + " Catalog Item was not migrated due to issue in catalog client script.");
+            }
+        }
+    },
+
+
+    clientScript_1_4: function(catSysId) {
+        var catalogScriptGR = new GlideRecord(this.appUtil.configuration.table.catalogClientScript + '');
+        catalogScriptGR.addQuery('cat_item', catSysId);
+        catalogScriptGR.query();
+        this.logger.info("ctalog client Script " + catalogScriptGR.getRowCount() + "to be updatated");
+        while (catalogScriptGR.next()) {
+            this.logger.info(catalogScriptGR.name + "catalog client script updatated");
+            if (catalogScriptGR.name + '' == "Fetch form data on change of profile") {
+                this.logger.info("If " + catalogScriptGR.name + "catalog client script updatated");
+				var catalogClientScript = new sn_sc.CatalogClientScript();
+				catalogClientScript.deleteRecord(catalogScriptGR.sys_id);
+
+            }
+            if (catalogScriptGR.name + '' == "Get Project and Profile List onLoad") {
+                this.logger.info("If " + catalogScriptGR.name + "catalog client script updatated");
+				var catalogClientScript = new sn_sc.CatalogClientScript();
+				catalogClientScript.deleteRecord(catalogScriptGR.sys_id);
+            }
+            if (catalogScriptGR.name + '' == "Hide Order details on request") {
+                this.logger.info("If " + catalogScriptGR.name + "catalog client script updatated");
+				var catalogClientScript = new sn_sc.CatalogClientScript();
+				catalogClientScript.deleteRecord(catalogScriptGR.sys_id);
+            }
+			if (catalogScriptGR.name + '' == "Get Subnet Info"){
+				this.logger.info("If " + catalogScriptGR.name + "catalog client script updatated");
+				var catalogClientScript = new sn_sc.CatalogClientScript();
+				catalogClientScript.deleteRecord(catalogScriptGR.sys_id);
+			}
+			if (catalogScriptGR.name + '' == "Get Subnet Info on project change"){
+				this.logger.info("If " + catalogScriptGR.name + "catalog client script updatated");
+				var catalogClientScript = new sn_sc.CatalogClientScript();
+				catalogClientScript.deleteRecord(catalogScriptGR.sys_id);
+			}
+			if (catalogScriptGR.name + '' == "Check Catalog Item Validity"){
+				this.logger.info("If " + catalogScriptGR.name + "catalog client script updatated");
+				var catalogClientScript = new sn_sc.CatalogClientScript();
+				catalogClientScript.deleteRecord(catalogScriptGR.sys_id);
+			}
+
+        }
+        var profileSysID = new GlideRecord('item_option_new');
+        profileSysID.addEncodedQuery('cat_item=' + catSysId + '^nameLIKEdefault_profile');
+        profileSysID.query();
+        profileSysID.next();
+        var catalogScriptGR = new sn_sc.CatalogClientScript();
+        catalogScriptGR.setAttributes({
+            "name": "Fetch form data on change of profile",
+            "type": "onChange",
+            "applies_to": "item",
+            "cat_item": "" + catSysId,
+            "cat_variable": "IO:" + profileSysID.sys_id,
+            "active": true,
+            "order": 100,
+            "description": 'This script is auto created thorugh runtime module for fetching and setting form data and visibility.',
+            "applies_catalog": true,
+            "ui_type": "0",
+            "applies_req_item": false,
+            "applies_sc_task": false,
+			"sys_scope" : "global"
+        });
+        catalogScriptGR.appliesToCatalogItem(true);
+        var Script = "function onChange(control, oldValue, newValue, isLoading) {if (newValue == '') {return;} var loadingHTML=\"<div class=\'loading-container\'><div class=\'loading-indicator icon-loading icon-lg\'></div></div>\"; var loadingDialogbox = new GlideModal('loader', true);loadingDialogbox.setTitle('Fetching Order Form Data...'); loadingDialogbox.renderWithContent(''+loadingHTML);var fldType = {};var elemen = g_form.elements;for (var i in elemen) { fldType[elemen[i].fieldName + ''] = elemen[i].type + '';}var flds = g_form.nameMap;for (var i in flds) {if (fldType[flds[i].realName + ''] + '' == 'formatter' || fldType[flds[i].realName + ''] + '' == 'container' || fldType[flds[i].realName + ''] + '' == 'checkbox_container' || fldType[flds[i].realName + ''] + '' == 'undefined') {continue;} g_form.setDisplay(flds[i].prettyName, false);}g_form.setVariablesReadOnly(true);g_form.setDisplay('provider_icons', 'false');g_form.setReadOnly('default_project', false);g_form.setReadOnly('default_app_name', false);g_form.setReadOnly('default_profile', false);g_form.setDisplay('default_project', true);g_form.setDisplay('default_app_name', true);g_form.setDisplay('default_profile', true);var profile = newValue;var cat_sys_id = g_form.getUniqueValue();var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');ga.addParam('sysparm_name', 'fetchOrderFormData');ga.addParam('sysparm_profile', profile);ga.addParam('sysparm_catSysID', cat_sys_id);ga.getXML(parseResponse, null, loadingDialogbox);function parseResponse(response, loadingDialog) { var answer = response.responseXML.documentElement.getAttribute('answer');   var fldType = {}; var elemen = g_form.elements; for (var i in elemen) { fldType[elemen[i].fieldName + ''] = elemen[i].type + ''; }  var nameTypeMap = {}; var flds = g_form.nameMap; for(var i in flds){ nameTypeMap[flds[i].prettyName+''] = fldType[flds[i].realName+'']+''; } 		  var fielVal = {};  var parsed = JSON.parse(answer);for (var i in parsed) {if(i.indexOf('cluster_name') == -1){ if(nameTypeMap[i+'']+'' == 'masked'){ fielVal[i] = parsed[i].value; g_form.setValue(i + '', ''); } else{ g_form.setValue(i + '', parsed[i].value + ''); }			 g_form.setReadOnly(i + '', parsed[i].readOnly + ''); g_form.setDisplay(i + '', !parsed[i].readOnly);	 }else{ g_form.setDisplay(i + '', !parsed[i].readOnly);	 g_form.setReadOnly(i + '', true);	 			}		}   sessionStorage['fieldValues_' + g_form.getUniqueValue()] = JSON.stringify(fielVal);		  new GlideModal().get('loader').destroy();}} var cat_sys_id = g_form.getUniqueValue();	var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge'); ga.addParam('sysparm_name', 'fetchProjectAndProfileList');ga.addParam('sysparm_catSysID', cat_sys_id);ga.getXML(parseResponse); function parseResponse(response) { var answer = response.responseXML.documentElement.getAttribute('answer'); var parsed = JSON.parse(answer); var projectList = parsed.projectList; if (projectList.length == 1) { g_form.setReadOnly('default_project', true);}}";
+        catalogScriptGR.addScript(Script);
+        var ScriptId = catalogScriptGR.create();
+		this.logger.info("V1.4 migration, "+catSysId+" \'Fetch form data on change of profile\' catalog client script created.");
+		var gr = new GlideRecord('catalog_script_client');
+		if(gr.get(ScriptId)){
+			gr.setValue("sys_scope" ,"global");
+			gr.update();
+		}
+
+
+        var onLoadCatalogClientScript = new sn_sc.CatalogClientScript();
+				onLoadCatalogClientScript.setAttributes({
+					 "name":"Get Project and Profile List onLoad",
+				     "type":"onLoad",
+				     "applies_to":"item",
+				     "cat_item":''+catSysId,
+				     "active":"true",
+				     "order":"100",
+				     "description":"This script is auto created thorugh runtime module for getting projects and profile list.",
+				     "applies_catalog":"true",
+				     "ui_type":"0",
+					 "applies_req_item":false,
+				     "applies_sc_task":false,
+					 "sys_scope" : "global"
+				});
+                onLoadCatalogClientScript.appliesToCatalogItem(true);
+				var onLoadScript = "function onLoad() { var loadingHTML=\"<div class=\'loading-container\'><div class=\'loading-indicator icon-loading icon-lg\'></div></div>\"; var loadingDialog = new GlideModal('loader', true); loadingDialog.setTitle('Fetching Project And Profile'); loadingDialog.renderWithContent(''+loadingHTML); var cat_sys_id = g_form.getUniqueValue(); var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge'); ga.addParam('sysparm_name', 'fetchProjectAndProfileList'); ga.addParam('sysparm_catSysID', cat_sys_id); ga.getXML(parseResponse, null , loadingDialog); function parseResponse(response, loadingDialog) { var answer = response.responseXML.documentElement.getAttribute('answer'); var parsed = JSON.parse(answer);var projectList = parsed.projectList; g_form.clearOptions('default_project');for (var i = 0; i < projectList.length; i++) { var project = projectList[i]; g_form.addOption('default_project', project.uuid, project.name);}var profileList = parsed.profileList.split(','); g_form.clearOptions('default_profile'); for (i = 0; i < profileList.length; i++) { g_form.addOption('default_profile', profileList[i] + '', profileList[i] + ''); } g_form.setValue('default_profile', profileList[0]);if (projectList.length == 1) { g_form.setReadOnly('default_project', true);} if (profileList.length == 1) { g_form.setReadOnly('default_profile', true);} new GlideModal().get('loader').destroy();var loadingHTML=\"<div class=\'loading-container\'><div class=\'loading-indicator icon-loading icon-lg\'></div></div>\";var loadingDialog = new GlideModal('loader', true); loadingDialog.setTitle('Fetching variables...'); loadingDialog.renderWithContent(''+loadingHTML);var cat_sys_id = g_form.getUniqueValue();var profile = g_form.getValue('default_profile').trim(); var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');ga.addParam('sysparm_name', 'fetchLaunchVars');ga.addParam('sysparm_catsysid', cat_sys_id);ga.addParam('sysparm_profile', profile);ga.getXML(varResponse, null, loadingDialog);}function varResponse(response, loadingDialog) {var answer = response.responseXML.documentElement.getAttribute('answer');var varJSON = JSON.parse(answer);var prof_json = varJSON.profile;var serv_json = varJSON.service; var sess_json = {};var var_array = [];for (var i in prof_json) {var field = prof_json[i];var curr_value = g_form.getValue('IO:' + i);var parsed_field = JSON.parse(field);parsed_field.value = curr_value;parsed_field.sys_id = i + '';sess_json['IO:'+i] = curr_value;var_array.push(parsed_field);}getAdvancedVars(var_array);for (var j in serv_json) {var_array = [];for (var k in serv_json[j]) {var field = serv_json[j][k];var curr_value = g_form.getValue('IO:' + k);var parsed_field = JSON.parse(field);parsed_field.value = curr_value;parsed_field.sys_id = k + '';sess_json['IO:'+k] = curr_value;var_array.push(parsed_field);}getAdvancedVars(var_array);}sessionStorage['varValues'] = JSON.stringify(sess_json);}}function getAdvancedVars(variable_json) {var act_var_JSON = JSON.stringify(variable_json);var gajax = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');gajax.addParam('sysparm_name', 'variableArrayParser');gajax.addParam('sysparm_type', 'catalog');gajax.addParam('sysparm_parentUuid', g_form.getUniqueValue() + '');gajax.addParam('sysparm_varJson', act_var_JSON);gajax.getXML(getVarResponse);}function getVarResponse(response) {var answer = response.responseXML.documentElement.getAttribute('answer');if (answer + '' == '' || answer + '' == 'undeined' || answer + '' == 'null')return;var parsedResponse = JSON.parse(answer);for (var i in parsedResponse) {var row = parsedResponse[i];var sys_id = 'IO:' + row.sys_id;var type = row.type + '';if (row.state == 'SUCCESS') {if(type == 'LOCAL')g_form.setValue(sys_id, row.value);if (type == 'EXEC_LOCAL' || type == 'HTTP_LOCAL' || type == 'EXEC_SECRET' || type == 'HTTP_SECRET') {g_form.clearOptions(sys_id);for (var k = 0; k < (row.value).length; k++) {g_form.addOption(sys_id + '', row.value[k], row.value[k]);}}}if (row.state == 'ERROR') {g_form.addErrorMessage('Error in variable: ' + row.name + ': ' + row.error[0]);}}}";
+                onLoadCatalogClientScript.addScript(onLoadScript);
+                var onLoadCatalogClientScriptId = onLoadCatalogClientScript.create();
+				this.logger.info("V1.4 migration, "+catSysId+" \'Get Project and Profile List onLoad\' catalog client script created.");
+				var gr = new GlideRecord('catalog_script_client');
+				if(gr.get(onLoadCatalogClientScriptId)){
+					gr.setValue("sys_scope" ,"global");
+					gr.update();
+				}
+
+        var onLoadCatalogClientScriptGR = new sn_sc.CatalogClientScript();
+        onLoadCatalogClientScriptGR.setAttributes({
+            "name": "Hide Order details on request",
+            "type": "onLoad",
+            "applies_to": "item",
+            "cat_item": '' + catSysId,
+            "active": true,
+            "order": 10,
+            "description": "Hide values on request details.",
+            "applies_catalog": "false",
+            "ui_type": "0",
+            "applies_req_item": "true",
+            "applies_sc_task": "false",
+			"sys_scope" : "global"
+        });
+        onLoadCatalogClientScriptGR.appliesToCatalogItem(false);
+        onLoadCatalogClientScriptGR.appliesToRequestedItem(true);
+        var onLoadScriptHide = "function onLoad() {if(g_form.getTableName() + '' == 'sc_req_item') {var fldType = {};var elemen = g_form.elements;for (var i in elemen) {fldType[elemen[i].fieldName + ''] = elemen[i].type + '';}var flds = g_form.nameMap;for (var i in flds) {if (fldType[flds[i].realName + ''] + '' == 'formatter' || fldType[flds[i].realName + ''] + '' == 'container' || fldType[flds[i].realName + ''] + '' == 'checkbox_container' || fldType[flds[i].realName + ''] + '' == 'undefined') {continue;}g_form.setDisplay(flds[i].prettyName, false);}g_form.setVariablesReadOnly(true);g_form.setDisplay('provider_icons', 'false');g_form.setReadOnly('default_project', false);g_form.setReadOnly('default_app_name', false);g_form.setReadOnly('default_profile', false);g_form.setDisplay('default_project', true);g_form.setDisplay('default_app_name', true);g_form.setDisplay('default_profile', true);var profile = g_form.getValue('default_profile') + '';var cat_sys_id = g_form.getValue('cat_item') + '';var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');ga.addParam('sysparm_name', 'fetchOrderFormData');ga.addParam('sysparm_profile', profile + '');ga.addParam('sysparm_catSysID', cat_sys_id + '');ga.getXML(parseResponse);} function parseResponse(response) {var answer = response.responseXML.documentElement.getAttribute('answer');var fldType = {};var elemen = g_form.elements;for (var i in elemen) {fldType[elemen[i].fieldName + ''] = elemen[i].type + '';}var nameTypeMap = {};var flds = g_form.nameMap;for (var i in flds) {nameTypeMap[flds[i].prettyName + ''] = fldType[flds[i].realName + ''] + '';}var fielVal = {};var parsed = JSON.parse(answer);for (var i in parsed) {if (i.indexOf('cluster_name') == -1) {if (nameTypeMap[i + ''] + '' == 'masked') {fielVal[i] = parsed[i].value;g_form.setValue(i + '', '');} else {g_form.setValue(i + '', parsed[i].value + '');}g_form.setReadOnly(i + '', true); g_form.setDisplay(i + '', !parsed[i].readOnly);} else {g_form.setDisplay(i + '', !parsed[i].readOnly);g_form.setReadOnly(i + '', true);}}sessionStorage['fieldValues_' + g_form.getUniqueValue()] = JSON.stringify(fielVal);}}";
+        onLoadCatalogClientScriptGR.addScript(onLoadScriptHide);
+        var onLoadCatalogClientScriptId = onLoadCatalogClientScriptGR.create();
+        this.logger.info("V1.4 migration, "+catSysId+" \'Hide values on request details.\' catalog client script created.");
+		var gr = new GlideRecord('catalog_script_client');
+		if(gr.get(onLoadCatalogClientScriptId)){
+			gr.setValue("sys_scope" ,"global");
+			gr.update();
+		}
+
+        /*Insert new Scripts Get Subnet Info on project change*/
+        var oldGR = new GlideRecord('item_option_new');
+        oldGR.addEncodedQuery('cat_item=' + catSysId + '^nameLIKEdefault_project');
+        oldGR.query();
+        oldGR.next();
+        var onChangecatalogClientScript1 = new sn_sc.CatalogClientScript();
+        onChangecatalogClientScript1.setAttributes({
+            "name": "Get Subnet Info on project change",
+            "type": "onChange",
+            "applies_to": "item",
+            "cat_item": '' + catSysId,
+            "cat_variable": "IO:" + oldGR.sys_id,
+            "active": true,
+            "order": 600,
+            "description": "This script is auto created thorugh runtime module for checking application name on submit.",
+            "applies_catalog": true,
+            "ui_type": "0",
+            "applies_req_item": false,
+            "applies_sc_task": false,
+			"sys_scope" : "global"
+        });
+		  onChangecatalogClientScript1.appliesToCatalogItem(true);
+        var onChangeScript = "function onChange(control, oldValue, newValue, isLoading) { if (newValue == '') { return; }var clusterJSON = {}; var catalogSysId = g_form.getUniqueValue(); var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge'); ga.addParam('sysparm_name', 'getSubnet');ga.addParam('sysparm_catSysID', catalogSysId);ga.addParam('sysparm_ProjectUuid', newValue);ga.getXML(processAnswer);function processAnswer(response) {var ans = response.responseXML.documentElement.getAttribute('answer');sessionStorage['clusterName_' + g_form.getUniqueValue()] = ans;ans = JSON.parse(ans);var catalog_clusterJSON = ans.catalog_data;clusterJSON = ans.cluster_info;var nicList = [];for(var m in clusterJSON){nicList.push(clusterJSON[m].subnet);}for (var k in catalog_clusterJSON) {for (var i in catalog_clusterJSON[k].nics) {if (catalog_clusterJSON[k].value + '') {for (var l in clusterJSON) {var subnetList = clusterJSON[l].subnet;if (l != catalog_clusterJSON[k].value + '')for (var s in subnetList){ /*g_form.removeOption(catalog_clusterJSON[k].nics[i] + '', s);*/}}}{var opt = g_form.getElement(catalog_clusterJSON[k].nics[i] + '');for (var x=1, n = opt.options.length; x < n; x++) {var present = false;var val = opt.options[x].value+'';for(var s=0; s < nicList.length ;s++){if (nicList[s][val]) {present =true;break;}} if(!present){g_form.removeOption(catalog_clusterJSON[k].nics[i] + '', opt.options[x].value+''); x--;n--; } }} }}}}";
+        onChangecatalogClientScript1.addScript(onChangeScript);
+        var OnChangeCatalogScriptId = onChangecatalogClientScript1.create();
+		this.logger.info("V1.4 migration, "+catSysId+" \'Get Subnet Info on project change\' catalog client script created.");
+		var gr = new GlideRecord('catalog_script_client');
+		if(gr.get(OnChangeCatalogScriptId)){
+			gr.setValue("sys_scope" ,"global");
+			gr.update();
+		}
+		
+				var projectSysID = new GlideRecord('item_option_new');
+				projectSysID.addEncodedQuery('cat_item=' + catSysId + '^nameLIKEdefault_project');
+				projectSysID.query();
+				projectSysID.next();
+				var onLoadCatalogClientScript = new sn_sc.CatalogClientScript();
+				onLoadCatalogClientScript.setAttributes({
+				   "name" : "Check Catalog Item Validity project",
+				   "type" : "onChange",
+				   "applies_to" : "item",
+				   "cat_item" : ''+catSysId,
+				   "cat_variable":"IO:"+projectSysID,
+				   "active" : true,
+				   "order" : 1,
+				   "description" : 'This script is auto created thorugh runtime module for checking BP validity from which this catalog item was created.',
+				   "applies_catalog" : true,
+				   "ui_type" : "0",
+				   "applies_req_item" : false,
+				   "applies_sc_task" : false,
+				   "sys_scope" : "global"
+				});
+				onLoadCatalogClientScript.appliesToCatalogItem(true);
+				var onLoadScript =  "function onChange(control, oldValue, newValue, isLoading) {if (isLoading || newValue == '') { return;} var loadingHTML=\"<div class=\'loading-container\'><div class=\'loading-indicator icon-loading icon-lg\'></div></div>\"; var loadingDialog = new GlideModal('loader', true); loadingDialog.setTitle('Checking Blueprint Status...'); loadingDialog.renderWithContent(''+loadingHTML); var blueprintType = getParameterValue('type')+''; var blueprintUUID = getParameterValue('uuid')+''; var profileSysId = getParameterValue('profileSysId')+''; var profileName = (g_form.getValue('default_profile')+'').trim();if(profileName == '') return;var projectUUID = (newValue+'').trim();if(projectUUID == '')return; var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge'); ga.addParam('sysparm_name', 'checkCatalogValidity'); ga.addParam('blueprintType', blueprintType); ga.addParam('blueprintUUID', blueprintUUID); ga.addParam('profileSysId', profileSysId); ga.addParam('projectUUID', projectUUID); ga.addParam('profileName', profileName); ga.getXML(parseResponse, null, loadingDialog); function parseResponse(response, loadingDialog) { var answer = response.responseXML.documentElement.getAttribute('answer'); var message=''; if (answer + '' == 'INACTIVE') { message= 'Project/Profile/Blueprint/MPI is not available at Calm. So, Catalog Item can\\'t be launched. Re-Directing back to catalog launch page.'; clearFieldValue(message); } else if (answer + '' == 'CANTCHECK') { message='Can\\'t check whether the Project/Profile/BP/MPI from which the catalog item was created is available or not. Please check the connection with Calm. Re-Directing back to catalog launch page.'; clearFieldValue(message); } new GlideModal().get('loader').destroy(); }  function clearFieldValue(message){ var fldType = {}; var elemen = g_form.elements; for (var i in elemen) { fldType[elemen[i].fieldName + ''] = elemen[i].type + ''; } alert(message); var flds = g_form.nameMap; for (var i in flds) { if (fldType[flds[i].realName + ''] + '' == 'formatter' || fldType[flds[i].realName + ''] + '' == 'container' || fldType[flds[i].realName + ''] + '' == 'checkbox_container' || fldType[flds[i].realName + ''] + '' == 'undefined') { continue; }  if(flds[i].label == \"Project\"  && flds[i].prettyName == \"default_project\")continue;if(flds[i].label == \"Profile\"  && flds[i].prettyName == \"default_profile\")continue;if (flds[i].prettyName.indexOf('cluster_name') == -1) g_form.clearValue(flds[i].prettyName);/* self.location = '/x_nuta2_nutanix_ca_nutanix_runtime_configuration_list.do?sysparm_userpref_module=29d7d2e54f41230065e48020a310c7f6&sysparm_view=catalog_view&sysparm_query=GROUPBYitem_name.category&sysparm_clear_stack=true'; */			}	 }  function getParameterValue(name) {   name = name.replace(/[\\[]/, \"\\\\\\[\").replace(/[\\]]/, \"\\\\\\]\");   var regexS = \"[\\\\?&]\" + name + \"=([^&#]*)\";   var regex = new RegExp(regexS);   var results = regex.exec(self.location);   if (results == null) {   return \"\";   } else {   return unescape(results[1]);   }   } }";
+                onLoadCatalogClientScript.addScript(onLoadScript);
+                var onLoadCatalogClientScriptId = onLoadCatalogClientScript.create();
+				this.logger.info("V1.4 migration, "+catSysId+" \'Check Catalog Item Validity project\' catalog client script created.");
+				var gr = new GlideRecord('catalog_script_client');
+				if(gr.get(onLoadCatalogClientScriptId)){
+					gr.setValue("sys_scope" ,"global");
+					gr.update();
+				}
+
+				
+				var profileSysID = new GlideRecord('item_option_new');
+				profileSysID.addEncodedQuery('cat_item=' + catSysId + '^nameLIKEdefault_profile');
+				profileSysID.query();
+				profileSysID.next();
+				var onLoadCatalogClientScript = new sn_sc.CatalogClientScript();
+				onLoadCatalogClientScript.setAttributes({
+				   "name" : "Check Catalog Item Validity profile",
+				   "type" : "onChange",
+				   "applies_to" : "item",
+				   "cat_item" : ''+catSysId,
+				   "cat_variable":"IO:"+profileSysID.sys_id,
+				   "active" : true,
+				   "order" : 1,
+				   "description" : 'This script is auto created thorugh runtime module for checking BP validity from which this catalog item was created.',
+				   "applies_catalog" : true,
+				   "ui_type" : "0",
+				   "applies_req_item" : false,
+				   "applies_sc_task" : false,
+					"sys_scope" : "global"
+				});
+				onLoadCatalogClientScript.appliesToCatalogItem(true);
+				var onLoadScript =  "function onChange(control, oldValue, newValue, isLoading) {if (isLoading || newValue == '') { return;} var loadingHTML=\"<div class=\'loading-container\'><div class=\'loading-indicator icon-loading icon-lg\'></div></div>\"; var loadingDialog = new GlideModal('loader', true); loadingDialog.setTitle('Checking Blueprint Status...'); loadingDialog.renderWithContent(''+loadingHTML); var blueprintType = getParameterValue('type')+''; var blueprintUUID = getParameterValue('uuid')+''; var profileSysId = getParameterValue('profileSysId')+'';var profileName = (newValue+'').trim(); if(profileName == '') return; var projectUUID = (g_form.getValue('default_project')+'').trim(); if(projectUUID == '') return; var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge'); ga.addParam('sysparm_name', 'checkCatalogValidity'); ga.addParam('blueprintType', blueprintType); ga.addParam('blueprintUUID', blueprintUUID); ga.addParam('profileSysId', profileSysId); ga.addParam('projectUUID', projectUUID); ga.addParam('profileName', profileName);ga.getXML(parseResponse, null, loadingDialog); function parseResponse(response, loadingDialog) { var answer = response.responseXML.documentElement.getAttribute('answer'); var message=''; if (answer + '' == 'INACTIVE') { message= 'Project/Profile/Blueprint/MPI is not available at Calm. So, Catalog Item can\\'t be launched. Re-Directing back to catalog launch page.'; clearFieldValue(message); } else if (answer + '' == 'CANTCHECK') { message='Can\\'t check whether the Project/Profile/BP/MPI from which the catalog item was created is available or not. Please check the connection with Calm. Re-Directing back to catalog launch page.'; clearFieldValue(message); } new GlideModal().get('loader').destroy(); }  function clearFieldValue(message){ var fldType = {}; var elemen = g_form.elements; for (var i in elemen) { fldType[elemen[i].fieldName + ''] = elemen[i].type + ''; } alert(message); var flds = g_form.nameMap; for (var i in flds) { if (fldType[flds[i].realName + ''] + '' == 'formatter' || fldType[flds[i].realName + ''] + '' == 'container' || fldType[flds[i].realName + ''] + '' == 'checkbox_container' || fldType[flds[i].realName + ''] + '' == 'undefined') { continue; } if(flds[i].label == \"Project\"  && flds[i].prettyName == \"default_project\")continue;if(flds[i].label == \"Profile\"  && flds[i].prettyName == \"default_profile\")continue;if (flds[i].prettyName.indexOf('cluster_name') == -1) g_form.clearValue(flds[i].prettyName);/*	 self.location = '/x_nuta2_nutanix_ca_nutanix_runtime_configuration_list.do?sysparm_userpref_module=29d7d2e54f41230065e48020a310c7f6&sysparm_view=catalog_view&sysparm_query=GROUPBYitem_name.category&sysparm_clear_stack=true'; 	*/			 }}  function getParameterValue(name) {   name = name.replace(/[\\[]/, \"\\\\\\[\").replace(/[\\]]/, \"\\\\\\]\");   var regexS = \"[\\\\?&]\" + name + \"=([^&#]*)\";   var regex = new RegExp(regexS);   var results = regex.exec(self.location);   if (results == null) {   return \"\";   } else {   return unescape(results[1]);   }   } }";
+                onLoadCatalogClientScript.addScript(onLoadScript);
+                var onLoadCatalogClientScriptId = onLoadCatalogClientScript.create();
+				this.logger.info("V1.4 migration, "+catSysId+" \'Check Catalog Item Validity profile\' catalog client script created.");
+				var gr = new GlideRecord('catalog_script_client');
+				if(gr.get(onLoadCatalogClientScriptId)){
+					gr.setValue("sys_scope" ,"global");
+					gr.update();
+				}
+		
+		
+    },
+    catalogItem_1_4: function() {
+        var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+        gr.addEncodedQuery('multiple_application_profileISEMPTY^multiple_projectsISEMPTY^state=active^ORstate=draft');
+        gr.query();
+        while (gr.next()) {
+            try {
+                gr.multiple_projects = gr.project;
+                gr.multiple_application_profile = gr.application_profile;
+                gr.update();
+				this.logger.info("V1.4 migration, "+gr.item_name.name + " Catalog Item was migrated.");
+            } catch (e) {
+                this.logger.error("V1.4 migration, "+gr.item_name.name + " Catalog Item was not migrated due to issue in some field type and the value it contained.");
+            }
+        }
+    },
+	
+	copyFieldJson: function() {
+		
+		this.logger.info("V1.4 migration: Migrating old variables");
+		var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+		gr.addQuery("state", "active");
+		gr.query();
+		while(gr.next()) {
+			this._createOnChangeSessionScript(gr.item_name.sys_id);
+			var grVars = new GlideRecord('x_nuta2_nutanix_ca_catalog_variables_properties');
+			grVars.addEncodedQuery('catalog_item=' + gr.item_name.sys_id + '^isprofilevariable=true^ORisservicevariable=true');
+			grVars.query();
+			while(grVars.next()) {
+				var grVarsBp = new GlideRecord('x_nuta2_nutanix_ca_catalog_variables_properties');
+				grVarsBp.addQuery('catalog_item', gr.blueprint + "");
+				grVarsBp.addQuery('uuid', grVars.uuid + "");
+				grVarsBp.query();
+				if(grVarsBp.next()) {
+					this._createOnChangeScript(grVars.variable.sys_id + "", gr.item_name.sys_id + "");
+					grVars.field_json = grVarsBp.field_json + '';
+					grVars.update();
+				}
+			}
+		}
+		
+	},
+	
+	_createOnChangeSessionScript: function(catSysId) {
+		
+		var profileSysID = new GlideRecord('item_option_new');
+        profileSysID.addEncodedQuery('cat_item=' + catSysId + '^nameLIKEdefault_profile');
+        profileSysID.query();
+        profileSysID.next();
+		
+				var onChangecatalogClientScript3 = new sn_sc.CatalogClientScript();
+				onChangecatalogClientScript3.setAttributes({
+						 "name":"Fetch dependencies on change of profile",
+						 "type":"onChange",
+						 "applies_to":"item",
+						 "cat_item":''+catSysId,
+						 "cat_variable":"IO:"+profileSysID.sys_id,
+						 "active":true,
+						 "order":700,
+						 "description":"This script is auto created thorugh runtime module for getting variables on change of profile.",
+						 "applies_catalog":true,
+						 "ui_type":"0",
+						 "applies_req_item":false,
+						 "applies_sc_task":false,
+
+				});
+				onChangecatalogClientScript3.appliesToCatalogItem(true);
+                var onChangeScriptVars= "function onChange(control, oldValue, newValue, isLoading) {if (isLoading || newValue == '') {return;}var loadingHTML=\"<div class=\'loading-container\'><div class=\'loading-indicator icon-loading icon-lg\'></div></div>\"; var loadingDialog = new GlideModal('loader', true);loadingDialog.setTitle('Fetching variables...');loadingDialog.renderWithContent('' + loadingHTML);var cat_sys_id = g_form.getUniqueValue();var profile = (newValue + '').trim();var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');ga.addParam('sysparm_name', 'fetchLaunchVars');ga.addParam('sysparm_catsysid', cat_sys_id);ga.addParam('sysparm_profile', profile);ga.getXML(varResponse);}function varResponse(response) {var answer = response.responseXML.documentElement.getAttribute('answer');var varJSON = JSON.parse(answer);var prof_json = varJSON.profile;var serv_json = varJSON.service;var sess_json = {};var var_array = [];for (var i in prof_json) {var field = prof_json[i];var curr_value = g_form.getValue('IO:' + i);var parsed_field = JSON.parse(field);parsed_field.value = curr_value;parsed_field.sys_id = i + '';sess_json['IO:' + i] = curr_value;var_array.push(parsed_field);}getAdvancedVars(var_array);for (var j in serv_json) {var_array = [];for (var k in serv_json[j]) {var field = serv_json[j][k];var curr_value = g_form.getValue('IO:' + k);var parsed_field = JSON.parse(field);parsed_field.value = curr_value;parsed_field.sys_id = k + '';sess_json['IO:' + k] = curr_value;var_array.push(parsed_field);}getAdvancedVars(var_array);}sessionStorage['varValues'] = JSON.stringify(sess_json);}function getAdvancedVars(variable_json) {var act_var_JSON = JSON.stringify(variable_json);var gajax = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');gajax.addParam('sysparm_name', 'variableArrayParser');gajax.addParam('sysparm_type', 'catalog');gajax.addParam('sysparm_parentUuid', g_form.getUniqueValue() + '');gajax.addParam('sysparm_varJson', act_var_JSON);gajax.getXML(getVarResponse);}function getVarResponse(response) {var answer = response.responseXML.documentElement.getAttribute('answer');if (answer + '' == '' || answer + '' == 'undeined' || answer + '' == 'null') return;var parsedResponse = JSON.parse(answer);for (var i in parsedResponse) {var row = parsedResponse[i];var sys_id = 'IO:' + row.sys_id;var type = row.type + '';if (row.state == 'SUCCESS') {if (type == 'LOCAL') g_form.setValue(sys_id, row.value);if (type == 'EXEC_LOCAL' || type == 'HTTP_LOCAL' || type == 'EXEC_SECRET' || type == 'HTTP_SECRET') {g_form.clearOptions(sys_id);for (var k = 0; k < (row.value).length; k++) {g_form.addOption(sys_id + '', row.value[k], row.value[k]);}}}if (row.state == 'ERROR') {g_form.addErrorMessage('Error in variable: ' + row.name + ': ' + row.error[0]);}}}";
+        onChangecatalogClientScript3.addScript(onChangeScriptVars);
+		var OnChangeCatalogScriptId = onChangecatalogClientScript3.create();
+		var gr = new GlideRecord('catalog_script_client');
+		if(gr.get(OnChangeCatalogScriptId)){
+			gr.setValue("sys_scope" ,"global");
+			gr.update();
+		}
+		
+		var onChangecatalogClientScript2 = new sn_sc.CatalogClientScript();
+		onChangecatalogClientScript2.setAttributes({
+			"name":"Set Session Vars",
+			"type":"onChange",
+			"applies_to":"item",
+			"cat_item":''+catSysId,
+			"cat_variable":"IO:"+profileSysID.sys_id,
+			"active":true,
+			"order":700,
+			"description":"This script is auto created thorugh runtime module for setting session json.",
+			"applies_catalog":true,
+			"ui_type":"0",
+			"applies_req_item":false,
+			"applies_sc_task":false,
+			"sys_scope" : "global"
+		});
+		onChangecatalogClientScript2.appliesToCatalogItem(true);
+        var onChangeScriptSess = "function onChange(control, oldValue, newValue, isLoading) {if (isLoading || newValue == '') {return;}var cat_sys_id = g_form.getUniqueValue();var profile = (newValue + '').trim();var ga = new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');ga.addParam('sysparm_name', 'fetchLaunchVars');ga.addParam('sysparm_catsysid', cat_sys_id);ga.addParam('sysparm_profile', profile);ga.getXML(varResponse);function varResponse(response) {var answer = response.responseXML.documentElement.getAttribute('answer');jslog(answer);var varJSON = JSON.parse(answer);var prof_json = varJSON.profile;var serv_json = varJSON.service;var sess_json = {};for (var i in prof_json) {var field = prof_json[i];var curr_value = g_form.getValue('IO:' + i);var parsed_field = JSON.parse(field);parsed_field.value = curr_value;parsed_field.sys_id = i + '';sess_json['IO:' + i] = curr_value;}for (var j in serv_json) {for (var k in serv_json[j]) {var field = serv_json[j][k];var curr_value = g_form.getValue('IO:' + k);var parsed_field = JSON.parse(field);parsed_field.value = curr_value;parsed_field.sys_id = k + '';sess_json['IO:' + k] = curr_value;}}sessionStorage['varValues'] = JSON.stringify(sess_json);}}";
+        onChangecatalogClientScript2.addScript(onChangeScriptSess);
+        var OnChangeCatalogScriptId = onChangecatalogClientScript2.create();
+		var gr = new GlideRecord('catalog_script_client');
+		if(gr.get(OnChangeCatalogScriptId)){
+			gr.setValue("sys_scope" ,"global");
+			gr.update();
+		}
+		
+		this.logger.debug("Created onChange script to set Session variables ");
+	},
+	
+	_createOnChangeScript: function(varSysId, catSysId) {
+		try {
+			this.logger.info("V1.4 migration: Creating onChange Scripts");
+		var onChangecatalogClientScript = new sn_sc.CatalogClientScript();
+		onChangecatalogClientScript.setAttributes({
+			"name":"Fetch values OnChange",
+			"type":"onChange",
+			"applies_to":"item",
+			"cat_item":''+catSysId,
+			"cat_variable":"IO:"+varSysId,
+			"active":true,
+			"order":100,
+			"description":"This script is auto created thorugh runtime module for fetching values.",
+			"applies_catalog":"true",
+			"ui_type":"0",
+			"applies_req_item":false,
+			"applies_sc_task":false,
+			"sys_scope" : "global"
+		});
+		onChangecatalogClientScript.appliesToCatalogItem(true);
+        var onChangeScript = "function onChange(control, oldValue, newValue, isLoading) { if(!sessionStorage['varValues'])return; var varValues = JSON.parse(sessionStorage['varValues']);oldValue = varValues[control.id + '']; if (isLoading || newValue == '' || oldValue + '' == newValue + '') {new GlideModal().get('loader').destroy(); return; }jslog(oldValue);jslog(newValue); function varResponse(response,loadingDialog){var answer=response.responseXML.documentElement.getAttribute('answer');var varJSON=JSON.parse(answer);var prof_json=varJSON.profile;var serv_json=varJSON.service;var var_array=[];for(var i in prof_json){var field=prof_json[i];var curr_value=g_form.getValue('IO:'+i);varValues['IO:' + i] = curr_value + '';var parsed_field=JSON.parse(field);parsed_field.value=curr_value,parsed_field.sys_id=i+'',var_array.push(parsed_field);}getAdvancedVars(var_array);for(var j in serv_json){var_array=[];for(var k in serv_json[j]){var field=serv_json[j][k];var curr_value=g_form.getValue('IO:'+k);varValues['IO:' + k] = curr_value + '';var parsed_field=JSON.parse(field);parsed_field.value=curr_value,parsed_field.sys_id=k+'',var_array.push(parsed_field);}getAdvancedVars(var_array);}sessionStorage['varValues'] = JSON.stringify(varValues);}function getAdvancedVars(variable_json){var act_var_JSON=JSON.stringify(variable_json);var gajax=new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');gajax.addParam('sysparm_name','variableArrayParser'),gajax.addParam('sysparm_type','catalog'),gajax.addParam('sysparm_parentUuid',g_form.getUniqueValue()+''),gajax.addParam('sysparm_varJson',act_var_JSON),gajax.getXML(getVarResponse);}function getVarResponse(response){ new GlideModal().get('loader').destroy(); var answer=response.responseXML.documentElement.getAttribute('answer');if(answer+''==''||answer+''=='undeined'||answer+''=='null')return;var parsedResponse=JSON.parse(answer);for(var i in parsedResponse){var row=parsedResponse[i];var sys_id='IO:'+row.sys_id;var type=row.type+'';if(row.state=='SUCCESS'&&(type=='LOCAL'&&g_form.setValue(sys_id,row.value),type=='EXEC_LOCAL'||type=='HTTP_LOCAL'||type=='EXEC_SECRET'||type=='HTTP_SECRET')){g_form.clearOptions(sys_id);for(var k=0;k<row.value.length;k++)g_form.addOption(sys_id+'',row.value[k],row.value[k]);}row.state=='ERROR'&&g_form.addErrorMessage('Error in variable: '+row.name+': '+row.error[0]);}}var loadingHTML=\"<div class=\'loading-container\'><div class=\'loading-indicator icon-loading icon-lg\'></div></div>\"; var loadingDialog = new GlideModal('loader', true); loadingDialog.setTitle('Fetching variables...'); loadingDialog.renderWithContent(''+loadingHTML);var cat_sys_id=g_form.getUniqueValue();var profile=g_form.getValue('default_profile').trim();var ga=new GlideAjax('x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge');ga.addParam('sysparm_name','fetchLaunchVars'),ga.addParam('sysparm_catsysid',cat_sys_id),ga.addParam('sysparm_profile',profile),ga.getXML(varResponse,null,loadingDialog);}";
+        onChangecatalogClientScript.addScript(onChangeScript);
+        var OnChangeCatalogScriptId = onChangecatalogClientScript.create();
+		this.logger.info("V1.4 migration, "+catSysId+" Fetch values OnChange catalog client script created.");
+		var gr = new GlideRecord('catalog_script_client');
+		if(gr.get(OnChangeCatalogScriptId)){
+			gr.setValue("sys_scope" ,"global");
+			gr.update();
+		}
+		}
+		catch(e) {
+			this.logger.error("Exception caught inside Migration_Script._createOnChangeScript. Error:- "+e);
+		}
+	},
+	
+    type: 'Migration_Script'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-09-11 10:09:24</sys_created_on>
+        <sys_id>caeab4864f337300d8494ebf9310c73e</sys_id>
+        <sys_mod_count>77</sys_mod_count>
+        <sys_name>Migration_Script</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_caeab4864f337300d8494ebf9310c73e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-23 09:47:56</sys_updated_on>
+    </sys_script_include>
+</record_update>

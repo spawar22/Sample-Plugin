@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_map">
+    <sys_transform_map action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copy_empty_fields>false</copy_empty_fields>
+        <create_new_record_on_empty_coalesce_fields>false</create_new_record_on_empty_coalesce_fields>
+        <enforce_mandatory_fields>No</enforce_mandatory_fields>
+        <name>GCP Provider</name>
+        <order>100</order>
+        <run_business_rules>true</run_business_rules>
+        <run_script>true</run_script>
+        <script><![CDATA[(function transformRow(source, target, map, log, isUpdate) {
+
+	// Add your code here
+	var entity = JSON.parse(source.create_spec);
+	var entityResource = entity.resources;
+	//gs.error("entity :: "+entity+"::"+" entityResource:: "+entityResource);
+	target.provider_type = entity.type;
+	target.provider_name = entityResource.name;
+	target.machine_type = entityResource.machineType;
+	target.description = entityResource.description;
+	target.zone = entityResource.zone;
+	target.start_up_script = entityResource.guestCustomization.startupScript;
+	target.environment = source.environment;
+	//gs.error("securityJSON :: "+JSON.stringify(entityResource.tags.items));
+	if(entityResource.tags && entityResource.tags.items ){	
+		//gs.error("in securityJSON :: "+JSON.stringify(entityResource.tags.items));
+		target.security_group_list = "";
+		for(var i = 0; i<entityResource.tags.items.length ; i++){
+		//target.security_group_list = target.security_group_list+entityResource.tags.items[i];
+		target.security_group_list = (i != (entityResource.tags.items.length-1)) ? target.security_group_list + entityResource.tags.items[i] + "," : target.security_group_list + entityResource.tags.items[i]+"";
+		}
+	}
+	if(entityResource.sshKeys){	
+		//gs.error("in sshKeys :: "+JSON.stringify(entityResource.sshKeys));
+		target.ssh_keys = "";
+		for(var i = 0; i<entityResource.sshKeys.length ; i++){
+			//gs.error("inside sshKeys :: "+entityResource.sshKeys[i]);
+			target.ssh_keys = (i != (entityResource.sshKeys.length-1)) ? target.ssh_keys + entityResource.sshKeys[i] + "," : target.ssh_keys + entityResource.sshKeys[i]+"";
+		}
+	}
+	if(entityResource.serviceAccounts){		
+	target.email = entityResource.serviceAccounts[0].email;
+	}
+	
+	if(source.login_credential_local_reference){
+		
+		var credJSON = JSON.parse(source.login_credential_local_reference);
+		//gs.error(" credJSON " + credJSON);
+		var credUUID = credJSON.uuid;
+		//gs.error(" credUUID " + credUUID);
+		var gr = new GlideRecord(this.appUtil.configuration.table.Credentials+"");
+		gr.addQuery("uuid",credUUID);							
+		gr.query();
+		if(gr.next()){
+			//gs.error(" uuid " + gr);
+			target.credential = gr.sys_id;
+		}
+	}
+
+})(source, target, map, log, action==="update");]]></script>
+        <source_table>x_nuta2_nutanix_ca_staging_gcp</source_table>
+        <sys_class_name>sys_transform_map</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-12-27 10:21:58</sys_created_on>
+        <sys_id>7dcec403dbae230075f47dda8c9619c3</sys_id>
+        <sys_mod_count>23</sys_mod_count>
+        <sys_name>GCP Provider</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_map_7dcec403dbae230075f47dda8c9619c3</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-05-02 11:09:35</sys_updated_on>
+        <target_table>x_nuta2_nutanix_ca_gcp</target_table>
+    </sys_transform_map>
+</record_update>

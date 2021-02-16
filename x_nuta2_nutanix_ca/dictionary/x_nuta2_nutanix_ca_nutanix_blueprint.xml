@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="update_synch=true" extends="sc_cat_item" label="Blueprint" max_length="40" name="x_nuta2_nutanix_ca_nutanix_blueprint" type="collection">
+        <element label="Application count" max_length="50" name="application_count" type="string"/>
+        <element label="App UUID" max_length="100" name="app_uuid" type="string"/>
+        <element label="Blueprint Name" max_length="40" name="blueprint_name" type="string"/>
+        <element label="Creation Time" max_length="100" name="creation_time" type="string"/>
+        <element label="Deleted" max_length="100" name="deleted" type="string"/>
+        <element label="Deletion Time" max_length="100" name="deletion_time" type="string"/>
+        <element attributes="no_truncate=false" label="Description" max_length="8000" name="description_markdown" type="string"/>
+        <element label="Entity Verison" max_length="100" name="entity_verison" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Is Cloned" max_length="40" name="is_cloned" type="boolean"/>
+        <element label="Kind" max_length="100" name="kind" type="string"/>
+        <element label="Last Update Time" max_length="100" name="last_update_time" type="string"/>
+        <element label="Owner Name" max_length="100" name="owner_name" type="string"/>
+        <element label="Owner UUID" max_length="100" name="owner_uuid" type="string"/>
+        <element label="Project Name" max_length="100" name="project_name" type="string"/>
+        <element label="Project UUID" max_length="100" name="project_uuid" type="string"/>
+        <element label="Schema Version" max_length="100" name="schema_version" type="string"/>
+        <element label="Source MPI" max_length="100" name="source_mpi" type="string"/>
+        <element attributes="edge_encryption_enabled=true" choice="3" default="active" label="State" max_length="100" name="state" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Active" sequence="1" value="ACTIVE"/>
+                <element inactive_on_update="false" label="Inactive" sequence="2" value="INACTIVE"/>
+            </choice>
+        </element>
+        <element label="Template Type" max_length="100" name="template_type" type="string"/>
+        <element label="UUID" max_length="100" name="uuid" type="string"/>
+    </element>
+</database>

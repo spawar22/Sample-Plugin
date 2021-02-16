@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.NutanixAppIntermediateDao</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>NutanixAppIntermediateDao</name>
+        <script><![CDATA[var NutanixAppIntermediateDao = Class.create();
+NutanixAppIntermediateDao.prototype = {
+	initialize: function() {
+		this.logger = new Nutanix_Calm_Logger();
+		this.utils = new Nutanix_Calm_Utils();
+		this.pageLimit = 20;
+	},
+	
+	startAppImport: function(){
+		try{
+			body = {
+				"filter": "_state!=deleted",
+				"length": 1,
+				"offset": 0
+			};
+			
+			var response = this.utils.makeCalmApiCall('POST', this.utils.configuration.api.getAppList+'', this.utils.stringify(body));
+			
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				this.logger.info("Connection established to API " + this.utils.configuration.api.getAppList + ". inside NutanixAppIntermediateDao.startAppImport");
+				var totalAppCounts = JSON.parse(response.getBody()).metadata.total_matches;
+				var pages = parseInt(totalAppCounts/this.pageLimit);
+				for(var i=0; i<=pages; i++){
+					body = {
+						"filter": "_state!=deleted",
+						"length": this.pageLimit,
+						"offset": i*this.pageLimit
+					};
+					this.utils.insertIntoQueue('importApplications', 'POST', this.utils.stringify(body), this.utils.configuration.api.getAppList+'', 'Import applications', 'This process invokes the import of all applications.');
+				}
+			} else {
+				this.logger.error("Inside NutanixAppIntermediateDao.startAppImport : Error during startAppImport Error: "+response.getBody());
+			}
+			
+		}catch(e){
+			this.logger.error("Connection failure to API /app/list inside startAppImport: "+e);
+		}
+	},
+	
+	importApplications: function(current){
+		try{
+			this.logger.debug("Inside NutanixAppIntermediateDao.importApplications");
+			
+			var response = this.utils.makeCalmApiCall(current.method+'', current.payload+'', current.parameter+'');
+			
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				this.logger.info("Connection established to API " + current.payload + ". Retrieving applications.");
+				var parsedJson = this.utils.parse(response.getBody());
+				parsedJson = parsedJson.entities;
+				this.logger.debug("Found "+parsedJson.length+" applications.");
+				for(var i = 0; i<parsedJson.length; i++){
+					var app_uuid = parsedJson[i].metadata.uuid;
+					var appUuidResponse = this.utils.makeCalmApiCall('GET', this.utils.configuration.api.getAppDetail+''+app_uuid, '');
+					if(appUuidResponse.getStatusCode() == '200' || appUuidResponse.getStatusCode() == '201'){
+						
+						this.logger.info("Connection established to API " + this.utils.configuration.api.getAppDetail+''+app_uuid + ". Retrieving applications.");
+						
+						this.utils.insertIntoQueue("processImportedApp", 'GET', '', appUuidResponse.getBody(), 'Process applications', 'This job processes the imported applications.'); //this.utils.configuration.api.getAppDetail+''+app_uuid
+						
+					} else {
+						this.logger.error("Error during retrieval of application actions to API /apps/<uuid> Error : "+appUuidResponse.getBody());
+					}
+				}
+				this.logger.info("Schedule job has completed importing of application information.");
+			} else {
+				this.logger.error("Inside NutanixAppIntermediateDao.importApplications : Error during retrieval of applications to API /apps/list Error: "+response.getBody());
+			}
+		}catch(e){
+			this.logger.error("Connection failure to API /apps/list inside importApplications: "+e);
+		}
+		
+	},
+	
+	startDeletedAppImport: function(){
+		try{
+			body = {
+				"filter": "_state==deleted",
+				"length": 1,
+				"offset": 0
+			};
+			
+			var response = this.utils.makeCalmApiCall('POST', this.utils.configuration.api.getAppList+'', this.utils.stringify(body));
+			
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				this.logger.info("Connection established to API " + this.utils.configuration.api.getAppList + ". inside NutanixAppIntermediateDao.startDeletedAppImport");
+				var totalAppCounts = JSON.parse(response.getBody()).metadata.total_matches;
+				var pages = parseInt(totalAppCounts/this.pageLimit);
+				for(var i=0; i<=pages; i++){
+					body = {
+						"filter": "_state==deleted",
+						"length": this.pageLimit,
+						"offset": i*this.pageLimit
+					};
+					this.utils.insertIntoQueue('importDeletedApplications', 'POST', this.utils.stringify(body), this.utils.configuration.api.getAppList+'', 'Import Deleted applications', 'This process invokes the import of deleted applications.');
+				}
+			} else {
+				this.logger.error("Inside NutanixAppIntermediateDao.startDeletedAppImport : Error during startDeletedAppImport Error: "+response.getBody());
+			}
+			
+		}catch(e){
+			this.logger.error("Connection failure to API /app/list inside startDeletedAppImport: "+e);
+		}
+	},
+	
+	importDeletedApplications: function(current){
+		try{
+			this.logger.debug("Inside NutanixAppIntermediateDao.importDeletedApplications");
+			
+			var response = this.utils.makeCalmApiCall(current.method+'', current.payload+'', current.parameter+'');
+			
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				this.logger.info("Connection established to API " + current.payload + ". Retrieving deleted applications.");
+				var parsedJson = this.utils.parse(response.getBody());
+				parsedJson = parsedJson.entities;
+				this.logger.debug("Found "+parsedJson.length+" deleted applications.");
+				for(var i = 0; i<parsedJson.length; i++){
+					var app_uuid = parsedJson[i].metadata.uuid;
+					var appUuidResponse = this.utils.makeCalmApiCall('GET', this.utils.configuration.api.getAppDetail+''+app_uuid, '');
+					if(appUuidResponse.getStatusCode() == '200' || appUuidResponse.getStatusCode() == '201'){
+						
+						this.logger.info("Connection established to API " + this.utils.configuration.api.getAppDetail+''+app_uuid + ". Retrieving applications.");
+						
+						this.utils.insertIntoQueue("processImportedApp", 'GET', '', appUuidResponse.getBody(), 'Process applications', 'This job processes the imported applications.'); //this.utils.configuration.api.getAppDetail+''+app_uuid
+						
+					} else {
+						this.logger.error("Error during retrieval of application actions to API /apps/<uuid> Error : "+appUuidResponse.getBody());
+					}
+				}
+				this.logger.info("Schedule job has completed importing of application information.");
+			} else {
+				this.logger.error("Inside NutanixAppIntermediateDao.importDeletedApplications : Error during retrieval of applications to API /apps/list Error: "+response.getBody());
+			}
+		}catch(e){
+			this.logger.error("Connection failure to API /apps/list inside importApplications: "+e);
+		}
+		
+	},
+	
+	processImportedApp: function(current){
+		try{
+			this.logger.debug("Inside NutanixAppIntermediateDao.processImportedApp");
+			
+			var appUuidJsonParsed = this.utils.parse(current.payload+'');
+			var statusMetadata = appUuidJsonParsed.status;
+			var resourcesMetadata = appUuidJsonParsed.status.resources;
+			var appMetadata = appUuidJsonParsed.metadata;
+			
+			var grApp = new GlideRecord(this.utils.configuration.table.NutanixStagingApplication);
+			grApp.initialize();
+			
+			grApp.app_metadata = JSON.stringify(appMetadata) + '';
+			
+			for(var keyStatus in statusMetadata){
+				var status = statusMetadata[keyStatus];
+				if(keyStatus != 'resources' && status)
+					grApp[keyStatus]= (status.constructor === Object || status.constructor === Array ) ? JSON.stringify(status) : status+'';
+			}
+			
+			for(var keyResource in resourcesMetadata){
+				var resources = resourcesMetadata[keyResource];
+				if(resources)
+					grApp[keyResource]= (resources.constructor === Object || resources.constructor === Array ) ? JSON.stringify(resources) : resources+'';
+			}
+			
+			for(var keyMetadata in appMetadata){
+				var metadata = appMetadata[keyMetadata];
+				if(metadata)
+					grApp[keyMetadata]= (metadata.constructor === Object || metadata.constructor === Array ) ? JSON.stringify(metadata) : metadata+'';
+			}
+			
+			grApp.applicatoin_created_by = current.parameter+'';
+			grApp.insert();
+			
+		}catch(e){
+			this.logger.error("Error inside NutanixAppIntermediateDao.processImportedApp: "+e);
+		}
+	},
+	type: 'NutanixAppIntermediateDao'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-10-10 10:03:05</sys_created_on>
+        <sys_id>e0dc92f537412300d27b8cf6c3990e66</sys_id>
+        <sys_mod_count>102</sys_mod_count>
+        <sys_name>NutanixAppIntermediateDao</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_e0dc92f537412300d27b8cf6c3990e66</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-06-17 14:05:38</sys_updated_on>
+    </sys_script_include>
+</record_update>

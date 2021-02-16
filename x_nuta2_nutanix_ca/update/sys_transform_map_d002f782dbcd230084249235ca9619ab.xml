@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_map">
+    <sys_transform_map action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copy_empty_fields>false</copy_empty_fields>
+        <create_new_record_on_empty_coalesce_fields>false</create_new_record_on_empty_coalesce_fields>
+        <enforce_mandatory_fields>No</enforce_mandatory_fields>
+        <name>Nutanix Transform Blueprints </name>
+        <order>100</order>
+        <run_business_rules>true</run_business_rules>
+        <run_script>true</run_script>
+        <script><![CDATA[(function transformRow(source, target, map, log, isUpdate) {
+	
+	// Add your code here
+	
+	target.category = gs.getProperty('x_nuta2_nutanix_ca.nutanix_unpublishedBP_sysId')+'';
+	target.sc_catalogs = gs.getProperty('x_nuta2_nutanix_ca.nutanix_catalog_sysId')+'';
+	
+	var parsed;
+	var logger = new Nutanix_Calm_Logger();
+	var appUtil = new Nutanix_Calm_Utils();
+	
+	logger.info("Transform map ["+ map.name+"] started.");
+	if( source.owner_reference ){
+		logger.info("Parsed owner reference");
+		parsed = JSON.parse(source.owner_reference);
+		target.owner_uuid=parsed.uuid;
+		target.owner_name=parsed.name;
+	}
+	
+	if( source.project_reference ){
+		logger.info("Parsed project_reference");
+		parsed = JSON.parse(source.project_reference);
+		target.project_uuid=parsed.uuid;
+		target.project_name=parsed.name;
+	}
+	
+	target.workflow = gs.getProperty('x_nuta2_nutanix_ca.Workflow')+'';
+	
+	target.no_cart = true;
+	target.no_quantity = true;
+	target.omit_price = true;
+	target.no_proceed_checkout = true;
+	target.delivery_time.setDateNumericValue(0);
+	target.use_sc_layout = false;
+	
+	target.active = false;
+	
+	target.description = appUtil.markdown_renderer(source.description) + '';
+	
+	logger.info("Transform map ["+ map.name+"]. completed.");
+	
+})(source, target, map, log, action==="update");]]></script>
+        <source_table>x_nuta2_nutanix_ca_nutanix_staging_blueprints</source_table>
+        <sys_class_name>sys_transform_map</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-11 10:26:08</sys_created_on>
+        <sys_id>d002f782dbcd230084249235ca9619ab</sys_id>
+        <sys_mod_count>21</sys_mod_count>
+        <sys_name>Nutanix Transform Blueprints </sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_map_d002f782dbcd230084249235ca9619ab</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-06-12 10:13:26</sys_updated_on>
+        <target_table>x_nuta2_nutanix_ca_nutanix_blueprint</target_table>
+    </sys_transform_map>
+</record_update>

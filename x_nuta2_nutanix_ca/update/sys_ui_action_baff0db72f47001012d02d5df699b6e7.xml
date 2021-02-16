@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_action">
+    <sys_ui_action action="INSERT_OR_UPDATE">
+        <action_name>delete_blueprint</action_name>
+        <active>true</active>
+        <client>true</client>
+        <client_script_v2><![CDATA[function onClick(g_form) {
+
+}]]></client_script_v2>
+        <comments/>
+        <condition>(gs.hasRole('admin') || gs.hasRole('x_nuta2_nutanix_ca.calm_admin') ) &amp;&amp; current.state+''!='deleted' &amp;&amp; new Nutanix_ClientServerScriptBridge().checkQueue()</condition>
+        <form_action>true</form_action>
+        <form_button>true</form_button>
+        <form_button_v2>false</form_button_v2>
+        <form_context_menu>false</form_context_menu>
+        <form_link>false</form_link>
+        <form_menu_button_v2>false</form_menu_button_v2>
+        <form_style>destructive</form_style>
+        <hint/>
+        <isolate_script>true</isolate_script>
+        <list_action>false</list_action>
+        <list_banner_button>false</list_banner_button>
+        <list_button>false</list_button>
+        <list_choice>false</list_choice>
+        <list_context_menu>false</list_context_menu>
+        <list_link>false</list_link>
+        <list_save_with_form_button>false</list_save_with_form_button>
+        <list_style/>
+        <name>Delete</name>
+        <onclick>runClientCode()</onclick>
+        <order>100</order>
+        <script><![CDATA[function runClientCode(){
+
+	if(confirm("Deleting blueprint will also delete associated catalog items. Are you sure you wanna delete this Blueprint?"))
+    	gsftSubmit(null, g_form.getFormElement(), 'delete_blueprint');
+}
+
+if(typeof window == 'undefined')
+	runBusRuleCode();
+
+function runBusRuleCode(){
+	var url = 'x_nuta2_nutanix_ca_nutanix_blueprint_list.do?sysparm_userpref_module=b2d6d6a54f41230065e48020a310c7b7&sysparm_view=catalog_view&sysparm_clear_stack=true';
+	var cat_item = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+	cat_item.addQuery('blueprint',current.sys_id);
+	cat_item.query();
+	
+	while(cat_item.next()){
+		
+		if(cat_item.state+''=='deleted' ){
+			
+		}else{
+			cat_item.state = 'deleted';
+			cat_item.update();
+			var catItem = cat_item.item_name.getRefRecord();
+			catItem.active = false;
+			catItem.update();
+			gs.addErrorMessage("Catalog Item " + cat_item.item_name.name + " Deleted.");
+			url = 'x_nuta2_nutanix_ca_nutanix_blueprint_list.do?sysparm_userpref_module=b2d6d6a54f41230065e48020a310c7b7&sysparm_view=catalog_view&sysparm_clear_stack=true';
+		}
+	}
+	gs.addErrorMessage("Blueprint " + current.name + " Deleted.");
+	current.deleteRecord();
+	action.setRedirectURL(url);
+}
+]]></script>
+        <show_insert>true</show_insert>
+        <show_multiple_update>false</show_multiple_update>
+        <show_query>false</show_query>
+        <show_update>true</show_update>
+        <sys_class_name>sys_ui_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-02-25 11:46:02</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>baff0db72f47001012d02d5df699b6e7</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>Delete</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_action_baff0db72f47001012d02d5df699b6e7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-03-04 11:42:49</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_nutanix_blueprint</table>
+        <ui11_compatible>true</ui11_compatible>
+        <ui16_compatible>false</ui16_compatible>
+    </sys_ui_action>
+</record_update>

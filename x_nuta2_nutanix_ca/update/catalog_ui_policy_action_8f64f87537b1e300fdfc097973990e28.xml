@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="catalog_ui_policy_action">
+    <catalog_ui_policy_action action="INSERT_OR_UPDATE">
+        <catalog_item display_value="Service Configuration">b3800e3337d12300fdfc097973990e3c</catalog_item>
+        <catalog_variable>IO:f13256b4377d2300fdfc097973990eff</catalog_variable>
+        <cleared>false</cleared>
+        <disabled>true</disabled>
+        <field/>
+        <mandatory>ignore</mandatory>
+        <order>100</order>
+        <sys_class_name>catalog_ui_policy_action</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-16 08:44:25</sys_created_on>
+        <sys_id>8f64f87537b1e300fdfc097973990e28</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>type_of_blueprint</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>catalog_ui_policy_action_8f64f87537b1e300fdfc097973990e28</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-03 07:54:21</sys_updated_on>
+        <table/>
+        <ui_policy display_value="To Hide Variables">43aad24037ed2300fdfc097973990e33</ui_policy>
+        <variable>type_of_blueprint</variable>
+        <variable_set/>
+        <visible>false</visible>
+    </catalog_ui_policy_action>
+</record_update>

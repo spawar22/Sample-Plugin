@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_Import_Subnets</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_Import_Subnets</name>
+        <script><![CDATA[var Nutanix_Import_Subnets = Class.create();
+Nutanix_Import_Subnets.prototype = {
+	initialize: function() {
+		this.logger = new Nutanix_Calm_Logger();
+		this.utils = new Nutanix_Calm_Utils();
+		this.pageLimit = 999;
+	},
+	
+	startSubnetImport: function() {
+		try{
+			this.logger.debug("Inside Nutanix_Import_Subnets.startImportSubnets");
+			var body = {
+				"kind": "subnet",
+				"length": 1,
+				"offset": 0
+			};
+			var response = this.utils.makeCalmApiCall('POST', this.utils.configuration.api.getSubnets + '' , this.utils.stringify(body));
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+				var totalSubnetsCount = JSON.parse(response.getBody()).metadata.total_matches;
+				var pages = parseInt(totalSubnetsCount/this.pageLimit);
+				for(var i=0; i<=pages; i++) {
+					body = {
+						"kind": "subnet",
+						"length": this.pageLimit,
+						"offset": i*this.pageLimit
+					};
+					var subResponse = this.utils.makeCalmApiCall('POST', this.utils.configuration.api.getSubnets + '' , this.utils.stringify(body));
+					
+					//this.utils.insertIntoQueue('processSubnets', '', '', subResponse.getBody() + '' , 'Process Subnets', 'This process invokes the processing of all subnets.');
+					var options = {
+						"parameter": "",
+						"payload": subResponse.getBody()+""
+					};					
+					this.processSubnets(options);
+				}
+			}
+		}
+		catch(e) {
+			this.logger.error("Exception caught during retrieval of subnets. Error :- "+e);
+		}
+	},
+	
+	processSubnets: function(current){
+		try{
+			this.logger.debug("Inside Nutanix_Import_Subnets.processSubnets");
+			var subnetResp = this.utils.parse(current.payload).entities;
+			
+			for(var i = 0; i < subnetResp.length; i++) {
+				var subnetUUID = subnetResp[i].metadata.uuid + '';
+				var subnetName = subnetResp[i].status.name + '';
+				var clusterName = subnetResp[i].status.cluster_reference.name + '';
+				var clusterUUID = subnetResp[i].status.cluster_reference.uuid + '';
+				
+				var grSubnet = new GlideRecord(this.utils.configuration.table.subnet);
+				grSubnet.addEncodedQuery('uuid='+subnetUUID);
+				grSubnet.query();
+				
+				if(grSubnet.next()) {
+					grSubnet.name = subnetName + '';
+					grSubnet.cluster_name = clusterName;
+					grSubnet.cluster_uuid = clusterUUID;
+					grSubnet.update();
+				}
+				else {
+					grSubnet.initialize();
+					grSubnet.name = subnetName + '';
+					grSubnet.uuid = subnetUUID + '';
+					grSubnet.cluster_name = clusterName;
+					grSubnet.cluster_uuid = clusterUUID;
+					grSubnet.insert();
+				}
+			}
+		}
+		catch(e) {
+			this.logger.error("Exception caught during processing of subnets. Error :- "+e);
+		}
+		
+	},
+	
+	type: 'Nutanix_Import_Subnets'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-04-19 07:38:08</sys_created_on>
+        <sys_id>5ab9a957dbbc3300bd097dda8c961914</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_name>Nutanix_Import_Subnets</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_5ab9a957dbbc3300bd097dda8c961914</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-07-09 09:59:08</sys_updated_on>
+    </sys_script_include>
+</record_update>

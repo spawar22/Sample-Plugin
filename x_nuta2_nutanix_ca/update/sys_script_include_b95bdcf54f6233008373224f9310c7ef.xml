@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_ImportRecoveryPoints</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_ImportRecoveryPoints</name>
+        <script><![CDATA[var Nutanix_ImportRecoveryPoints = Class.create();
+Nutanix_ImportRecoveryPoints.prototype = {
+    initialize: function() {
+		this.logger = new Nutanix_Calm_Logger();
+		this.utils = new Nutanix_Calm_Utils();
+		this.pageLimit = 50;
+    },
+	
+	importRecoveryPoints: function(current) {
+		try{
+			this.logger.debug("Inside Nutanix_Import_Recovery_Points.ImportRecoveryPoints");
+			var body = {
+				"length": 1,
+				"offset": 0
+			};
+			var parsed_JSON = this.utils.parse(current.parameter);
+			var substrate_uuid = parsed_JSON.substrate_uuid + '';
+			var app_uuid = parsed_JSON.app_uuid + '';
+			var process_by_type = {"AHV_VM":"processAhvRecoveryPoints","AWS_VM":"processAwsRecoveryPoints","VMWARE_VM":"processVmwareRecoveryPoints"};
+			var process_name = process_by_type[parsed_JSON.substrate_provider] + '';
+			
+			var response = this.utils.makeCalmApiCall('POST', '/apps/'+app_uuid+'/substrates/'+substrate_uuid+'/recovery_points/list' , this.utils.stringify(body));
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+				
+				this._delete_recovery_points(app_uuid);
+				var totalRecPointCount = JSON.parse(response.getBody()).metadata.total_matches;
+				var pages = parseInt(totalRecPointCount/this.pageLimit);
+				
+				for(var i=0; i<=pages; i++) {
+					body = {
+						"length": this.pageLimit,
+						"offset": i*this.pageLimit
+					};
+					var recoveryPointResponse = this.utils.makeCalmApiCall('POST', '/apps/'+app_uuid+'/substrates/'+substrate_uuid+'/recovery_points/list' , this.utils.stringify(body));
+					
+					this.utils.insertIntoQueue(process_name, '', app_uuid+"", recoveryPointResponse.getBody() + '' , 'Process Recovery Points', 'This process invokes the processing of application recovery points.');
+				}
+			}
+		}
+		catch(e) {
+			this.logger.error("Exception caught during retrieval of recovery points. Error :- "+e);
+		}
+	},
+	
+	processAhvRecoveryPoints: function(current){
+		try{
+			this.logger.debug("Inside Nutanix_Import_Recovery_Points.processRecoveryPoints");
+			
+			var recoveryPointResp = (current.payload) ? this.utils.parse(current.payload).entities : "";
+			var app_uuid = current.parameter + '';
+			
+			for(var i = 0; i < recoveryPointResp.length; i++) {
+				
+				var grRecoveryPoints = new GlideRecord("x_nuta2_nutanix_ca_restore_points");
+				grRecoveryPoints.initialize();
+				
+				var resources = recoveryPointResp[i].resources;
+				var recoveryPointUUID = resources.uuid + '';
+				
+				grRecoveryPoints.addQuery('uuid', recoveryPointUUID);
+				grRecoveryPoints.query();
+				
+				if(!grRecoveryPoints.next()) {
+					
+					grRecoveryPoints.initialize();
+					grRecoveryPoints.name = resources.name + '' ;
+					grRecoveryPoints.uuid = recoveryPointUUID + '';
+					grRecoveryPoints.recovery_point_type = (resources.recovery_point_type) ? resources.recovery_point_type + '' : "";
+					grRecoveryPoints.creation_time = (resources.creation_time) ? resources.creation_time.replace('T',' ').replace('Z','') + '' : "";
+					grRecoveryPoints.expiration_time = (resources.expiration_time) ? resources.expiration_time.replace('T',' ').replace('Z','') + '' : "";
+					grRecoveryPoints.parent_uuid = app_uuid + '';
+					grRecoveryPoints.insert();
+				}
+			}
+		}
+		catch(e) {
+			this.logger.error("Exception caught during processing of AHV recovery points. Error :- "+e);
+		}
+	},
+	
+	processAwsRecoveryPoints: function(current) {
+		try{
+			this.logger.debug("Inside Nutanix_Import_Recovery_Points.processRecoveryPoints");
+			
+			var recoveryPointResp = (current.payload) ? this.utils.parse(current.payload).entities : {};
+			var app_uuid = current.parameter + '';
+			
+			for(var i = 0; i < recoveryPointResp.length; i++) {
+				
+				var grRecoveryPoints = new GlideRecord("x_nuta2_nutanix_ca_restore_points");
+				grRecoveryPoints.initialize();
+				
+				var resources = recoveryPointResp[i].resources;
+				var recoveryPointUUID = resources.uuid + '';
+				
+				grRecoveryPoints.addQuery('uuid', recoveryPointUUID);
+				grRecoveryPoints.query();
+				
+				if(!grRecoveryPoints.next()) {
+					
+					grRecoveryPoints.initialize();
+					grRecoveryPoints.name = resources.snapshot_name + '';
+					grRecoveryPoints.description = (resources.snapshot_description) ? resources.snapshot_description + '' : '';
+					grRecoveryPoints.uuid = recoveryPointUUID + '';
+					grRecoveryPoints.creation_time = (resources.snapshot_create_time) ? resources.snapshot_create_time.replace('T',' ').replace('Z','') + '' : "";
+					grRecoveryPoints.parent_uuid = app_uuid + '';
+					grRecoveryPoints.insert();
+				}
+			}
+		}
+		catch(e) {
+			this.logger.error("Exception caught during processing of AWS recovery points. Error :- "+e);
+		}
+	},
+	
+	processVmwareRecoveryPoints: function(current) {
+		try{
+			this.logger.debug("Inside Nutanix_Import_Recovery_Points.processRecoveryPoints");
+			
+			var recoveryPointResp = (current.payload) ? this.utils.parse(current.payload).entities : {};
+			var app_uuid = current.parameter + '';
+			
+			for(var i = 0; i < recoveryPointResp.length; i++) {
+				
+				var grRecoveryPoints = new GlideRecord("x_nuta2_nutanix_ca_restore_points");
+				grRecoveryPoints.initialize();
+				
+				var resources = recoveryPointResp[i].resources;
+				var recoveryPointUUID = resources.uuid + '';
+				
+				grRecoveryPoints.addQuery('uuid', recoveryPointUUID);
+				grRecoveryPoints.query();
+				
+				if(!grRecoveryPoints.next()) {
+					
+					grRecoveryPoints.initialize();
+					grRecoveryPoints.name = resources.snapshot_name + '';
+					grRecoveryPoints.description = (resources.snapshot_description) ? resources.snapshot_description + '' : '';
+					grRecoveryPoints.uuid = recoveryPointUUID + '';
+					grRecoveryPoints.creation_time = resources.snapshot_create_time.replace('T',' ').replace('Z','') + '';
+					grRecoveryPoints.parent = (resources.parent) ? resources.parent + '' : '';
+					grRecoveryPoints.children = resources.children.toString() + '';
+					grRecoveryPoints.parent_uuid = app_uuid + '';
+					grRecoveryPoints.insert();
+				}
+			}
+		}
+		catch(e) {
+			this.logger.error("Exception caught during processing of VMWare recovery points. Error :- "+e);
+		}
+	},
+	
+	_delete_recovery_points: function(app_uuid) {
+		var grDel = new GlideRecord('x_nuta2_nutanix_ca_restore_points');
+		grDel.addQuery('parent_uuid', app_uuid);
+		grDel.query();
+		while(grDel.next())
+			grDel.deleteRecord();
+	},
+	
+    type: 'Nutanix_ImportRecoveryPoints'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-07-10 10:02:26</sys_created_on>
+        <sys_id>b95bdcf54f6233008373224f9310c7ef</sys_id>
+        <sys_mod_count>39</sys_mod_count>
+        <sys_name>Nutanix_ImportRecoveryPoints</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_b95bdcf54f6233008373224f9310c7ef</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-02-25 10:07:53</sys_updated_on>
+    </sys_script_include>
+</record_update>

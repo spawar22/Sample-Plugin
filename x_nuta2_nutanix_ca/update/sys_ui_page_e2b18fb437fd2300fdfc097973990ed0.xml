@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[/*function showHidden(option) {
+	//alert(option);
+    if (option === "SSH_Private_Key") {
+   document.getElementById("option1").setAttribute('style', 'padding: 10px;  width:50%;float:left;');
+		//document.getElementById("txtID").setAttribute('class', 'inputText');
+		document.getElementById("option2").setAttribute('style', 'display:none');
+    }
+    else {
+		if(option === "Password") {
+			document.getElementById("option2").setAttribute('style', 'padding: 10px;  width:50%;float:left;');
+			document.getElementById("option1").setAttribute('style', 'display:none');
+			document.getElementById("para").setAttribute('style', 'display:none');
+		}
+
+    }
+  }
+function showPara() {
+	document.getElementById("para").setAttribute('style', 'padding: 10px;  width:50%;float:left;');
+}
+function delPara() {
+	document.getElementById("para").setAttribute('style', 'display:none');
+}
+///////////////////
+/*
+this.options[this.selectedIndex].value
+function show(aval) {
+    if (aval == "Orange") {
+		//document.getElementById("hiddenDiv").setAttribute('style', 'display:block');
+    hiddenDiv.style.display='inline-block';
+    Form.fileURL.focus();
+    }
+    else{
+   // document.getElementById("hiddenDiv").setAttribute('style', 'display:none');
+    }
+  }*/
+]]></client_script>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Nutanix_Calm_Credential_Page.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"></link>
+
+
+	<style>
+		<!-- .box{
+ border:2px solid black;
+ height:80%;
+ } -->
+		input[type=checkbox] {
+			margin: 0px 5px 0px 0px;
+			width: 16px;
+			height: 16px;
+		}
+		.dropdown-container {
+		padding: 6px;
+		<!-- border-bottom: 1px solid #a0a0a0; -->
+		}
+		.credential-dropdown-secondrow{
+		font-size:12px;
+		}
+		.inputText{
+			width: 100%;
+			border:1px solid #bdc0c4;
+			border-radius:3px;
+			line-height:1.42857px;
+			height:32px;
+			padding: 6px 9px 6px 9px;
+			font-size: 13px;
+			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); 
+		}
+		.credential-dropdown {
+		width: 100%;
+		}
+		.credential-caret {
+		float: right;
+		margin-right: 5px;
+		margin-top: 7px;
+		}
+		.credential-dropdown-menu-label {
+		    font-size: 13px;
+		}
+		.credential-dropdown-label {
+		float: left;
+		<!-- padding-left: 10px; -->
+		}
+		.credential-dropdown-type {
+		color: #d0d0d0;
+		text-align: right;
+		color: #d0d0d0;
+		padding-right: 20px;
+		
+		}
+		.field-icon {
+			cursor: pointer;
+			float: right;
+			margin-right: .5%;
+			padding-right: 5px;
+			margin-top: -24px;
+			position: relative;
+			z-index: 2;
+		}
+		.bodyDataStyle {
+			font-family: 'ProximaNovaSoft', Helvetica, Arial, sans-serif;
+			margin-left: auto;
+			margin-right: auto;
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.header{
+			font-family: 'ProximaNovaSoft', Helvetica, Arial, sans-serif;
+			color: #6b747a;
+			font-weight: bold;
+			font-size: 13px;
+			margin-bottom: 15px;
+		}	
+		.svg-icon{
+			pointer-events: none;
+			width: 12px;
+			height: 12px;
+			fill: currentColor;
+			vertical-align: text-bottom;
+			display: inline-block;
+		}
+		.nameField{
+			float:left;
+			<!-- 		color: #9aa8b1; -->
+		}
+		.credential-dropdown-menu {
+		width: 100%;
+		padding: 0px !important;
+		}
+
+	</style>
+
+	<body onload="getDropDownValue();">
+		<!-- changes started-->
+		<div id="mappedCred">
+			<div style="margin-bottom:22px;padding-left:4px;">
+				<input id="credetialMap" type="checkbox" name="envCred" onclick="showDropdown(this.checked)" >Select credentials mapping from project environment</input>
+			</div>
+			<!--<div>
+	<label style="margin-left:4px;">Credentials</label><select name="" onclick="" id="envCredDropdown" style="display:none;" onchange="printConsole(this.options[this.selectedIndex].text,value)" class="inputText"></select>
+   </div> -->
+			<!-- changes -->
+			<div class="mappedCredential container" id="envCredDropdown" style="display:none;">
+				<!--<div class="row" style="">
+	 <div class="col-md-3" style="padding-left:0px;">
+	  <p style="margin-bottom:0px;">Centos</p>
+	  <p>USERNAME: test</p>
+	 </div>
+	 <div class="col-md-6">
+	  <select name="" onclick=""  onchange="printConsole(this.options[this.selectedIndex].text,value)" class="inputText"></select>
+	 </div>
+	 <div class="col-md-3">
+	  <input type="checkbox" name="" onclick="" >Runtime</input>
+	 </div>
+	</div> -->
+			</div>
+			<!-- changes end -->
+		</div>
+		<!-- changes completed-->
+
+		<div class="bodyData bodyDataStyle" id="credShowHide">
+		</div>
+	</body>
+
+	<g:requires name="x_nuta2_nutanix_ca.Calm_Catalog_Cred_Con.jsdbx"/>	
+
+	<!---	
+<div class="box">
+  <h1>CENTOS</h1> 
+ <div style="align:center;" id="variablesId1" >
+
+  <div style="padding: 10px;  width:50%;float:left;">
+   <div style="padding:1px 1px 12px 1px;">	
+	<span style="float:left;">Credential Name</span>
+   </div>
+   <div style="padding-top:14px;">
+	<input class="inputText " type="text" ></input>
+   </div>
+  </div>
+
+  <div style="padding: 10px;  width:50%;float:left;">
+   <div style="padding:1px 1px 12px 1px;">	
+	<span style="float:left;">Username</span>
+	<span style="float:right;">
+	 <input class="inputCheckbox" style="margin-right:2px" type="checkbox" checked="true" onchange="myFunction('asdf')"></input>Runtime</span>
+   </div>
+   <div style="padding-top:14px;">
+	<input class="inputText " type="text" ></input>
+   </div>
+  </div>
+
+ <div style="padding: 10px; width:50% ;float:left;">
+  <div style="padding:1px 1px 12px 1px;">	
+   <span style="float:left;">Secret Type</span>
+  </div>
+  <div style="padding-top:14px;">
+   <select class="inputText" id="inputText" onchange="showHidden(this.options[this.selectedIndex].value)" >
+	<option value="SSH_Private_Key">SSH Private Key</option>
+	<option value="Password">Password</option>
+   </select>
+  </div>		
+ </div>
+
+ <div style="padding: 10px;width:50%;float:left;;" id="option1">
+  <div style="padding:1px 1px 12px 1px;">	
+   <span style="float:left;">SSH Private Key</span>
+   <span style="float:right;">
+	<input class="inputCheckbox" style="margin-right:2px" type="checkbox" checked="true" onchange="myFunction('asdf')"></input>Runtime</span>
+  </div>
+  <div style="padding-top:14px;">
+   <textarea class="inputText " style="width:100%; height:32px;" id="txtID"></textarea>
+   <p><a href="#" onclick="showPara()">+ Add Passphrase</a></p>
+  </div>
+ </div>
+
+ <div style="padding: 10px;  width:50%;float:left;display:none" id="para">
+  <div style="padding:1px 1px 12px 1px;">	
+   <span style="float:left;">Passphrase</span>
+   <span style="float:right;">
+	<input class="inputCheckbox" style="margin-right:2px" type="checkbox" checked="true" onchange="myFunction('asdf')"></input>Runtime</span>
+  </div>
+  <div style="padding-top:14px;">
+   <input class="inputText field1" type="password" ></input>
+   <span class="field-icon toggle-password glyphicon glyphicon-eye-open spanField1" onclick="tooglePassword('field1', 'spanField1')"></span>
+   <p style="float:right"><a href="#" onclick="delPara()">Delete</a></p>
+  </div>
+ </div>
+
+ <div style="padding: 10px;  width:50%;float:left;display:none;;" id="option2" >
+  <div style="padding:1px 1px 12px 1px;">	
+   <span style="float:left;">Password</span>
+   <span style="float:right;">
+	<input class="inputCheckbox" style="margin-right:2px" type="checkbox" checked="true" onchange="myFunction('asdf')"></input>Runtime</span>
+  </div>
+  <div style="padding-top:14px;">
+   <input class="inputText field2" type="password" ></input>
+  </div>
+  <span class="field-icon toggle-password glyphicon glyphicon-eye-open spanField2" onclick="tooglePassword('field2', 'spanField2')"></span>
+ </div>
+ </div>
+
+</div>
+-->	
+	
+
+</j:jelly>]]></html>
+        <name>Nutanix_Calm_Credential_Page</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>nikita.kumari</sys_created_by>
+        <sys_created_on>2018-11-13 16:28:21</sys_created_on>
+        <sys_id>e2b18fb437fd2300fdfc097973990ed0</sys_id>
+        <sys_mod_count>187</sys_mod_count>
+        <sys_name>Nutanix_Calm_Credential_Page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_e2b18fb437fd2300fdfc097973990ed0</sys_update_name>
+        <sys_updated_by>nikita.kumari</sys_updated_by>
+        <sys_updated_on>2018-12-04 17:47:18</sys_updated_on>
+    </sys_ui_page>
+</record_update>

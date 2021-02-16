@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_list parent="" relationship="" sys_domain="global" table="x_nuta2_nutanix_ca_app_action_workflow_trigger" version="2" view="nutanix_calm">
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>number</element>
+            <list_id display_value="x_nuta2_nutanix_ca_app_action_workflow_trigger" element="NULL" name="x_nuta2_nutanix_ca_app_action_workflow_trigger" parent="NULL" relationship="NULL" sys_domain="global" view="801bd74037912300fdfc097973990e6c">c3e3731edb9140100a41ab7dca961977</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>0</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-11-26 07:49:00</sys_created_on>
+            <sys_id>5fe3731edb9140100a41ab7dca961977</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-26 07:49:00</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>application</element>
+            <list_id display_value="x_nuta2_nutanix_ca_app_action_workflow_trigger" element="NULL" name="x_nuta2_nutanix_ca_app_action_workflow_trigger" parent="NULL" relationship="NULL" sys_domain="global" view="801bd74037912300fdfc097973990e6c">c3e3731edb9140100a41ab7dca961977</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>1</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-11-26 07:49:00</sys_created_on>
+            <sys_id>d3e3731edb9140100a41ab7dca961978</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-26 07:49:00</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>actionsysid</element>
+            <list_id display_value="x_nuta2_nutanix_ca_app_action_workflow_trigger" element="NULL" name="x_nuta2_nutanix_ca_app_action_workflow_trigger" parent="NULL" relationship="NULL" sys_domain="global" view="801bd74037912300fdfc097973990e6c">c3e3731edb9140100a41ab7dca961977</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>2</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-11-26 07:49:00</sys_created_on>
+            <sys_id>57e3731edb9140100a41ab7dca961978</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-26 07:49:00</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>approval_status</element>
+            <list_id display_value="x_nuta2_nutanix_ca_app_action_workflow_trigger" element="NULL" name="x_nuta2_nutanix_ca_app_action_workflow_trigger" parent="NULL" relationship="NULL" sys_domain="global" view="801bd74037912300fdfc097973990e6c">c3e3731edb9140100a41ab7dca961977</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>3</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-11-26 07:49:00</sys_created_on>
+            <sys_id>d7e3731edb9140100a41ab7dca961978</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-26 07:49:00</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>user_name</element>
+            <list_id display_value="x_nuta2_nutanix_ca_app_action_workflow_trigger" element="NULL" name="x_nuta2_nutanix_ca_app_action_workflow_trigger" parent="NULL" relationship="NULL" sys_domain="global" view="801bd74037912300fdfc097973990e6c">c3e3731edb9140100a41ab7dca961977</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>4</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-11-26 07:49:00</sys_created_on>
+            <sys_id>5be3731edb9140100a41ab7dca961978</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-26 07:49:00</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>sys_updated_on</element>
+            <list_id display_value="x_nuta2_nutanix_ca_app_action_workflow_trigger" element="NULL" name="x_nuta2_nutanix_ca_app_action_workflow_trigger" parent="NULL" relationship="NULL" sys_domain="global" view="801bd74037912300fdfc097973990e6c">c3e3731edb9140100a41ab7dca961977</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>5</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-11-26 07:49:00</sys_created_on>
+            <sys_id>dbe3731edb9140100a41ab7dca961978</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-26 07:49:00</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element/>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <name>x_nuta2_nutanix_ca_app_action_workflow_trigger</name>
+            <parent/>
+            <position/>
+            <relationship/>
+            <sum>false</sum>
+            <sys_class_name>sys_ui_list</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-11-26 07:49:00</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>c3e3731edb9140100a41ab7dca961977</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_nuta2_nutanix_ca_app_action_workflow_trigger</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_list_x_nuta2_nutanix_ca_app_action_workflow_trigger_nutanix_calm</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-11-26 07:49:00</sys_updated_on>
+            <sys_user/>
+            <view display_value="Nutanix CALM" name="nutanix_calm">801bd74037912300fdfc097973990e6c</view>
+            <view_name/>
+        </sys_ui_list>
+    </sys_ui_list>
+</record_update>

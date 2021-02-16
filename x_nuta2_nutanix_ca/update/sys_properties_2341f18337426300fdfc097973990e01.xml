@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description/>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.credentials.variable.set</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>credentials.variable.set</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-12-02 20:39:37</sys_created_on>
+        <sys_id>2341f18337426300fdfc097973990e01</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.credentials.variable.set</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_2341f18337426300fdfc097973990e01</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-02 20:39:37</sys_updated_on>
+        <type>string</type>
+        <value>5d512007378e2300fdfc097973990e65</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=2341f18337426300fdfc097973990e01"/>
+</record_update>

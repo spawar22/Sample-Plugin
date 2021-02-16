@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="sys_import_set_row" label="Nutanix Staging Marketplace Items" max_length="40" name="x_nuta2_nutanix_ca_nutanix_staging_marketplace_items" type="collection">
+        <element label="App Blueprint Template" max_length="10000" name="app_blueprint_template" type="string"/>
+        <element label="App Group UUID" max_length="250" name="app_group_uuid" type="string"/>
+        <element label="App State" max_length="250" name="app_state" type="string"/>
+        <element label="Author" max_length="250" name="author" type="string"/>
+        <element label="Categories" max_length="2000" name="categories" type="string"/>
+        <element label="Creation Time" max_length="250" name="creation_time" type="string"/>
+        <element label="Deprecation Reason" max_length="200" name="deprecation_reason" type="string"/>
+        <element label="Description" max_length="5000" name="description" type="string"/>
+        <element label="Execution Context" max_length="2000" name="execution_context" type="string"/>
+        <element label="Icon Reference List" max_length="2000" name="icon_reference_list" type="string"/>
+        <element label="Last Update time" max_length="250" name="last_update_time" type="string"/>
+        <element label="Name" max_length="250" name="name" type="string"/>
+        <element label="Owner Reference" max_length="2000" name="owner_reference" type="string"/>
+        <element label="Project Reference List" max_length="10000" name="project_reference_list" type="string"/>
+        <element label="Spec Version" max_length="250" name="spec_version" type="string"/>
+        <element label="State" max_length="100" name="state" type="string"/>
+        <element label="Support Status" max_length="30" name="support_status" type="string"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+        <element label="Version" max_length="250" name="version" type="string"/>
+    </element>
+</database>

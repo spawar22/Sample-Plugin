@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="" label="Catalog Items" language="en" table="x_nuta2_nutanix_ca_nutanix_catalog_items">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element/>
+            <help/>
+            <hint/>
+            <label>Catalog Items</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_catalog_items</name>
+            <plural>Catalog Items</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-11-08 21:27:08</sys_created_on>
+            <sys_id>61469a9737e12300fdfc097973990e98</sys_id>
+            <sys_mod_count>1</sys_mod_count>
+            <sys_name>Catalog Items</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_nutanix_catalog_items__en</sys_update_name>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-12-10 10:17:44</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

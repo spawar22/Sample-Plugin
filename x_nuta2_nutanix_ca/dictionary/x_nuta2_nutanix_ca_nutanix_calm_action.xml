@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Actions" max_length="40" name="x_nuta2_nutanix_ca_nutanix_calm_action" type="collection">
+        <element display="true" label="Action Name" max_length="100" name="action_name" type="string"/>
+        <element label="Action Variables" max_length="4000" name="action_variables" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Critical" max_length="32" name="critical" type="boolean"/>
+        <element label="Description" max_length="200" name="description" type="string"/>
+        <element label="Name" max_length="100" name="name" type="string"/>
+        <element label="Application Name" max_length="50" name="parent_name" type="string"/>
+        <element label="Application UUID" max_length="100" name="parent_uuid" type="string"/>
+        <element label="State" max_length="50" name="state" type="string"/>
+        <element label="Type" max_length="32" name="type" type="string"/>
+        <element label="UUID" max_length="100" name="uuid" type="string"/>
+    </element>
+</database>

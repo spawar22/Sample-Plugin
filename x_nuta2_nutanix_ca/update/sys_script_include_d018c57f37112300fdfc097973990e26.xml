@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_ClientServerScriptBridge</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description/>
+        <name>Nutanix_ClientServerScriptBridge</name>
+        <script><![CDATA[var Nutanix_ClientServerScriptBridge = Class.create();
+Nutanix_ClientServerScriptBridge.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+
+	
+    fieldValidation: function() {
+
+        var utils = new Nutanix_Calm_Utils();
+        var logger = new Nutanix_Calm_Logger();
+
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fieldValidation.");
+
+            var catSysId = this.getParameter('sysparm_catSysId');
+            var fieldValueMap = this.getParameter('sysparm_fieldValueMap');
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+
+            return configureScript.fieldValidation(catSysId, fieldValueMap);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fieldValidation. Error:- " + e);
+        }
+
+    },
+	
+	fetchLaunchVars: function()
+	{
+		var utils = new Nutanix_Calm_Utils();
+		var logger = new Nutanix_Calm_Logger();
+		
+		try
+			{
+				logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchLaunchVars.");
+				var catSysID = this.getParameter('sysparm_catsysid') + "";
+				var profile = this.getParameter('sysparm_profile') + "";
+				var configScript = new Nutanix_FetchConfigureSettingDropdown();
+				
+				return configScript.fetchLaunchVars(catSysID, profile);
+			}
+		catch(e)
+			{
+				logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchLaunchVars. Error:- "+e);
+			}
+	},
+	
+	variableArrayParser: function() {
+		var logger = new Nutanix_Calm_Logger();
+		try {
+			logger.debug("Inside Nutanix_ClientServerScriptBridge.variableArrayParser");
+
+			var type = this.getParameter('sysparm_type');
+			var parent_uuid = this.getParameter('sysparm_parentUuid');
+			var var_array = this.getParameter('sysparm_varJson');
+
+			var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+			return configureScript.variableArrayParser(type, parent_uuid, var_array);	
+		}catch(e) {
+			logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.variableArrayParser. Error:- "+e);	
+		}
+	},
+
+    hideAccessLocalGroupOption: function() {
+        var utils = new Nutanix_Calm_Utils();
+        var logger = new Nutanix_Calm_Logger();
+
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.hideAccessLocalGroupOption.");
+            var localGroupOption = new Nutanix_FetchConfigureSettingDropdown();
+            return localGroupOption.hideAccessLocalGroupOption(); //returns the value that is present on the form
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.hideAccessLocalGroupOption. Error:- " + e);
+        }
+    },
+
+    supportStatusMPI: function() {
+        var utils = new Nutanix_Calm_Utils();
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.supportStatusMPI.");
+            var bpSysID = this.getParameter('sysparm_blueprint') + "";
+            var supportStatus = new Nutanix_FetchConfigureSettingDropdown();
+            return supportStatus.supportStatusMPI(bpSysID); //returns the value.
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.supportStatusMPI. Error:- " + e);
+        }
+    },
+
+    advanceVariableDynamicOptions: function() {
+
+        var utils = new Nutanix_Calm_Utils();
+        var logger = new Nutanix_Calm_Logger();
+
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getHttpValues.");
+
+            var catSysId = this.getParameter('sysparm_catSysID');
+            // 			var fieldValueMap = this.getParameter('sysparm_fieldValueMap');
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.advanceVariableDynamicOptions(catSysId);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getHttpValues. Error:- " + e);
+        }
+
+    },
+
+	getHttpValues: function() {
+		
+		var utils = new Nutanix_Calm_Utils();
+		var logger = new Nutanix_Calm_Logger();
+		
+		try {
+			logger.debug("Inside Nutanix_ClientServerScriptBridge.getHttpValues.");
+
+			var type = this.getParameter('sysparm_type');
+			var parent_uuid = this.getParameter('sysparm_parentUuid');
+			var pre_map = this.getParameter('sysparm_preMap');
+
+			var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+			return configureScript.getHttpValues(type, parent_uuid, pre_map);	
+		}catch(e) {
+			logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getHttpValues. Error:- "+e);	
+		}
+	},
+
+
+    mpiPatching: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.mpiPatching.");
+            var project = this.getParameter('sysparm_project');
+            var blueprint = this.getParameter('sysparm_blueprint');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.mpiPatching(project, blueprint);
+
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.mpiPatching. Error:- " + e);
+        }
+    },
+
+    getSubnet: function() {
+
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("***Inside Nutanix_ClientServerScriptBridge.getSubnet. catalog sys_id" + this.getParameter('sysparm_catSysID') + " projectUuid " + projectUuid);
+            var catalog = this.getParameter('sysparm_catSysID');
+            var projectUuid = this.getParameter('sysparm_ProjectUuid');
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.getProjectSubnet(catalog, projectUuid);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getSubnet. Error:- " + e);
+        }
+
+    },
+
+    checkQueue: function() {
+        var logger = new Nutanix_Calm_Logger();
+        var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_process_queue');
+        //gr.addEncodedQuery('state!=complete^topic!=startInventoryDelete^topic!=processImportedApp^topic!=importApplications');
+        gr.addEncodedQuery('state!=complete^state!=error^topic!=startInventoryDelete^topic!=processImportedApp^topic!=importRecoveryPoints^topic!=processRecoveryPoints');
+        gr.query();
+        if (gr.next()) {
+            //gs.addErrorMessage('Inventory is currently being synced. Please wait for this operation to finish.');
+            //logger.error("Inside Nutanix_ClientServerScriptBridge.checkQueue: Inventory is being synced.");
+            return false;
+        } else if (gs.getProperty('x_nuta2_nutanix_ca.Delete_Flag') == '1') {
+            //gs.addErrorMessage('Inventory is currently being deleted. Please wait for this operation to finish.');
+            //logger.error("Inside Nutanix_ClientServerScriptBridge.checkQueue: Inventory is being deleted.");
+            return false;
+        } else
+            return true;
+    },
+
+    deleteFlagState: function() {
+        if (gs.getProperty('x_nuta2_nutanix_ca.Delete_Flag') == 1) {
+            return 'deleting';
+        } else {
+            var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_process_queue');
+            gr.addEncodedQuery('state!=complete^state!=error^topic!=startInventoryDelete^topic!=processImportedApp^topic!=importRecoveryPoints^topic!=processRecoveryPoints');
+            gr.query();
+            if (gr.next()) {
+                return 'syncing';
+            }
+        }
+    },
+
+    appFlag: function() {
+        var utils = new Nutanix_Calm_Utils();
+        var grAction = new GlideRecord(utils.configuration.table.NutanixCalmAction);
+        if (grAction.get(this.getParameter('sysparm_actId'))) {
+            var appUUID = grAction.parent_uuid;
+            var gr = new GlideRecord(utils.configuration.table.NutanixCalmApplication);
+            gr.addQuery('uuid', appUUID);
+            gr.query();
+            gr.next();
+
+            if (gr.action_flag == '1') {
+                return '1';
+            } else
+                return '0';
+        }
+    },
+
+    getVariablesProperty: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            var varProp = gs.getProperty('x_nuta2_nutanix_ca.aws_display_vars');
+            return varProp;
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getVariablesProperty. Error:- " + e);
+        }
+    },
+
+    cleanInstance: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_process_queue');
+            gr.addEncodedQuery('state!=complete^topic!=startInventoryDelete');
+            gr.query();
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.cleanInstance.");
+            if (gr.next() || gs.getProperty('x_nuta2_nutanix_ca.Delete_Flag') == '1') {
+                logger.error('A sync or a delete process is currently in progress. Please wait for them to finish');
+            } else {
+                gs.setProperty('x_nuta2_nutanix_ca.Delete_Flag', '1');
+                var grDel = new Nutanix_Calm_Utils();
+                grDel.insertIntoQueue('startInventoryDelete', '', '', '', 'Starts Inventory deletion', 'This process deletes the calm snow data.');
+                logger.info('Inventory cleanup has started.');
+            }
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.cleanInstance. Error:- " + e);
+        }
+    },
+
+    fetchBlueprints: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchBlueprints.");
+            var project = this.getParameter('sysparm_project');
+            var blueprintType = this.getParameter('sysparm_blueprintType');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.fetchBlueprints(project, blueprintType);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchBlueprints. Error:- " + e);
+        }
+    },
+
+    fetchApplicationProfiles: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            var blueprint = this.getParameter('sysparm_blueprint');
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchApplicationProfiles. Blueprint :" + blueprint);
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.fetchApplicationProfiles(blueprint);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchApplicationProfiles. Error:- " + e);
+        }
+    },
+
+    fetchProviderIcons: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchProviderIcons.");
+            var catSysId = this.getParameter('sysparm_catId');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.fetchProviderIcons(catSysId);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchProviderIcons. Error:- " + e);
+        }
+    },
+
+    fetchActionVariables: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchActionVariables.");
+            var JSONstr = '';
+            var actSysId = this.getParameter('sysparm_actSysId');
+            var grAction = new GlideRecord('x_nuta2_nutanix_ca_nutanix_calm_action');
+            if (grAction.get(actSysId)) {
+                var actName = grAction.action_name + '';
+                var trueName = grAction.name + '';
+                var actionType = grAction.type + '';
+                var varStr = grAction.action_variables + '';
+            }
+            if (varStr != '') {
+                JSONstr = {
+                    "name": actName,
+                    "true_name": trueName,
+                    "type": actionType,
+                    "vars": varStr
+                };
+            } else
+                JSONstr = {
+                    "name": actName,
+                    "true_name": trueName,
+                    "type": actionType
+                };
+            return JSON.stringify(JSONstr);
+
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchActionVariables. Error:- " + e);
+        }
+    },
+
+    getProfileVariableDetails: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getProfileVariableDetails.");
+            var project = this.getParameter('sysparm_project');
+            var blueprint = this.getParameter('sysparm_blueprint');
+            var application_profile = this.getParameter('sysparm_application_profile');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            var response = configureScript.getProfileVariableDetails(project, blueprint, application_profile);
+
+            return response;
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getProfileVariableDetails. Error:- " + e);
+        }
+    },
+    getMultipleProfileVariableDetails: function() { //multi-profile- project function
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getMultipleProfileVariableDetails.");
+            var project = this.getParameter('sysparm_project');
+            var blueprint = this.getParameter('sysparm_blueprint');
+            var application_profile = this.getParameter('sysparm_application_profile');
+			var cat_item = this.getParameter('sysparm_cat_item');
+			var delta_profile = this.getParameter('sysparm_delta_profiles');
+			var type = this.getParameter('sysparm_type');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            var response = configureScript.getMultipleProfileVariableDetails(project, blueprint, application_profile, cat_item, delta_profile, type);
+
+            return response;
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getMultipleProfileVariableDetails. Error:- " + e);
+        }
+    },
+
+    getServiceVariableDetails: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getServiceVariableDetails.");
+            var project = this.getParameter('sysparm_project');
+            var blueprint = this.getParameter('sysparm_blueprint');
+            var application_profile = this.getParameter('sysparm_application_profile');
+            var type = this.getParameter('sysparm_type');
+            var bpType = this.getParameter('sysparm_bpType');
+            var cat_item = this.getParameter('sysparm_cat_item');
+			var delta_profiles = this.getParameter('sysparm_delta_profiles');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.getMultipleServiceVariableDetails(project, blueprint, application_profile, type, bpType, cat_item, delta_profiles); 
+
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getProfileVariableDetails. Error:- " + e);
+        }
+    },
+
+    getCrendentialsDetails: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getCrendentialsDetails.");
+            var project = this.getParameter('sysparm_project');
+            var blueprint = this.getParameter('sysparm_blueprint');
+            var application_profile = this.getParameter('sysparm_application_profile');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            var response = configureScript.getCrendentialsDetails(project, blueprint, application_profile);
+
+            return response;
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getCrendentialsDetails. Error:- " + e);
+        }
+    },
+
+    mappedCredentials: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.mappedCredentials.");
+            var projects = this.getParameter('sysparm_project');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.mappedCredentials(projects);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.mappedCredentials. Error:- " + e);
+        }
+    },
+
+    fetchEnvironmentCredentials: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchEnvironmentCredentials.");
+            var credSysId = this.getParameter('sysparm_credentialSydID');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.fetchEnvironmentCredentials(credSysId);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchEnvironmentCredentials. Error:- " + e);
+        }
+    },
+
+    getCatalogInfo: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getCatalogInfo.");
+            var catalogItemSysID = this.getParameter('sysparm_catalogItemSysID');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.getCatalogInfo(catalogItemSysID);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getCatalogInfo. Error:- " + e);
+        }
+    },
+
+    getRealtedCatalogItems: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getRealtedCatalogItems.");
+            var blueprint = this.getParameter('sysparm_blueprint');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.getRealtedCatalogItems(blueprint);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getRealtedCatalogItems. Error:- " + e);
+        }
+    },
+
+    getBlueprintInfo: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getBlueprintInfo.");
+            var blueprint = this.getParameter('sysparm_blueprint');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.getBlueprintInfo(blueprint);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getBlueprintInfo. Error:- " + e);
+        }
+    },
+
+    fetchRuntimeVariablesValue: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchRuntimeVariablesValue.");
+            var sysId = this.getParameter('sysparm_sysId');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.fetchRuntimeVariablesValue(sysId);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchRuntimeVariablesValue. Error:- " + e);
+        }
+    },
+
+    fetchProjectAndProfileList: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchProjectAndProfileList.");
+            var catSysID = this.getParameter('sysparm_catSysID');
+
+            var configureScript = new Nutanix_CatalogFormScripts();
+            return configureScript.fetchMultipleProjectAndProfileList(catSysID);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchProjectAndProfileList. Error:- " + e);
+        }
+    },
+
+    fetchOrderFormData: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchOrderFormData.");
+            var profile = this.getParameter('sysparm_profile');
+            var catSysID = this.getParameter('sysparm_catSysID');
+
+            var configureScript = new Nutanix_CatalogFormScripts();
+            return configureScript.fetchOrderFormData(profile, catSysID);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchOrderFormData. Error:- " + e);
+        }
+    },
+
+    fetchCredentialsList: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchCredentialsList.");
+            var catSysID = this.getParameter('sysparm_catSysID');
+
+            var configureScript = new Nutanix_ImportCredentials();
+            return configureScript.fetchCredentialsList(catSysID);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchCredentialsList. Error:- " + e);
+        }
+    },
+
+    fetchMappedCredentialsDetails: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchMappedCredentialsDetails.");
+            var catSysID = this.getParameter('sysparm_catSysID');
+
+            var configureScript = new Nutanix_ImportCredentials();
+            return configureScript.fetchMappedCredentialsDetails(catSysID);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchMappedCredentialsDetails. Error:- " + e);
+        }
+    },
+
+    checkDuplicate: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.checkDuplicate.");
+            var catName = this.getParameter('sysparm_catName');
+            var catSysId = this.getParameter('sysparm_catSysId');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.checkDuplicate(catName, catSysId);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.checkDuplicate. Error:- " + e);
+        }
+    },
+
+    checkCatalogValidity: function() {
+        var logger = new Nutanix_Calm_Logger();
+     try {
+         logger.debug("Inside Nutanix_ClientServerScriptBridge.checkCatalogValidity.");
+         var blueprintType = this.getParameter('blueprintType');
+         var blueprintUUID = this.getParameter('blueprintUUID');
+
+         var profileSysIds = this.getParameter('profileSysId').split(',');
+         var projectSysId = this.getParameter('projectUUID');
+         var profileName = this.getParameter('profileName');
+         var profileSysId = '';
+
+         for (var i = 0; i < profileSysIds.length; i++) {
+             var profile = new GlideRecord('x_nuta2_nutanix_ca_application_profile');
+             profile.get(profileSysIds[i]);
+			 logger.debug("***True/false: profile_name : "+profile.name + ' profileName : '+profileName+ '');
+             if (profile.name + '' == profileName+ '') {
+                 profileSysId = profileSysIds[i] + '';
+                 break;
+             } else {
+                 continue;
+             }
+         }
+	
+            var configureScript = new Nutanix_CheckCatalogItemValidity();
+            return configureScript.checkCatalogValidity(blueprintType, blueprintUUID, profileSysId, projectSysId);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.checkCatalogValidity. Error:- " + e);
+        }
+    },
+
+    getUserEmail: function() {
+        var gr = new GlideRecord('sys_user');
+
+        if (gr.get(gs.getUserID())) {
+            return gr.email + '';
+        }
+    },
+    fetchMultipleBlueprints: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            var blueprintType = this.getParameter('sysparm_blueprintType');
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchMultipleBlueprints. blueprintType " + blueprintType);
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.fetchMultipleBlueprints(blueprintType);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchMultipleBlueprints. Error:- " + e);
+        }
+    },
+    fetchMultipleProjects: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            var blueprint = this.getParameter('sysparm_blueprint');
+            var blueprintType = this.getParameter('sysparm_blueprintType');
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchMultipleProjects. Blueprint " + blueprint + " BlueprintType " + blueprintType);
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.fetchMultipleProjects(blueprint, blueprintType);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchMultipleProjects. Error:- " + e);
+        }
+    },
+    getMultipleServiceVariableDetails: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getMultipleServiceVariableDetails.");
+            var project = this.getParameter('sysparm_project');
+            var blueprint = this.getParameter('sysparm_blueprint');
+            var application_profile = this.getParameter('sysparm_application_profile');;
+            var type = this.getParameter('sysparm_type');
+            var bpType = this.getParameter('sysparm_bpType');
+            var project1 = project.split(',');
+            var profile1 = application_profile.split(',');
+            var answer = [];
+            for (var i in profile1) {
+                var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+                var response = JSON.parse(configureScript.getServiceVariableDetails(project1[0], blueprint, profile1[i], type, bpType));
+                var res = {
+                    "profile": profile1[i],
+                    "response": response.service_configuration
+                };
+                answer.push(res);
+            }
+            logger.debug("End Nutanix_ClientServerScriptBridge.getMultipleServiceVariableDetails." + JSON.stringify(answer));
+            return JSON.stringify(answer);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.toyota1_getServiceVariableDetails. Error:- " + e);
+        }
+    },
+
+    getProject: function(blueprint, blueprintType) {
+		var logger = new Nutanix_Calm_Logger();
+        logger.debug("Inside Nutanix_ClientServerScriptBridge.getProject.");
+        try {
+            logger.debug("Inside global Business Rule.getProject.blueprint : " + blueprint + 'blueprintType : ' + blueprintType);
+
+            var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_calm_projects_blueprints_relationship');
+            gr.addQuery('catalog_item', blueprint);
+            if (blueprintType == 'unpublished')
+                gr.addQuery('catalog_item.category', gs.getProperty('x_nuta2_nutanix_ca.nutanix_unpublishedBP_sysId'));
+            else
+                gr.addQuery('catalog_item.category', gs.getProperty('x_nuta2_nutanix_ca.nutanix_category_sysId'));
+            gr.orderBy('catalog_item.name');
+            gr.query();
+            var query = 'state=COMPLETE^sys_idIN';
+            var pro = [];
+            while (gr.next()) {
+                if ((blueprintType == 'unpublished' && gr.catalog_item.state + '' == 'ACTIVE') || (blueprintType != 'unpublished' && gr.catalog_item.state + '' == 'active')) {
+                    query += gr.projects + ',';
+                }
+            }
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getProject. Query return " + query);
+            return query;
+        } catch (e) {
+           logger.debug("Exception Nutanix_ClientServerScriptBridge.getProject. Error:- " + e);
+        }
+    },
+    getProfile: function(blueprintSysId) {
+		var logger = new Nutanix_Calm_Logger();
+        logger.debug("Inside Nutanix_ClientServerScriptBridge.getProfile.");
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getProfile.blueprint : " + blueprint);
+
+            var blueprint = new GlideRecord('x_nuta2_nutanix_ca_nutanix_blueprint');
+            blueprint.get(blueprintSysId);
+            var gr = new GlideRecord('x_nuta2_nutanix_ca_catalog_item_and_application_profile_relation');
+            gr.addQuery('catalog_item', blueprintSysId);
+            gr.addQuery('state', 'active');
+            //gr.addEncodedQuery('providersNOT LIKEaws^providersNOT LIKEazure^providersNOT LIKEgcp');
+            gr.orderBy('application_profile.name');
+            gr.query();
+
+            var query = 'sys_idIN';
+
+            while (gr.next()) {
+                query += gr.application_profile + ',';
+            }
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getProfile. Query return " + query);
+            return query;
+        } catch (e) {
+            logger.debug("Exception Nutanix_ClientServerScriptBridge.getProfile. Error:- " + e);
+        }
+    },
+   noProfileVariableDetails: function() { //multi-profile- project function
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.noProfileVariableDetails.");
+            var project = this.getParameter('sysparm_project');
+            var blueprint = this.getParameter('sysparm_blueprint');
+            var application_profile = this.getParameter('sysparm_application_profile');
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            var response = configureScript.noProfileVariableDetails(project, blueprint, application_profile);
+
+            return response;
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.noProfileVariableDetails. Error:- " + e);
+        }
+    },
+	
+	
+    getSubnetDetails: function() {
+        var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getServiceVariableDetails.");
+            var project = this.getParameter('sysparm_project');
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getSubnetDetails. Project : " + project);
+
+            var configureScript = new Nutanix_FetchConfigureSettingDropdown();
+            return configureScript.getNutanixSubnetList(project); 
+
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getProfileVariableDetails. Error:- " + e);
+        }
+    },
+	
+		getDeltaProject : function(){
+		var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getDeltaProject.");
+            var project_sysId = this.getParameter('sysparm_project').split(',');
+			var catalog_sysId = this.getParameter('sysparm_catItem');
+			var deltaProject = [];
+						
+			var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+			gr.addEncodedQuery('item_name.sys_id='+catalog_sysId);
+			gr.query();
+						
+			while(gr.next()){
+				var projects = gr.getValue('multiple_projects')+'';
+				for(var i in project_sysId){
+						if(projects.includes(project_sysId[i]))
+							continue;
+						else
+							deltaProject.push(project_sysId[i]);		
+				}			
+			}
+					
+            return JSON.stringify(deltaProject);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getDeltaProject. Error:- " + e);
+        }
+	},
+	
+	getDeltaProfile : function(){
+		var logger = new Nutanix_Calm_Logger();
+		var utils = new Nutanix_Calm_Utils();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.getDeltaProject.");
+            var profile_sysId = this.getParameter('sysparm_profile').split(',');
+            var catalog_sysId = this.getParameter('sysparm_catItem');
+			var deltaProfile = [];
+			
+			
+			var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+			gr.addEncodedQuery('item_name.sys_id='+catalog_sysId);
+			gr.query();
+						
+			while(gr.next()){
+			   var profile = gr.getValue('multiple_application_profile')+'';
+				for(var i in profile_sysId){
+						if(profile.includes(profile_sysId[i])){
+							continue;
+						}
+						else{
+							var gr1 = new GlideRecord('x_nuta2_nutanix_ca_catalog_variables_properties');
+							gr1.addQuery('application_profile', profile_sysId[i]);
+							gr1.addQuery('catalog_item', catalog_sysId);
+				//			gr1.addQuery('isprofilevariable', false);
+							gr1.query();
+							if(gr1.next()){
+								continue;
+							}
+							else{
+								deltaProfile.push(profile_sysId[i]);
+							}
+						}				
+				}
+			}
+					
+            return JSON.stringify(deltaProfile);
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.getDeltaProject. Error:- " + e);
+        }
+	},
+	fetchBlueprintName : function(){	
+		var logger = new Nutanix_Calm_Logger();
+        try {
+            logger.debug("Inside Nutanix_ClientServerScriptBridge.fetchBlueprintName.");
+            var BlueprintsysId = this.getParameter('sysparm_BlueprintsysId');
+						
+			var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_calm_projects_blueprints_relationship');
+			gr.addQuery('catalog_item', BlueprintsysId);                  
+            gr.query();
+            if(gr.next()) 
+                 return gr.catalog_item.name + '' + " " + gr.version + '';                
+		} catch (e) {
+            logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fetchBlueprintName. Error:- " + e);
+        }
+	},
+	getProjectCount: function(){
+			var blueprint = this.getParameter('sysparm_blueprint');
+			var gr = new GlideAggregate('x_nuta2_nutanix_ca_nutanix_calm_projects_blueprints_relationship');
+            gr.addQuery('catalog_item', blueprint);
+			gr.addAggregate('COUNT');
+			gr.query();
+			var count = 0;
+				if(gr.next()){
+				count = gr.getAggregate('COUNT');
+				}
+            return count;
+	},
+	getProfileCount: function(){
+		var blueprint = this.getParameter('sysparm_blueprint');
+		var profile = new GlideAggregate('x_nuta2_nutanix_ca_catalog_item_and_application_profile_relation');
+		profile.addQuery('catalog_item', blueprint);
+		profile.addQuery('state', 'active');
+		profile.addAggregate('COUNT');
+		profile.query();
+		var count = 0;
+		if(profile.next()){
+			count = profile.getAggregate('COUNT');
+		}
+		return count;
+	},
+	getProfilesysIdNameJSON: function(){
+		var profile = this.getParameter('sysparm_profile');
+		var array_profile = profile.split(',');
+		var profile_JSON = {};
+		for(var n=0; n <array_profile.length; n++){
+			var profile_gr = new GlideRecord('x_nuta2_nutanix_ca_application_profile');
+			profile_gr.get(array_profile[n]);
+			profile_JSON[profile_gr.sys_id] = { "name" : profile_gr.name+''
+											  };
+		}
+		return JSON.stringify(profile_JSON);
+	},
+	getSecretVaraiable: function(){
+		var profile = this.getParameter('sysparm_profile');
+		var array_profile = profile.split(',');
+		var blueprint = this.getParameter('sysparm_blueprint');
+		var answer = [];
+		for(var n=0; n <array_profile.length; n++){
+			var gr_variable = new GlideRecord('x_nuta2_nutanix_ca_catalog_variables_properties');
+			gr_variable.addEncodedQuery('isprofilevariable=true^data_type=SECRET^catalog_item='+blueprint+'^application_profile='+array_profile[n]);
+			gr_variable.query();
+			while(gr_variable.next()){
+				answer.push(gr_variable.variable.name);
+			}
+		}
+		return answer.toString();
+	},
+/*	migration_1_4 : function(){
+		var answer = '';
+		if(gs.getProperty('x_nuta2_nutanix_ca.Version1_4_3_migration_needed') == '0')
+		{
+		    var utils = new Nutanix_Calm_Utils();
+			
+			var blueprint = new GlideRecord('x_nuta2_nutanix_ca_nutanix_blueprint');
+			blueprint.addQuery('state', 'ACTIVE');
+			blueprint.query();
+			while(blueprint.next()){
+				var final_var_list = [];
+				var response = utils.makeCalmApiCall("get", '/blueprints/'+blueprint.uuid, "");
+				if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				   var app_profile_list = JSON.parse(response.getBody()).spec.resources.app_profile_list;
+					if(app_profile_list.length <1)
+						   continue;
+
+				   for(var i  in app_profile_list){
+
+					   var variable_list =  app_profile_list[i].variable_list;
+						 if(variable_list.length <1)
+								 continue;
+						  for(var j in variable_list){						  
+	// 						var var_index = final_var_list.indexOf(variable_list[j].name);
+	// 				        var_index === -1 ? final_var_list.push(variable_list[j].name) :( answer.inludes(blueprint.name)? '' : answer += " "+blueprint.name);
+							var variable_prop = new GlideRecord('x_nuta2_nutanix_ca_catalog_variables_properties');
+							variable_prop.addQuery('uuid', variable_list[j].uuid);
+							variable_prop.query();
+							if(variable_prop.next()){
+								continue;
+							}
+							else{ 
+							  answer += " "+blueprint.name;	
+							}
+					   }
+				   }
+				}
+			}
+		}
+		if(blueprint.getRowCount() == 0 || answer == ''){
+			gs.setProperty('x_nuta2_nutanix_ca.Version1_4_3_migration_needed', '1');
+		}
+			
+		return answer+"";
+	},*/
+    type: 'Nutanix_ClientServerScriptBridge'		
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-28 19:13:04</sys_created_on>
+        <sys_id>d018c57f37112300fdfc097973990e26</sys_id>
+        <sys_mod_count>265</sys_mod_count>
+        <sys_name>Nutanix_ClientServerScriptBridge</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_d018c57f37112300fdfc097973990e26</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-23 09:22:25</sys_updated_on>
+    </sys_script_include>
+</record_update>

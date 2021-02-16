@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>This is base64 string of default image on each catalog item.</description>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.default.icons</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>default.icons</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-29 12:53:09</sys_created_on>
+        <sys_id>cd0aa8ca3782a300fdfc097973990eab</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.default.icons</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_cd0aa8ca3782a300fdfc097973990eab</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-11-29 12:53:09</sys_updated_on>
+        <type>string</type>
+        <value>iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAA90lEQVRIx+3Uvy5DcRjG8c85lUY1yAmjqQSJG3AxJjcgIdGkYhFBKsIsJnEd3ICZGCQmg6paDNKTMLSEnkhO+zP2WX5/3jzf98/wRpWiuhVT+lfLuc1CcmTN2AB2SpYVo8rzQNm/1IwqHwF2xGH2IQBGOseqDaO/AjduHXj5ft9nrLM/K1jvsadiS47N5G2h1PPdBtPq3TwDz2DSvsWwIZbtmA8BULZrLgTQQQQBGO8XkLrKR/67ghPXYYDUnrsQAO+2PYQAeLPlMQTAq5oGokyknQ9AQ9WTJNPeYfc2XKr/AmgG+ZuxiyDAWSG5NGEhsxTzqOVU7RPdDCxkSOGi6wAAAABJRU5ErkJggg==</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=cd0aa8ca3782a300fdfc097973990eab"/>
+</record_update>

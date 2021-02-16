@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description/>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.nutanix.fields.labels.mapping</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>nutanix.fields.labels.mapping</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-27 06:02:48</sys_created_on>
+        <sys_id>15b87819378e6b00fdfc097973990e3c</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.nutanix.fields.labels.mapping</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_15b87819378e6b00fdfc097973990e3c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-08-30 07:40:23</sys_updated_on>
+        <type>string</type>
+        <value>{"connection_type":{"label":"Connection Type"},"disable_readiness_probe":{"label":"Check Log-In Upon Create"},"timeout_secs":{"label":"Delay (in seconds)"},"address":{"label":"Address"},"connection_port":{"label":"Connection Port"},"name":{"label":"Instance Name"},"associate_public_ip_address":{"label":"Associate Public IP Address"},"num_sockets":{"label":"Sockets"},"min_replicas":{"label":"Min Replicas"},"max_replicas":{"label":"Max Replicas"},"instance_profile_name":{"label":"IAM Role"},"availability_zone":{"label":"Availability Zone"},"subnet_id":{"label":"Subnet"},"key_name":{"label":"Key Pairs"},"region":{"label":"Region"},"user_data":{"label":"User Data"},"image_id":{"label":"Machine Image"},"instance_type":{"label":"Instance Type"},"security_group_list":{"label":"Security Groups"},"vpc_id":{"label":"VPC"},"machineType":{"label":"Machine Type"},"cloud_init":{"label":"Cloud-Init"},"num_vcpus_per_socket":{"label":"Num vCPUs Per Socket"},"memory_size_mib":{"label":"Memory Size MB"},"block_project_wide_ssh_key":{"label":"Block Project Wide SSH Key"},"drs_mode":{"label":"DRS mode"}}</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=15b87819378e6b00fdfc097973990e3c"/>
+</record_update>

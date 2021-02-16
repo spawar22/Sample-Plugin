@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_Queue_Cleaner</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Cleans Queue before a specified number of days</description>
+        <name>Nutanix_Queue_Cleaner</name>
+        <script><![CDATA[var Nutanix_Queue_Cleaner = Class.create();
+Nutanix_Queue_Cleaner.prototype = {
+    initialize: function() {
+		this.Utils = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+    },
+	
+	deleteQueue: function() {
+		
+		var retPeriod = 0;
+		
+		try {
+			
+// 			var configObj = new GlideRecord(this.Utils.configuration.table.CalmPluginConfig+'');
+// 			configObj.query();
+// 			if(configObj.next())
+// 				retPeriod = configObj.retention_period+'';
+		
+			retPeriod = gs.getProperty('x_nuta2_nutanix_ca.retention.period')-1;
+			
+			this.logger.info("Deleting data in process queue older than " + retPeriod + " days.");
+			
+			var queueObj = new GlideRecord(this.Utils.configuration.table.processQueue);
+			queueObj.addEncodedQuery("sys_created_on<=javascript:gs.daysAgoStart("+retPeriod+")");
+			queueObj.deleteMultiple();
+			
+		}
+		catch(err) {
+			this.logger.error("Error found inside Nutanix_Queue_Cleaner.deleteQueue. Error: " + err);
+		}
+	},
+	
+    type: 'Nutanix_Queue_Cleaner'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>bharat.vajjala</sys_created_by>
+        <sys_created_on>2018-11-01 08:50:34</sys_created_on>
+        <sys_id>045e133837212300fdfc097973990e1c</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>Nutanix_Queue_Cleaner</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_045e133837212300fdfc097973990e1c</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-24 00:35:55</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="state" label="State" language="en" table="x_nuta2_nutanix_ca_nutanix_staging_environment">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>state</element>
+            <help/>
+            <hint/>
+            <label>State</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_staging_environment</name>
+            <plural>States</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-26 13:23:02</sys_created_on>
+            <sys_id>3d141d4d37466b00fdfc097973990e66</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>State</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_nutanix_staging_environment_state_en</sys_update_name>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-26 13:23:02</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

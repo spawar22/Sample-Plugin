@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="catalog_ui_policy_action">
+    <catalog_ui_policy_action action="INSERT_OR_UPDATE">
+        <catalog_item display_value="Variables">dae4cbd637512300fdfc097973990e0d</catalog_item>
+        <catalog_variable>IO:938809df4f933300d8494ebf9310c730</catalog_variable>
+        <cleared>false</cleared>
+        <disabled>true</disabled>
+        <field/>
+        <mandatory>ignore</mandatory>
+        <order/>
+        <sys_class_name>catalog_ui_policy_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-08-21 11:50:27</sys_created_on>
+        <sys_id>e3d8c9df4f933300d8494ebf9310c76b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>patching_status</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>catalog_ui_policy_action_e3d8c9df4f933300d8494ebf9310c76b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-08-22 11:03:53</sys_updated_on>
+        <table/>
+        <ui_policy display_value="To Hide Variables">6ef99a0037ed2300fdfc097973990e77</ui_policy>
+        <variable>patching_status</variable>
+        <variable_set/>
+        <visible>false</visible>
+    </catalog_ui_policy_action>
+</record_update>

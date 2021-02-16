@@ -1,0 +1,2623 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="wf_workflow_version">
+    <wf_workflow_version action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <activity_stages>{"activities":{"5dc8dc0107625050b7bbf1d08c1ed0ac":"11c8dc0107625050b7bbf1d08c1ed09d","ddc8dc0107625050b7bbf1d08c1ed09d":"91c8dc0107625050b7bbf1d08c1ed09d","51c8dc0107625050b7bbf1d08c1ed0a5":"11c8dc0107625050b7bbf1d08c1ed09d","51c8dc0107625050b7bbf1d08c1ed0b3":"11c8dc0107625050b7bbf1d08c1ed09d","15c8dc0107625050b7bbf1d08c1ed0a4":"11c8dc0107625050b7bbf1d08c1ed09d","51c8dc0107625050b7bbf1d08c1ed0b2":"91c8dc0107625050b7bbf1d08c1ed09d","95c8dc0107625050b7bbf1d08c1ed0a3":"1dc8dc0107625050b7bbf1d08c1ed09c","ddc8dc0107625050b7bbf1d08c1ed0a5":"11c8dc0107625050b7bbf1d08c1ed09d","d1c8dc0107625050b7bbf1d08c1ed0a2":"91c8dc0107625050b7bbf1d08c1ed09d","11c8dc0107625050b7bbf1d08c1ed0ac":"1dc8dc0107625050b7bbf1d08c1ed09c","11c8dc0107625050b7bbf1d08c1ed0ab":"91c8dc0107625050b7bbf1d08c1ed09d","d1c8dc0107625050b7bbf1d08c1ed0a0":"11c8dc0107625050b7bbf1d08c1ed09d","99c8dc0107625050b7bbf1d08c1ed0ad":"91c8dc0107625050b7bbf1d08c1ed09d","9dc8dc0107625050b7bbf1d08c1ed0b3":"11c8dc0107625050b7bbf1d08c1ed09d","99c8dc0107625050b7bbf1d08c1ed0ae":"91c8dc0107625050b7bbf1d08c1ed09d","5dc8dc0107625050b7bbf1d08c1ed0a9":"11c8dc0107625050b7bbf1d08c1ed09d"},"stages":{"11c8dc0107625050b7bbf1d08c1ed09d":{"duration":"","order":100,"stageId":"11c8dc0107625050b7bbf1d08c1ed09d","name":"Processing","value":"processing"},"1dc8dc0107625050b7bbf1d08c1ed09c":{"duration":"","order":1100,"stageId":"1dc8dc0107625050b7bbf1d08c1ed09c","name":"Completed","value":"complete"},"91c8dc0107625050b7bbf1d08c1ed09d":{"duration":"","order":100,"stageId":"91c8dc0107625050b7bbf1d08c1ed09d","name":"Waiting","value":"waiting"}},"subflows":[],"ends":["95c8dc0107625050b7bbf1d08c1ed0a3"]}</activity_stages>
+        <after_business_rules>false</after_business_rules>
+        <checked_out/>
+        <checked_out_by/>
+        <column_renderer display_value="Workflow-driven">a56213111b030100adca1e094f0713ac</column_renderer>
+        <condition/>
+        <condition_type/>
+        <description>This wokflow will run whenever admin user wants to configure a blueprint.</description>
+        <expected_sequences>11c8dc0107625050b7bbf1d08c1ed0ab,d1c8dc0107625050b7bbf1d08c1ed0a2,99c8dc0107625050b7bbf1d08c1ed0ae,5dc8dc0107625050b7bbf1d08c1ed0a9,d1c8dc0107625050b7bbf1d08c1ed0a0,51c8dc0107625050b7bbf1d08c1ed0b2,51c8dc0107625050b7bbf1d08c1ed0b3,11c8dc0107625050b7bbf1d08c1ed0ac,95c8dc0107625050b7bbf1d08c1ed0a3</expected_sequences>
+        <expected_time>1970-01-01 14:00:00</expected_time>
+        <expected_time_type/>
+        <full_sequences>11c8dc0107625050b7bbf1d08c1ed0ab,d1c8dc0107625050b7bbf1d08c1ed0a2,99c8dc0107625050b7bbf1d08c1ed0ae,5dc8dc0107625050b7bbf1d08c1ed0a9,d1c8dc0107625050b7bbf1d08c1ed0a0,51c8dc0107625050b7bbf1d08c1ed0b2,99c8dc0107625050b7bbf1d08c1ed0ad,ddc8dc0107625050b7bbf1d08c1ed09d,15c8dc0107625050b7bbf1d08c1ed0a4,51c8dc0107625050b7bbf1d08c1ed0b3,5dc8dc0107625050b7bbf1d08c1ed0ac,51c8dc0107625050b7bbf1d08c1ed0a5,ddc8dc0107625050b7bbf1d08c1ed0a5,11c8dc0107625050b7bbf1d08c1ed0ac,9dc8dc0107625050b7bbf1d08c1ed0b3,95c8dc0107625050b7bbf1d08c1ed0a3</full_sequences>
+        <journal/>
+        <max_activity_count>100</max_activity_count>
+        <name>Nutanix_Configure Calm BP Setting Workflow</name>
+        <not_cacheable>false</not_cacheable>
+        <on_cancel><![CDATA[// This script executes if the workflow is cancelled.// The global variable context_sys_id contains the sys_id of the cancelled workflow context.]]></on_cancel>
+        <order>100</order>
+        <pin_type>set_by_activity</pin_type>
+        <published>true</published>
+        <relative_duration display_value="2 business days by 4pm">3bf802c20a0a0b52008e2859cd8abcf2</relative_duration>
+        <requires_ert>true</requires_ert>
+        <run_multiple>false</run_multiple>
+        <schedule/>
+        <stage_field>stage</stage_field>
+        <stage_order>computed</stage_order>
+        <start display_value="Begin">11c8dc0107625050b7bbf1d08c1ed0ab</start>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>9dc8d00107625050b7bbf1d08c1ed036</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 19:00:13</sys_updated_on>
+        <table>sc_req_item</table>
+        <timezone/>
+        <validated>false</validated>
+        <workflow display_value="Nutanix_Configure Calm BP Setting Workflow">68b660d837256300fdfc097973990e97</workflow>
+    </wf_workflow_version>
+    <wf_workflow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <description>This wokflow will run whenever admin user wants to configure a blueprint.</description>
+        <name>Nutanix_Configure Calm BP Setting Workflow</name>
+        <preview/>
+        <sys_class_name>wf_workflow</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-30 05:37:53</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>68b660d837256300fdfc097973990e97</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Nutanix_Configure Calm BP Setting Workflow</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>wf_workflow_68b660d837256300fdfc097973990e97</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-10-30 10:51:21</sys_updated_on>
+        <table>sc_req_item</table>
+        <template>false</template>
+        <vars/>
+    </wf_workflow>
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Completed</name>
+        <ola>1970-01-01 00:00:00</ola>
+        <order>1100</order>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed09c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>complete</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_stage>
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Delivery</name>
+        <ola>1970-01-03 00:00:00</ola>
+        <order>140</order>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>9dc8dc0107625050b7bbf1d08c1ed09c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>delivery</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_stage>
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Fulfillment</name>
+        <ola>1970-01-02 00:00:00</ola>
+        <order>120</order>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed09c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>fulfillment</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_stage>
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Processing</name>
+        <ola>1970-01-01 00:00:00</ola>
+        <order>100</order>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed09d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>processing</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_stage>
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Request Cancelled</name>
+        <ola>1970-01-01 00:00:00</ola>
+        <order>1000</order>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed09c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>Request Cancelled</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_stage>
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Request Approved</name>
+        <ola>1970-01-01 00:00:00</ola>
+        <order>90</order>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed09d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>request_approved</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_stage>
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Waiting</name>
+        <ola>1970-01-01 00:00:00</ola>
+        <order>100</order>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>91c8dc0107625050b7bbf1d08c1ed09d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>waiting</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_stage>
+    <wf_stage action="INSERT_OR_UPDATE">
+        <name>Waiting for Approval</name>
+        <ola>1970-01-02 00:00:00</ola>
+        <order>100</order>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed09d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>waiting_for_approval</value>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_stage>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Begin">c7a5e32c0a0a0b3a002377c24ed8ea76</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>1</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Begin</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Waiting">91c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed0ab</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width>80</width>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>19</x>
+        <y>20</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=11c8dc0107625050b7bbf1d08c1ed0ab"/>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Begin">11c8dc0107625050b7bbf1d08c1ed0ab</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0ab</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Switch">f84eda480a0a3c1800a6fa8c7badf346</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>4</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Check Catalog Item to Run App. Script.</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Processing">11c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0a0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>142</x>
+        <y>35</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=d1c8dc0107625050b7bbf1d08c1ed0a0"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>d1c8dc0107625050b7bbf1d08c1ed0a0</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0a0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>field</value>
+        <variable display_value="">f85385830a0a3c18008599b17b971cbd</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>d1c8dc0107625050b7bbf1d08c1ed0a0</document_key>
+        <order>300</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0a0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>cat_item</value>
+        <variable display_value="">f8575c7d0a0a3c1800b8f4d25403c852</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>d1c8dc0107625050b7bbf1d08c1ed0a0</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0a0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value/>
+        <variable display_value="">f855a43e0a0a3c180106a59800a50a22</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>d1c8dc0107625050b7bbf1d08c1ed0a0</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0a0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>field</value>
+        <variable display_value="">f85385830a0a3c18008599b17b971cbd</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>d1c8dc0107625050b7bbf1d08c1ed0a0</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0a0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value/>
+        <variable display_value="">f855a43e0a0a3c180106a59800a50a22</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>d1c8dc0107625050b7bbf1d08c1ed0a0</document_key>
+        <order>300</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0a0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>cat_item</value>
+        <variable display_value="">f8575c7d0a0a3c1800b8f4d25403c852</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</activity>
+        <condition>activity.result == '12f00e3337d12300fdfc097973990e35'</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>false</is_positive>
+        <name>Credentials Config Catalog</name>
+        <order>2</order>
+        <short_description>Run a Script if the catalog item is Credentials,</short_description>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0a1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+    </wf_condition>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</activity>
+        <condition>activity.result == 'd4d3da7f37d12300fdfc097973990e11'</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>false</is_positive>
+        <name>General Settings</name>
+        <order>3</order>
+        <short_description>Run a Script if the catalog item is General Settings,</short_description>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>d9c8dc0107625050b7bbf1d08c1ed0a1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+    </wf_condition>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</activity>
+        <condition>activity.result == 'b3800e3337d12300fdfc097973990e3c'</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>false</is_positive>
+        <name>Service Configuration Catalog</name>
+        <order>1</order>
+        <short_description>Run a Script if the catalog item is Service Configuration ,</short_description>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>55c8dc0107625050b7bbf1d08c1ed0a1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+    </wf_condition>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</activity>
+        <condition>activity.result == 'dae4cbd637512300fdfc097973990e0d'</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>false</is_positive>
+        <name>Variable Config Catalog</name>
+        <order>0</order>
+        <short_description>Run a Script if the catalog item is Variable,</short_description>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0a1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Run Script">db8c65aec0a8016501d00259bc7203a4</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>7</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Config Calm Credentials for BP</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Processing">11c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0a5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>609</x>
+        <y>384</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=51c8dc0107625050b7bbf1d08c1ed0a5"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>51c8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0a5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>var configScript = new Nutanix_ConfigureSettingScripts();&#13;
+configScript.setCredentialsData( current );&#13;
+</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>51c8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0a5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>var configScript = new Nutanix_ConfigureSettingScripts();&#13;
+configScript.setCredentialsData( current );&#13;
+</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Config Calm Credentials for BP">51c8dc0107625050b7bbf1d08c1ed0a5</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0a5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Run Script">db8c65aec0a8016501d00259bc7203a4</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>5</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Config Calm Profile Variables</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Processing">11c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0b3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>994</x>
+        <y>226</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=51c8dc0107625050b7bbf1d08c1ed0b3"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>51c8dc0107625050b7bbf1d08c1ed0b3</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0b3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>var configScript = new Nutanix_ConfigureSettingScripts();&#13;
+configScript.setProfileVariables( current );&#13;
+</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>51c8dc0107625050b7bbf1d08c1ed0b3</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0b3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>var configScript = new Nutanix_ConfigureSettingScripts();&#13;
+configScript.setProfileVariables( current );&#13;
+</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Config Calm Profile Variables">51c8dc0107625050b7bbf1d08c1ed0b3</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0b3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Run Script">db8c65aec0a8016501d00259bc7203a4</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>6</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Config Variables of Services.</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Processing">11c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>5dc8dc0107625050b7bbf1d08c1ed0ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>826</x>
+        <y>338</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=5dc8dc0107625050b7bbf1d08c1ed0ac"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>5dc8dc0107625050b7bbf1d08c1ed0ac</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>var configScript = new Nutanix_ConfigureSettingScripts();&#13;
+configScript.setMultiProfileServiceVariables( current );&#13;
+</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>5dc8dc0107625050b7bbf1d08c1ed0ac</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>var configScript = new Nutanix_ConfigureSettingScripts();&#13;
+configScript.setMultiProfileServiceVariables( current );&#13;
+</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Config Variables of Services.">5dc8dc0107625050b7bbf1d08c1ed0ac</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0ad</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Run Script">db8c65aec0a8016501d00259bc7203a4</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>17</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Copy Client Data</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Waiting">91c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0a2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>30</x>
+        <y>214</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=d1c8dc0107625050b7bbf1d08c1ed0a2"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>d1c8dc0107625050b7bbf1d08c1ed0a2</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0a2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>workflow.scratchpad.nonFilteredclientData = '';&#13;
+workflow.scratchpad.clientData = '';&#13;
+&#13;
+if(gs.getSession().getClientData('Cloned_bp_response')+'' != 'null')&#13;
+	workflow.scratchpad.clientData = gs.getSession().getClientData('Cloned_bp_response')+'';&#13;
+&#13;
+if(gs.getSession().getClientData('non_filtered_cloned_bp_response')+'' != 'null')&#13;
+	workflow.scratchpad.nonFilteredclientData = gs.getSession().getClientData('non_filtered_cloned_bp_response')+'';&#13;
+	</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>d1c8dc0107625050b7bbf1d08c1ed0a2</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0a2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>workflow.scratchpad.nonFilteredclientData = '';&#13;
+workflow.scratchpad.clientData = '';&#13;
+&#13;
+if(gs.getSession().getClientData('Cloned_bp_response')+'' != 'null')&#13;
+	workflow.scratchpad.clientData = gs.getSession().getClientData('Cloned_bp_response')+'';&#13;
+&#13;
+if(gs.getSession().getClientData('non_filtered_cloned_bp_response')+'' != 'null')&#13;
+	workflow.scratchpad.nonFilteredclientData = gs.getSession().getClientData('non_filtered_cloned_bp_response')+'';&#13;
+	</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Copy Client Data">d1c8dc0107625050b7bbf1d08c1ed0a2</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0a2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Run Script">db8c65aec0a8016501d00259bc7203a4</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>8</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Do General Settings of BP</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Processing">11c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed0a4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>270</x>
+        <y>575</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=15c8dc0107625050b7bbf1d08c1ed0a4"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>15c8dc0107625050b7bbf1d08c1ed0a4</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0a4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>var configScript = new Nutanix_ConfigureSettingScripts();&#13;
+var cat_item_sysId = configScript.configBPGeneralSettings( current, workflow.scratchpad.clientData+'', workflow.scratchpad.nonFilteredclientData+'')+'';&#13;
+workflow.scratchpad.cat_item_sysId = cat_item_sysId;&#13;
+</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>15c8dc0107625050b7bbf1d08c1ed0a4</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0a4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>var configScript = new Nutanix_ConfigureSettingScripts();&#13;
+var cat_item_sysId = configScript.configBPGeneralSettings( current, workflow.scratchpad.clientData+'', workflow.scratchpad.nonFilteredclientData+'')+'';&#13;
+workflow.scratchpad.cat_item_sysId = cat_item_sysId;&#13;
+</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Do General Settings of BP">15c8dc0107625050b7bbf1d08c1ed0a4</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0a4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="End">c7a66f7d0a0a0b3a004544a6d2f14076</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>2</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>End</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Completed">1dc8dc0107625050b7bbf1d08c1ed09c</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0a3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width>80</width>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>1021</x>
+        <y>747</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=95c8dc0107625050b7bbf1d08c1ed0a3"/>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Set Values">1ca8d7cf0a0a0b265e9a000c2c08248c</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>13</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Set State To Closed Complete</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Completed">1dc8dc0107625050b7bbf1d08c1ed09c</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed0ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>1080</x>
+        <y>508</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=11c8dc0107625050b7bbf1d08c1ed0ac"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>11c8dc0107625050b7bbf1d08c1ed0ac</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>91c8dc0107625050b7bbf1d08c1ed0ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>state=3^description= ^EQ</value>
+        <variable display_value="">1cb38c8f0a0a0b266fb48e08de35f507</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>11c8dc0107625050b7bbf1d08c1ed0ac</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>91c8dc0107625050b7bbf1d08c1ed0ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>state=3^description= ^EQ</value>
+        <variable display_value="">1cb38c8f0a0a0b266fb48e08de35f507</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Set State To Closed Complete">11c8dc0107625050b7bbf1d08c1ed0ac</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Set Values">1ca8d7cf0a0a0b265e9a000c2c08248c</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>12</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Set State to Pending</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Processing">11c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>5dc8dc0107625050b7bbf1d08c1ed0a9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>65</x>
+        <y>494</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=5dc8dc0107625050b7bbf1d08c1ed0a9"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>5dc8dc0107625050b7bbf1d08c1ed0a9</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0aa</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>state=-5^EQ</value>
+        <variable display_value="">1cb38c8f0a0a0b266fb48e08de35f507</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>5dc8dc0107625050b7bbf1d08c1ed0a9</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0aa</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>state=-5^EQ</value>
+        <variable display_value="">1cb38c8f0a0a0b266fb48e08de35f507</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Set State to Pending">5dc8dc0107625050b7bbf1d08c1ed0a9</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0aa</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Run Script">db8c65aec0a8016501d00259bc7203a4</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>15</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Update other requests to process</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Processing">11c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>9dc8dc0107625050b7bbf1d08c1ed0b3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>725</x>
+        <y>664</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=9dc8dc0107625050b7bbf1d08c1ed0b3"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>9dc8dc0107625050b7bbf1d08c1ed0b3</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed0b4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>var cat_item_sysId = workflow.scratchpad.cat_item_sysId+'';&#13;
+&#13;
+var requestGr = new GlideRecord('sc_req_item');&#13;
+requestGr.addEncodedQuery('request='+current.request+'^sys_id!='+current.sys_id);&#13;
+requestGr.query();&#13;
+&#13;
+while(requestGr.next()){&#13;
+	requestGr.state = 2;&#13;
+	requestGr.description = cat_item_sysId;&#13;
+	requestGr.update();&#13;
+}</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>9dc8dc0107625050b7bbf1d08c1ed0b3</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed0b4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>var cat_item_sysId = workflow.scratchpad.cat_item_sysId+'';&#13;
+&#13;
+var requestGr = new GlideRecord('sc_req_item');&#13;
+requestGr.addEncodedQuery('request='+current.request+'^sys_id!='+current.sys_id);&#13;
+requestGr.query();&#13;
+&#13;
+while(requestGr.next()){&#13;
+	requestGr.state = 2;&#13;
+	requestGr.description = cat_item_sysId;&#13;
+	requestGr.update();&#13;
+}</value>
+        <variable display_value="">c35ddef20a0a0ba96248a7090eccd518</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Update other requests to process">9dc8dc0107625050b7bbf1d08c1ed0b3</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed0b4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Timer">3961a1da0a0a0b5c00ecd84822f70d85</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>14</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Wait for a second before updating other requests.</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Processing">11c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0a5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>502</x>
+        <y>642</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=ddc8dc0107625050b7bbf1d08c1ed0a5"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292b2f0e0a0a0b215aa2dd2cbc578dc5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>1970-01-01 00:00:02</value>
+        <variable display_value="">c35dc0df0a0a0ba96248a7098d737925</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>500</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed0a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">220dc5a40a0a0b2109fbd28b8c4b6213</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">21f80cd00a0a0b2101fcd5b5defc0810</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>3000</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>// Set 'answer' to the number of seconds this timer should wait&#13;
+answer = 0;</value>
+        <variable display_value="">293493710a0a0b2115e3e5b4fce1d12a</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>55c8dc0107625050b7bbf1d08c1ed0a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cba34da0a0a0b5200798c86eafe1203</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292c91070a0a0b212543d91ffde5014c</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>5dc8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292bd15e0a0a0b215a040c701033e3c5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc6788c0a0a0b5200e6743c94001b16</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">21fd462c0a0a0b211c997276d7806c03</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>9dc8dc0107625050b7bbf1d08c1ed0a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cbfe48a0a0a0b5200cf8b82cc6685f1</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>08fcd0830a0a0b2600079f56b1adb9ae</value>
+        <variable display_value="">4cc4a4030a0a0b52007334f001376dc5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>3bf802c20a0a0b52008e2859cd8abcf2</value>
+        <variable display_value="">220cd53d0a0a0b214103bdc2ec5c7ab4</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d9c8dc0107625050b7bbf1d08c1ed0a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc836da0a0a0b520083ebc07da2f47c</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc740fe0a0a0b520025dcf8e2ff78e7</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">21f80cd00a0a0b2101fcd5b5defc0810</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>55c8dc0107625050b7bbf1d08c1ed0a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cba34da0a0a0b5200798c86eafe1203</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>9dc8dc0107625050b7bbf1d08c1ed0a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cbfe48a0a0a0b5200cf8b82cc6685f1</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>500</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed0a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">220dc5a40a0a0b2109fbd28b8c4b6213</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>1970-01-01 00:00:02</value>
+        <variable display_value="">c35dc0df0a0a0ba96248a7098d737925</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>3bf802c20a0a0b52008e2859cd8abcf2</value>
+        <variable display_value="">220cd53d0a0a0b214103bdc2ec5c7ab4</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">21fd462c0a0a0b211c997276d7806c03</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>08fcd0830a0a0b2600079f56b1adb9ae</value>
+        <variable display_value="">4cc4a4030a0a0b52007334f001376dc5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc6788c0a0a0b5200e6743c94001b16</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d9c8dc0107625050b7bbf1d08c1ed0a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc836da0a0a0b520083ebc07da2f47c</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc740fe0a0a0b520025dcf8e2ff78e7</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>5dc8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292bd15e0a0a0b215a040c701033e3c5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>59c8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292c91070a0a0b212543d91ffde5014c</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed0a8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292b2f0e0a0a0b215aa2dd2cbc578dc5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed0a5</document_key>
+        <order>3000</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>// Set 'answer' to the number of seconds this timer should wait&#13;
+answer = 0;</value>
+        <variable display_value="">293493710a0a0b2115e3e5b4fce1d12a</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Wait for a second before updating other requests.">ddc8dc0107625050b7bbf1d08c1ed0a5</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>55c8dc0107625050b7bbf1d08c1ed0a9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Timer">3961a1da0a0a0b5c00ecd84822f70d85</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>16</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Wait for a while</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Waiting">91c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0ae</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>26</x>
+        <y>320</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=99c8dc0107625050b7bbf1d08c1ed0ae"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed0b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292c91070a0a0b212543d91ffde5014c</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292bd15e0a0a0b215a040c701033e3c5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>3000</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>// Set 'answer' to the number of seconds this timer should wait&#13;
+answer = 0;</value>
+        <variable display_value="">293493710a0a0b2115e3e5b4fce1d12a</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0ae</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cba34da0a0a0b5200798c86eafe1203</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">21fd462c0a0a0b211c997276d7806c03</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>55c8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cbfe48a0a0a0b5200cf8b82cc6685f1</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>5dc8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc6788c0a0a0b5200e6743c94001b16</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>91c8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc836da0a0a0b520083ebc07da2f47c</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc740fe0a0a0b520025dcf8e2ff78e7</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>08fcd0830a0a0b2600079f56b1adb9ae</value>
+        <variable display_value="">4cc4a4030a0a0b52007334f001376dc5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>9dc8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>3bf802c20a0a0b52008e2859cd8abcf2</value>
+        <variable display_value="">220cd53d0a0a0b214103bdc2ec5c7ab4</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">21f80cd00a0a0b2101fcd5b5defc0810</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292b2f0e0a0a0b215aa2dd2cbc578dc5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d9c8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>1970-01-01 00:00:01</value>
+        <variable display_value="">c35dc0df0a0a0ba96248a7098d737925</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>500</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0ae</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">220dc5a40a0a0b2109fbd28b8c4b6213</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">21f80cd00a0a0b2101fcd5b5defc0810</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0ae</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cba34da0a0a0b5200798c86eafe1203</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>55c8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cbfe48a0a0a0b5200cf8b82cc6685f1</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>500</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0ae</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">220dc5a40a0a0b2109fbd28b8c4b6213</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d9c8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>1970-01-01 00:00:01</value>
+        <variable display_value="">c35dc0df0a0a0ba96248a7098d737925</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">21fd462c0a0a0b211c997276d7806c03</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1310</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>9dc8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>3bf802c20a0a0b52008e2859cd8abcf2</value>
+        <variable display_value="">220cd53d0a0a0b214103bdc2ec5c7ab4</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>5dc8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc6788c0a0a0b5200e6743c94001b16</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1320</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>08fcd0830a0a0b2600079f56b1adb9ae</value>
+        <variable display_value="">4cc4a4030a0a0b52007334f001376dc5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc740fe0a0a0b520025dcf8e2ff78e7</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1350</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>91c8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">4cc836da0a0a0b520083ebc07da2f47c</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292b2f0e0a0a0b215aa2dd2cbc578dc5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed0b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292bd15e0a0a0b215a040c701033e3c5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>1360</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>11c8dc0107625050b7bbf1d08c1ed0b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">292c91070a0a0b212543d91ffde5014c</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ae</document_key>
+        <order>3000</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed0af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>// Set 'answer' to the number of seconds this timer should wait&#13;
+answer = 0;</value>
+        <variable display_value="">293493710a0a0b2115e3e5b4fce1d12a</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Wait for a while">99c8dc0107625050b7bbf1d08c1ed0ae</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Wait for condition">d93a02ae0a0a0aa30077abad3fdac035</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>9</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Waiting for update on request to process</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Waiting">91c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>763</x>
+        <y>27</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=51c8dc0107625050b7bbf1d08c1ed0b2"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>51c8dc0107625050b7bbf1d08c1ed0b2</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">c35dc4cd0a0a0ba96248a70990c1ac54</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>51c8dc0107625050b7bbf1d08c1ed0b2</document_key>
+        <order>2</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>// Set the variable 'answer' to true or false to indicate if the condition has been met or not.&#13;
+//answer = true;&#13;
+&#13;
+if(current.state+'' == '2')&#13;
+	answer = true;</value>
+        <variable display_value="">c35debce0a0a0ba96248a709440cf31a</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>51c8dc0107625050b7bbf1d08c1ed0b2</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>95c8dc0107625050b7bbf1d08c1ed0b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">c35dc4cd0a0a0ba96248a70990c1ac54</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>51c8dc0107625050b7bbf1d08c1ed0b2</document_key>
+        <order>2</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>// Set the variable 'answer' to true or false to indicate if the condition has been met or not.&#13;
+//answer = true;&#13;
+&#13;
+if(current.state+'' == '2')&#13;
+	answer = true;</value>
+        <variable display_value="">c35debce0a0a0ba96248a709440cf31a</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Waiting for update on request to process">51c8dc0107625050b7bbf1d08c1ed0b2</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Wait for condition">d93a02ae0a0a0aa30077abad3fdac035</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>10</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Waiting for update on request to process</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Waiting">91c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0ad</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>582</x>
+        <y>92</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=99c8dc0107625050b7bbf1d08c1ed0ad"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ad</document_key>
+        <order>2</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0ad</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>// Set the variable 'answer' to true or false to indicate if the condition has been met or not.&#13;
+//answer = true;&#13;
+&#13;
+if(current.state+'' == '2')&#13;
+	answer = true;</value>
+        <variable display_value="">c35debce0a0a0ba96248a709440cf31a</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ad</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0ad</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">c35dc4cd0a0a0ba96248a70990c1ac54</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ad</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0ad</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value/>
+        <variable display_value="">c35dc4cd0a0a0ba96248a70990c1ac54</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>99c8dc0107625050b7bbf1d08c1ed0ad</document_key>
+        <order>2</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0ad</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <value>// Set the variable 'answer' to true or false to indicate if the condition has been met or not.&#13;
+//answer = true;&#13;
+&#13;
+if(current.state+'' == '2')&#13;
+	answer = true;</value>
+        <variable display_value="">c35debce0a0a0ba96248a709440cf31a</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Waiting for update on request to process">99c8dc0107625050b7bbf1d08c1ed0ad</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d1c8dc0107625050b7bbf1d08c1ed0ae</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Wait for condition">d93a02ae0a0a0aa30077abad3fdac035</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>11</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Waiting for update on request to process</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage display_value="Waiting">91c8dc0107625050b7bbf1d08c1ed09d</stage>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed09d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+        <x>396</x>
+        <y>292</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=ddc8dc0107625050b7bbf1d08c1ed09d"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed09d</document_key>
+        <order>2</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed09e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>// Set the variable 'answer' to true or false to indicate if the condition has been met or not.&#13;
+//answer = true;&#13;
+&#13;
+if(current.state+'' == '2')&#13;
+	answer = true;</value>
+        <variable display_value="">c35debce0a0a0ba96248a709440cf31a</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed09d</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>91c8dc0107625050b7bbf1d08c1ed09f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value/>
+        <variable display_value="">c35dc4cd0a0a0ba96248a70990c1ac54</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed09d</document_key>
+        <order>1</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>91c8dc0107625050b7bbf1d08c1ed09f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value/>
+        <variable display_value="">c35dc4cd0a0a0ba96248a70990c1ac54</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>ddc8dc0107625050b7bbf1d08c1ed09d</document_key>
+        <order>2</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed09e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <value>// Set the variable 'answer' to true or false to indicate if the condition has been met or not.&#13;
+//answer = true;&#13;
+&#13;
+if(current.state+'' == '2')&#13;
+	answer = true;</value>
+        <variable display_value="">c35debce0a0a0ba96248a709440cf31a</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Waiting for update on request to process">ddc8dc0107625050b7bbf1d08c1ed09d</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed09f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+    </wf_condition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">19c8dc0107625050b7bbf1d08c1ed09f</condition>
+        <from display_value="Waiting for update on request to process">ddc8dc0107625050b7bbf1d08c1ed09d</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed0b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Config Calm Credentials for BP">51c8dc0107625050b7bbf1d08c1ed0a5</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">99c8dc0107625050b7bbf1d08c1ed0a4</condition>
+        <from display_value="Do General Settings of BP">15c8dc0107625050b7bbf1d08c1ed0a4</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>15c8dc0107625050b7bbf1d08c1ed0b8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Wait for a second before updating other requests.">ddc8dc0107625050b7bbf1d08c1ed0a5</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Service Configuration Catalog">55c8dc0107625050b7bbf1d08c1ed0a1</condition>
+        <from display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed0b5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Waiting for update on request to process">99c8dc0107625050b7bbf1d08c1ed0ad</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">55c8dc0107625050b7bbf1d08c1ed0a9</condition>
+        <from display_value="Wait for a second before updating other requests.">ddc8dc0107625050b7bbf1d08c1ed0a5</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>19c8dc0107625050b7bbf1d08c1ed0b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Update other requests to process">9dc8dc0107625050b7bbf1d08c1ed0b3</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Credentials Config Catalog">d5c8dc0107625050b7bbf1d08c1ed0a1</condition>
+        <from display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>1dc8dc0107625050b7bbf1d08c1ed0b5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Waiting for update on request to process">ddc8dc0107625050b7bbf1d08c1ed09d</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">59c8dc0107625050b7bbf1d08c1ed0ab</condition>
+        <from display_value="Begin">11c8dc0107625050b7bbf1d08c1ed0ab</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Copy Client Data">d1c8dc0107625050b7bbf1d08c1ed0a2</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">59c8dc0107625050b7bbf1d08c1ed0aa</condition>
+        <from display_value="Set State to Pending">5dc8dc0107625050b7bbf1d08c1ed0a9</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>51c8dc0107625050b7bbf1d08c1ed0b8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Variable Config Catalog">59c8dc0107625050b7bbf1d08c1ed0a1</condition>
+        <from display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>55c8dc0107625050b7bbf1d08c1ed0b5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Waiting for update on request to process">51c8dc0107625050b7bbf1d08c1ed0b2</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">d1c8dc0107625050b7bbf1d08c1ed0ad</condition>
+        <from display_value="Config Variables of Services.">5dc8dc0107625050b7bbf1d08c1ed0ac</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>55c8dc0107625050b7bbf1d08c1ed0b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Set State To Closed Complete">11c8dc0107625050b7bbf1d08c1ed0ac</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">15c8dc0107625050b7bbf1d08c1ed0b4</condition>
+        <from display_value="Update other requests to process">9dc8dc0107625050b7bbf1d08c1ed0b3</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>91c8dc0107625050b7bbf1d08c1ed0b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Set State To Closed Complete">11c8dc0107625050b7bbf1d08c1ed0ac</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="General Settings">d9c8dc0107625050b7bbf1d08c1ed0a1</condition>
+        <from display_value="Check Catalog Item to Run App. Script.">d1c8dc0107625050b7bbf1d08c1ed0a0</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0b5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Do General Settings of BP">15c8dc0107625050b7bbf1d08c1ed0a4</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">ddc8dc0107625050b7bbf1d08c1ed0a2</condition>
+        <from display_value="Copy Client Data">d1c8dc0107625050b7bbf1d08c1ed0a2</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>99c8dc0107625050b7bbf1d08c1ed0b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Wait for a while">99c8dc0107625050b7bbf1d08c1ed0ae</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">95c8dc0107625050b7bbf1d08c1ed0ac</condition>
+        <from display_value="Set State To Closed Complete">11c8dc0107625050b7bbf1d08c1ed0ac</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>9dc8dc0107625050b7bbf1d08c1ed0b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="End">95c8dc0107625050b7bbf1d08c1ed0a3</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">d5c8dc0107625050b7bbf1d08c1ed0a5</condition>
+        <from display_value="Config Calm Credentials for BP">51c8dc0107625050b7bbf1d08c1ed0a5</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>9dc8dc0107625050b7bbf1d08c1ed0b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Set State To Closed Complete">11c8dc0107625050b7bbf1d08c1ed0ac</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">d1c8dc0107625050b7bbf1d08c1ed0ae</condition>
+        <from display_value="Waiting for update on request to process">99c8dc0107625050b7bbf1d08c1ed0ad</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Config Variables of Services.">5dc8dc0107625050b7bbf1d08c1ed0ac</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">99c8dc0107625050b7bbf1d08c1ed0b2</condition>
+        <from display_value="Waiting for update on request to process">51c8dc0107625050b7bbf1d08c1ed0b2</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d5c8dc0107625050b7bbf1d08c1ed0b8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Config Calm Profile Variables">51c8dc0107625050b7bbf1d08c1ed0b3</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">99c8dc0107625050b7bbf1d08c1ed0b1</condition>
+        <from display_value="Wait for a while">99c8dc0107625050b7bbf1d08c1ed0ae</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>d9c8dc0107625050b7bbf1d08c1ed0b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Set State to Pending">5dc8dc0107625050b7bbf1d08c1ed0a9</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">d5c8dc0107625050b7bbf1d08c1ed0b3</condition>
+        <from display_value="Config Calm Profile Variables">51c8dc0107625050b7bbf1d08c1ed0b3</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:44</sys_created_on>
+        <sys_id>ddc8dc0107625050b7bbf1d08c1ed0b5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:44</sys_updated_on>
+        <to display_value="Set State To Closed Complete">11c8dc0107625050b7bbf1d08c1ed0ac</to>
+    </wf_transition>
+    <wf_estimated_runtime_config action="INSERT_OR_UPDATE">
+        <estimated_run_time/>
+        <no_of_data_points>1</no_of_data_points>
+        <percentage_threshold_ert>20</percentage_threshold_ert>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-08-08 18:08:43</sys_created_on>
+        <sys_id>91c8d00107625050b7bbf1d08c1ed037</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-08 18:08:43</sys_updated_on>
+        <workflow_version display_value="Nutanix_Configure Calm BP Setting Workflow">9dc8d00107625050b7bbf1d08c1ed036</workflow_version>
+    </wf_estimated_runtime_config>
+    <wf_workflow_version action="update_multiple" query="workflow=68b660d837256300fdfc097973990e97^sys_id!=9dc8d00107625050b7bbf1d08c1ed036">
+        <published>false</published>
+    </wf_workflow_version>
+</record_update>

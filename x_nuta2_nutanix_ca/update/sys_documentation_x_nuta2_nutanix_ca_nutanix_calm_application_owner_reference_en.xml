@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="owner_reference" label="Owner Reference" language="en" table="x_nuta2_nutanix_ca_nutanix_calm_application">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>owner_reference</element>
+            <help/>
+            <hint/>
+            <label>Owner Reference</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_calm_application</name>
+            <plural>Owner References</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>mumtaz.ansari</sys_created_by>
+            <sys_created_on>2018-10-11 05:48:51</sys_created_on>
+            <sys_id>0003320e37012300d27b8cf6c3990e78</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Owner Reference</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_nutanix_calm_application_owner_reference_en</sys_update_name>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-10-11 05:48:51</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

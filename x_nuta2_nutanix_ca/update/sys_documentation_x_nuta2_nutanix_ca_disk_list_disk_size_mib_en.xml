@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="disk_size_mib" label="Disk Size" language="en" table="x_nuta2_nutanix_ca_disk_list">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>disk_size_mib</element>
+            <help/>
+            <hint/>
+            <label>Disk Size</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_disk_list</name>
+            <plural>Disk Sizes</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-30 23:38:52</sys_created_on>
+            <sys_id>7d17a248db32230075f47dda8c9619f2</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Disk Size</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_disk_list_disk_size_mib_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-30 23:38:52</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

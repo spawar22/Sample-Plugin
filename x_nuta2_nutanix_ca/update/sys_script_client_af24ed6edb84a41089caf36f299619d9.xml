@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>apps_last_runtime</field>
+        <global>true</global>
+        <isolate_script>true</isolate_script>
+        <messages/>
+        <name>Show Help Text OnLoad</name>
+        <order/>
+        <script><![CDATA[function onLoad() 
+{
+    var cb1 = g_form.getValue('show_help_text');// to check the value status
+    if (cb1 == 'true') 
+	{
+        g_form.showFieldMsg('service_catalog', 'Name of the Catalog in which all Calm specific catalog items would be configured', 'info');
+        g_form.showFieldMsg('mid_server', 'Choose the MID server to connect with your Calm instance', 'info');
+        g_form.showFieldMsg('mid_application', 'Select mid server application', 'info');
+        g_form.showFieldMsg('calm_instance', 'Enter the Calm URL including protocol, FQDN/IP address and the port number.  Example: https://mycalm.mydomain.com:9440', 'info');
+        g_form.showFieldMsg('use_external_credential_system', 'Enabling this option allows you to connect to Calm using ServiceNow credential store object with CyberArk as the external storage', 'info');
+        g_form.showFieldMsg('credential', 'Select credentials stored in Credential Store', 'info');
+        g_form.showFieldMsg('calm_admin_username', 'Username using which this plugin will connect to Calm as using the Calm REST API.  This needs to be a user configured in Calm with the admin role', 'info');
+        g_form.showFieldMsg('calm_admin_password', 'Password to connect', 'info');
+        g_form.showFieldMsg('workflow', 'Choose a workflow to be triggered on ordering any catalog item under Nutanix Calm catalog created as a part of this plugin', 'info');
+        g_form.showFieldMsg('assignment_group', 'Choose an assignment group to which all incidents created from this plugin will be assigned to by default', 'info');
+        g_form.showFieldMsg('support_url', 'Nutanix support portal to raise cases for any issues', 'info');
+        g_form.showFieldMsg('show_published_blueprints', 'Enabling this will pull all blueprints (draft till un-published) into SNOW CMDB on which catalog items can be created', 'info');
+        g_form.showFieldMsg('create_alerts', 'Enabling this will allow this plugin to create incidents on blueprint/MPI launch errors', 'info');
+        g_form.showFieldMsg('log_verbosity', 'Set the verbosity for logging statements added by this plugin', 'info');
+        g_form.showFieldMsg('calm_version', 'Version of the above mentioned Calm instance', 'info');
+
+        g_form.showFieldMsg('actions_approval_workflow', ' You can enable or disable workflow for all Apps managed through Calm and hence ServiceNow', 'info');
+        g_form.showFieldMsg('system_actions', 'You can enable or disable workflow for system actions on all Apps', 'info');
+        g_form.showFieldMsg('workflows_for_system_actions', 'ServiceNow will trigger this workflow on any system action triggered by the user', 'info');
+        g_form.showFieldMsg('user_actions', 'You can enable or disable workflow for user (custom) actions on all Apps', 'info');
+        g_form.showFieldMsg('workflows_for_user_actions', 'ServiceNow will trigger this workflow on any user (custom) action triggered by the user', 'info');
+        g_form.showFieldMsg('use_local_groups', 'Enabling this will allow this plugin to assign the catalog item to the local ServiceNow along with LDAP AD Groups.');
+    }
+	else
+	{
+		g_form.hideFieldMsg('service_catalog',true);
+		g_form.hideFieldMsg('mid_server',true);
+		g_form.hideFieldMsg('mid_application',true);
+		g_form.hideFieldMsg('calm_instance',true);
+		g_form.hideFieldMsg('use_external_credential_system',true);
+		g_form.hideFieldMsg('credential',true);
+		g_form.hideFieldMsg('calm_admin_username',true);
+		g_form.hideFieldMsg('calm_admin_password',true);
+		g_form.hideFieldMsg('workflow',true);
+		g_form.hideFieldMsg('assignment_group',true);
+		g_form.hideFieldMsg('support_url',true);
+		g_form.hideFieldMsg('show_published_blueprints',true);
+		g_form.hideFieldMsg('create_alerts',true);
+		g_form.hideFieldMsg('log_verbosity',true);
+		g_form.hideFieldMsg('calm_version',true);
+		g_form.hideFieldMsg('use_local_groups', true);
+		g_form.hideFieldMsg('actions_approval_workflow',true);
+		g_form.hideFieldMsg('system_actions',true);
+		g_form.hideFieldMsg('workflows_for_system_actions',true);
+		g_form.hideFieldMsg('user_actions',true);
+		g_form.hideFieldMsg('workflows_for_user_actions',true);
+	}
+
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-10-27 05:04:01</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>af24ed6edb84a41089caf36f299619d9</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>Show Help Text OnLoad</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_client_af24ed6edb84a41089caf36f299619d9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-20 11:44:03</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_calm_plugin_configuration</table>
+        <type>onLoad</type>
+        <ui_type>10</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

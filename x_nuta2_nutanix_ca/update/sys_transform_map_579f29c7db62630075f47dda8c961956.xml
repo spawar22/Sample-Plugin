@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_map">
+    <sys_transform_map action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copy_empty_fields>false</copy_empty_fields>
+        <create_new_record_on_empty_coalesce_fields>false</create_new_record_on_empty_coalesce_fields>
+        <enforce_mandatory_fields>No</enforce_mandatory_fields>
+        <name>Azure Provider</name>
+        <order>100</order>
+        <run_business_rules>false</run_business_rules>
+        <run_script>true</run_script>
+        <script><![CDATA[(function transformRow(source, target, map, log, isUpdate) {
+
+	// Add your code here
+	this.appUtil = new Nutanix_Calm_Utils();
+	this.logger = new Nutanix_Calm_Logger();
+	
+	// Add your code here
+	//gs.error(" uuid " );
+	target.environment = source.environment;
+
+	if(source.login_credential_local_reference){
+		
+		var credJSON = JSON.parse(source.login_credential_local_reference);
+		//gs.error(" credJSON " + credJSON);
+		var credUUID = credJSON.uuid;
+		//gs.error(" credUUID " + credUUID);
+		var gr = new GlideRecord(this.appUtil.configuration.table.Credentials+"");
+		gr.addQuery("uuid",credUUID);							
+		gr.query();
+		if(gr.next()){
+			//gs.error(" uuid " + gr);
+			target.credential = gr.sys_id;
+		}
+	}
+	
+	if(source.create_spec){
+		
+		var entity = JSON.parse(source.create_spec);
+		var entityResource = entity.resources;
+		
+		target.vm_name = entityResource.vm_name;
+		target.resource_group = entityResource.resource_group;
+		target.availability_set_id = entityResource.availability_set_id;
+		target.location = entityResource.location;
+		target.vm_size = entityResource.hw_profile.vm_size;
+		
+		if(entityResource.storage_profile){
+			var entityJSON = "";
+			if(entityResource.storage_profile.image_details){
+				entityJSON = entityResource.storage_profile.image_details;
+				for(var key in entityJSON){
+					target[key] = entityJSON[key]+"";
+				}
+			}
+			if(entityResource.storage_profile.os_disk_details){
+				entityJSON = entityResource.storage_profile.os_disk_details;
+				target.disk_name = entityJSON.name+"";
+				for(var key in entityJSON){
+					if(key != "name")
+					target[key] = entityJSON[key]+"";
+				}
+			}
+		}
+		
+	}
+	
+
+})(source, target, map, log, action==="update");]]></script>
+        <source_table>x_nuta2_nutanix_ca_staging_azure</source_table>
+        <sys_class_name>sys_transform_map</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-12-27 17:03:36</sys_created_on>
+        <sys_id>579f29c7db62630075f47dda8c961956</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>Azure Provider</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_map_579f29c7db62630075f47dda8c961956</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-05-02 11:11:20</sys_updated_on>
+        <target_table>x_nuta2_nutanix_ca_azure</target_table>
+    </sys_transform_map>
+</record_update>

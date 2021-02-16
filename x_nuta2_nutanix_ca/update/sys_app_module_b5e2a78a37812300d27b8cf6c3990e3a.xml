@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_app_module">
+    <sys_app_module action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <application display_value="Nutanix Calm">7776fd254f452b001200e5201310c714</application>
+        <assessment/>
+        <device_type/>
+        <filter/>
+        <hint/>
+        <homepage/>
+        <image/>
+        <link_type>LIST</link_type>
+        <map_page/>
+        <mobile_title>Nutanix Calm Credentials</mobile_title>
+        <mobile_view_name>Mobile</mobile_view_name>
+        <name>x_nuta2_nutanix_ca_nutanix_calm_credential</name>
+        <order>332</order>
+        <override_menu_roles>false</override_menu_roles>
+        <query/>
+        <report/>
+        <roles/>
+        <sys_class_name>sys_app_module</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-10-11 09:18:08</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>b5e2a78a37812300d27b8cf6c3990e3a</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>Credentials</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_app_module_b5e2a78a37812300d27b8cf6c3990e3a</sys_update_name>
+        <sys_updated_by>mumtaz.ansari</sys_updated_by>
+        <sys_updated_on>2018-12-10 10:15:58</sys_updated_on>
+        <timeline_page/>
+        <title>Credentials</title>
+        <uncancelable>false</uncancelable>
+        <view_name/>
+        <window_name/>
+    </sys_app_module>
+</record_update>

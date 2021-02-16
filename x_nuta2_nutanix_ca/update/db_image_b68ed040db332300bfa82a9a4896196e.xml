@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category/>
+        <format/>
+        <height/>
+        <image/>
+        <name>azure.svg</name>
+        <size_bytes>1715</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:45:13</sys_created_on>
+        <sys_id>b68ed040db332300bfa82a9a4896196e</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>azure.svg</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>db_image_b68ed040db332300bfa82a9a4896196e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-18 06:45:21</sys_updated_on>
+        <thumbnail/>
+        <width/>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color/>
+        <chunk_size_bytes/>
+        <compressed>true</compressed>
+        <content_type>image/svg+xml</content_type>
+        <file_name>image</file_name>
+        <hash/>
+        <image_height/>
+        <image_width/>
+        <size_bytes>1715</size_bytes>
+        <size_compressed>883</size_compressed>
+        <state/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:45:20</sys_created_on>
+        <sys_id>879e9040db332300bfa82a9a48961909</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-18 06:45:20</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>b68ed040db332300bfa82a9a4896196e</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="879e9040db332300bfa82a9a48961909">879e9040db332300bfa82a9a48961909</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:45:20</sys_created_on>
+        <sys_id>c79e9040db332300bfa82a9a48961909</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>jVTBjts2EL0HyD+w6qkASZOUKJKOvUGyKIIcAhQokLuXVhwjqmxI9nqTov+eN0O5sIEeKoAiKQ5n3rx5o9Xbl7968dyN0/4wrCurTSW6IR+2+2G3rs6nLypWbx9ev1r9opT40A3duDkdxqV4tz08deJj35+nE38SNmmjrRR/fv4gfn85HsaT+KM/79THQWj++LkEWYpWGyPen/f9VpjfhFCK/E/Pu1sYthIANkzr6uvpdFwuFpfLRV9qfRh3C2eMWcB+Nlm+9Pvh238Z2pTSgk+r168EPc/77vL+8LKujDDCGh6VmE7f+25ddcPmqe/U0yZ/242H87BdDt1F3Fi+4YjL6bjJMD+O3dSNz131UJyv2M2D3vw4j50CPjWdzN9f9n2//NWY5B/jm39Wi2KEhHfXa8fN6avI/WZCsnd3K7FdV58akNp4HbLRjbLaS6ODqrWTFvtGt9npqLxOMmivoo7SNirBOEkDk1oZNg3K5kY7leDNelhacuFwn+7M7ODJxXMrPTzVGAGj1SkjdIPQXjkKgcBk5jO7R90xtxgULmLgwLFtArRAMBG5xQxHLVu2yuKUQijbICuLyzcwFGmJMi7+yWdD6RCOKA0I8GQC77U0GVMLK6eskQ15NOSvyQZpBHxpeEsvWw4S22OTyL10kejS9gYAcWBkzccNnYJS+gJiZ0op15CpCg77GnMNj6gE9iE7xl1LIorWgIXh2Qv2qpwFvtveRabr0oGmwEEilz3kmV3iLvC4IkC2hEw5S5SpGsZECbFrmH0iJsIYKT1G6eEQKJ30qAogAEbSzU18wxdKTf28Do8sw8BsYtFeF/D/o1r8Tyk7ElSLWmXKnricGQXeyGsb+MD5G8ZtqRTLj9Uua6jSsjqROri6k29ghXhuikCJkvIyMwfEigwQBINmyLHmBL1qWd2RyxWZbVkYD3zA5JKuA+vP+sJ5TQ15r1vUvdyee8HmMidqGAbn4BftkUuL1ABJ2okSnUiNlUuV7az7WlIlIltT7SL1bittS978XdckUgqRSBoDMZaCGlZdXdjmbNLMZiqsU2e0TCluOvo9sKxlYjgwjtcmdYSDhMfUOHZGPyFu1VsWrGMC8H8JJEkWZGR5Wq+oNkBvOY/HqyiSvK7iv6u2aGu12PEbYsL8EyuMvOizBgAA</data>
+        <length>1164</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="879e9040db332300bfa82a9a48961909">879e9040db332300bfa82a9a48961909</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:45:20</sys_created_on>
+        <sys_id>4b9e9040db332300bfa82a9a48961909</sys_id>
+    </sys_attachment_doc>
+</record_update>

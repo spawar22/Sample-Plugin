@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Catalog Items" max_length="40" name="x_nuta2_nutanix_ca_nutanix_runtime_configuration" type="collection">
+        <element attributes="no_sort=true,slushbucket_ref_no_expand=true,edge_encryption_enabled=true" label="Application Profile" max_length="1024" name="application_profile" reference="x_nuta2_nutanix_ca_application_profile" type="glide_list"/>
+        <element attributes="no_sort=true,slushbucket_ref_no_expand=true,edge_encryption_enabled=true" label="Assigned Users" max_length="4000" name="assigned_users" reference="sys_user" type="glide_list"/>
+        <element attributes="edge_encryption_enabled=true" label="Blueprint" max_length="32" name="blueprint" reference="sc_cat_item" type="reference"/>
+        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Item Name" max_length="32" name="item_name" reference="x_nuta2_nutanix_ca_nutanix_catalog_items" type="reference"/>
+        <element attributes="no_sort=true,edge_encryption_enabled=true" label="Application Profile" max_length="4000" name="multiple_application_profile" reference="x_nuta2_nutanix_ca_application_profile" type="glide_list"/>
+        <element attributes="no_sort=true,edge_encryption_enabled=true" label="Projects" max_length="4000" name="multiple_projects" reference="x_nuta2_nutanix_ca_nutanix_project" type="glide_list"/>
+        <element attributes="edge_encryption_enabled=true" label="Project" max_length="32" name="project" reference="x_nuta2_nutanix_ca_nutanix_project" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" choice="3" default="active" label="State" max_length="40" name="state" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Draft" sequence="0" value="draft"/>
+                <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
+                <element inactive_on_update="false" label="Deleted" sequence="2" value="deleted"/>
+                <element inactive_on_update="false" label="Inactive" sequence="3" value="inactive"/>
+            </choice>
+        </element>
+        <element attributes="edge_encryption_enabled=true" label="User Criteria" max_length="32" name="user_criteria" reference="user_criteria" type="reference"/>
+        <index name="index">
+            <element name="blueprint"/>
+        </index>
+        <index name="index2">
+            <element name="project"/>
+        </index>
+        <index name="index3">
+            <element name="item_name"/>
+        </index>
+        <index name="index4">
+            <element name="user_criteria"/>
+        </index>
+    </element>
+</database>

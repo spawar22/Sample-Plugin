@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section caption="" section_id="f15797fddb05230084249235ca9619fa" sys_domain="global" table="x_nuta2_nutanix_ca_nutanix_staging_project" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>x_nuta2_nutanix_ca_Nutanix_logo_on_config.xml</element>
+            <position>0</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>54c46cc0378e6700fdfc097973990e44</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter display_value="Nutanix Staging Project">20bb6c7737756700fdfc097973990eb0</sys_ui_formatter>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type>formatter</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.begin_split</element>
+            <position>1</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>98c46cc0378e6700fdfc097973990e44</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type>.begin_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>name</element>
+            <position>2</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>1cc46cc0378e6700fdfc097973990e44</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>state</element>
+            <position>3</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>9cc46cc0378e6700fdfc097973990e44</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>description</element>
+            <position>4</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>10c46cc0378e6700fdfc097973990e45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>5</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>90c46cc0378e6700fdfc097973990e45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>owner_reference</element>
+            <position>6</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>14c46cc0378e6700fdfc097973990e45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>kind</element>
+            <position>7</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>94c46cc0378e6700fdfc097973990e45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>categories</element>
+            <position>8</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>18c46cc0378e6700fdfc097973990e45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.end_split</element>
+            <position>9</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>98c46cc0378e6700fdfc097973990e45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type>.end_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.begin_split</element>
+            <position>10</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>1cc46cc0378e6700fdfc097973990e45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type>.begin_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>execution_context</element>
+            <position>11</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>9cc46cc0378e6700fdfc097973990e45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>resource_domain</element>
+            <position>12</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>10c46cc0378e6700fdfc097973990e46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>account_reference_list</element>
+            <position>13</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>90c46cc0378e6700fdfc097973990e46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>external_user_group_reference_list</element>
+            <position>14</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>14c46cc0378e6700fdfc097973990e46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>user_reference_list</element>
+            <position>15</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>94c46cc0378e6700fdfc097973990e46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>default_subnet_reference</element>
+            <position>16</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>18c46cc0378e6700fdfc097973990e46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>17</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>98c46cc0378e6700fdfc097973990e46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>subnet_reference_list</element>
+            <position>18</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>1cc46cc0378e6700fdfc097973990e46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>environment_reference_list</element>
+            <position>19</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>9cc46cc0378e6700fdfc097973990e46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>is_default</element>
+            <position>20</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>10c46cc0378e6700fdfc097973990e47</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>sys_target_sys_id</element>
+            <position>21</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>90c46cc0378e6700fdfc097973990e47</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>creation_time</element>
+            <position>22</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>14c46cc0378e6700fdfc097973990e47</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>last_update_time</element>
+            <position>23</position>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-23 07:22:19</sys_created_on>
+            <sys_id>94c46cc0378e6700fdfc097973990e47</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_staging_project" sys_domain="global" view="Default view">f15797fddb05230084249235ca9619fa</sys_ui_section>
+            <sys_updated_by>nikita.kumari</sys_updated_by>
+            <sys_updated_on>2018-11-23 07:22:19</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption/>
+            <header>false</header>
+            <name>x_nuta2_nutanix_ca_nutanix_staging_project</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-10-10 13:49:08</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>f15797fddb05230084249235ca9619fa</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_nuta2_nutanix_ca_nutanix_staging_project</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_section_f15797fddb05230084249235ca9619fa</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-10-10 13:49:08</sys_updated_on>
+            <sys_user/>
+            <title>true</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update node_type="sys_portal_page" unload_date="2021-02-16 07:26:39">
+    <sys_portal_page action="INSERT_OR_UPDATE">
+        <layout/>
+        <order>3050</order>
+        <read_roles>x_nuta2_nutanix_ca.user</read_roles>
+        <roles/>
+        <selectable>false</selectable>
+        <sys_class_name>sys_portal_page</sys_class_name>
+        <sys_created_by>nitin.babar</sys_created_by>
+        <sys_created_on>2018-11-24 09:33:11</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>834c02d8dbc22300c1c3e1bb4b961918</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>PA New Tab</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_portal_page_834c02d8dbc22300c1c3e1bb4b961918</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-05-02 10:45:30</sys_updated_on>
+        <title>PA New Tab</title>
+        <user/>
+        <view>pa_new_tab_9</view>
+    </sys_portal_page>
+</record_update>

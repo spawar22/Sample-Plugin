@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section caption="Spec" section_id="079682041b9b4490ac43877ddc4bcbe7" sys_domain="global" table="x_nuta2_nutanix_ca_service" version="3" view="nutanix_view">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>cpus</element>
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 10:10:38</sys_created_on>
+            <sys_id>8b96c2041b9b4490ac43877ddc4bcb2b</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Spec" display_value="Spec" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">079682041b9b4490ac43877ddc4bcbe7</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 10:10:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>memory</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 10:10:38</sys_created_on>
+            <sys_id>0f96c2041b9b4490ac43877ddc4bcb2b</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Spec" display_value="Spec" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">079682041b9b4490ac43877ddc4bcbe7</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 10:10:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>ip_address</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 10:10:38</sys_created_on>
+            <sys_id>8f96c2041b9b4490ac43877ddc4bcb2b</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Spec" display_value="Spec" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">079682041b9b4490ac43877ddc4bcbe7</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 10:10:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 10:10:38</sys_created_on>
+            <sys_id>0396c2041b9b4490ac43877ddc4bcb2c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Spec" display_value="Spec" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">079682041b9b4490ac43877ddc4bcbe7</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 10:10:38</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>cores_per_cpu</element>
+            <position>4</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 10:10:38</sys_created_on>
+            <sys_id>8396c2041b9b4490ac43877ddc4bcb2c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Spec" display_value="Spec" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">079682041b9b4490ac43877ddc4bcbe7</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 10:10:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>provider</element>
+            <position>5</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 10:10:38</sys_created_on>
+            <sys_id>0796c2041b9b4490ac43877ddc4bcb2c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Spec" display_value="Spec" name="x_nuta2_nutanix_ca_service" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">079682041b9b4490ac43877ddc4bcbe7</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 10:10:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption>Spec</caption>
+            <header>false</header>
+            <name>x_nuta2_nutanix_ca_service</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-02-26 10:10:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>079682041b9b4490ac43877ddc4bcbe7</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Spec</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_section_079682041b9b4490ac43877ddc4bcbe7</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-02-26 10:10:38</sys_updated_on>
+            <sys_user/>
+            <title>false</title>
+            <view display_value="Nutanix" name="nutanix_view">f340ac98374ea700fdfc097973990e93</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

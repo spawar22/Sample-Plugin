@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>action_flag</field>
+        <global>true</global>
+        <isolate_script>true</isolate_script>
+        <messages/>
+        <name>Check Application status on calm</name>
+        <order/>
+        <script><![CDATA[function onLoad() {
+	if(g_form.getValue('state') != 'deleted'){
+		var loadingHTML= "<div class='loading-container'><div class='loading-indicator icon-loading icon-lg'></div></div>";
+		var loadingDialog = new GlideModal("loader", true);
+		loadingDialog.setTitle('Validate application status on calm...'); //Set the loading dialog title here...
+		loadingDialog.renderWithContent(''+loadingHTML);
+		
+		var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+		ga.addParam('sysparm_name', 'checkApplicationValidityOnCalm');
+		ga.addParam('sysparm_app_uuid', g_form.getValue('uuid'));
+		ga.getXML(ApplicationStatusParse);
+		
+		function ApplicationStatusParse(response) {
+			var answer = response.responseXML.documentElement.getAttribute("answer");
+			if(answer == 'appDeleted'){
+				alert("This application is not available at Calm. So, cant perform action on it . Redirecting back to Application list page.");
+				
+				self.location = './x_nuta2_nutanix_ca_nutanix_calm_application_list.do?sysparm_query=state!=deleted^assigned_toDYNAMIC90d1921e5f510100a9ad2572f2b477fe^ORapplicatoin_created_by=javascript:gs.getUserName()^ORDERBYDESCsys_updated_on^ORapplicatoin_created_by=javascript:gs.getUser().getEmail()^ORDERBYDESCsys_updated_on&sysparm_userpref_module=765c2e8637012300d27b8cf6c3990e4d&sysparm_clear_stack=true';
+			}
+			new GlideModal().get("loader").destroy();
+		}
+	}
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-01-08 08:58:46</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>604e55d8dbdac4900a41ab7dca9619ad</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_name>Check Application status on calm</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_client_604e55d8dbdac4900a41ab7dca9619ad</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-06 08:38:48</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_nutanix_calm_application</table>
+        <type>onLoad</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

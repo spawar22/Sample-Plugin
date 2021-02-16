@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="catalog_ui_policy_action">
+    <catalog_ui_policy_action action="INSERT_OR_UPDATE">
+        <catalog_item/>
+        <catalog_variable>IO:14c36005dbf32300bfa82a9a489619e5</catalog_variable>
+        <cleared>false</cleared>
+        <disabled>true</disabled>
+        <field/>
+        <mandatory>ignore</mandatory>
+        <order>100</order>
+        <sys_class_name>catalog_ui_policy_action</sys_class_name>
+        <sys_created_by>girish</sys_created_by>
+        <sys_created_on>2019-02-21 09:42:16</sys_created_on>
+        <sys_id>8dd3e005dbf32300bfa82a9a48961920</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>url</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>catalog_ui_policy_action_8dd3e005dbf32300bfa82a9a48961920</sys_update_name>
+        <sys_updated_by>girish</sys_updated_by>
+        <sys_updated_on>2019-02-21 12:00:40</sys_updated_on>
+        <table/>
+        <ui_policy display_value="Hide Type Field">ed285da337212300fdfc097973990e66</ui_policy>
+        <variable>url</variable>
+        <variable_set display_value="Configure Settings Variables">d12cf97f37912300fdfc097973990e8e</variable_set>
+        <visible>false</visible>
+    </catalog_ui_policy_action>
+</record_update>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <name>x_nuta2_nutanix_ca.final_provider_script</name>
+        <script><![CDATA[var $j = jQuery.noConflict();
+
+var profileArray = [];
+function getProfiles() {
+	var cat_sys_id = g_form.getUniqueValue();
+	
+	var loadingHTML= "<div class='loading-container'><div class='loading-indicator icon-loading icon-lg'></div></div>";
+	var loadingDialog = new GlideModal("loader", true);
+	loadingDialog.setTitle('Fetching project and profile...'); 
+	loadingDialog.renderWithContent(''+loadingHTML);
+	
+	var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+	ga.addParam('sysparm_name', 'fetchProjectAndProfileList');
+	ga.addParam('sysparm_catSysID', cat_sys_id);
+	ga.getXML(parseProfiles, null, loadingDialog);
+}
+function parseProfiles(response, loadingDialog) {
+	var answer = response.responseXML.documentElement.getAttribute('answer');
+	var parsed = JSON.parse(answer);
+	var profileList = String(parsed.profileList).split(',');
+	for (i = 0; i < profileList.length; i++) {
+		profileArray.push(profileList[i] + '');
+	}
+	setProviderIcons(loadingDialog);
+}
+function setProviderIcons(loadingDialog) {
+	var cat_sys_id = g_form.getUniqueValue();
+	var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+	ga.addParam('sysparm_name', 'fetchProviderIcons');
+	ga.addParam('sysparm_catId', cat_sys_id);
+	ga.getXML(parseResponse, null , loadingDialog);
+}
+function parseResponse(response, loadingDialog) {
+	var htmlStr = '';
+	var profDiv = '';
+	var answer = response.responseXML.documentElement.getAttribute('answer');
+	var parsed = JSON.parse(answer);
+	var providerarray = [];
+	$j(".bodyData").html('');
+	for (var i = 0; i < parsed.length; i++) {
+		var providerStr = '';
+		var profilename = parsed[i].profile;
+		if(profileArray.includes(profilename)) {
+			profDiv = '<div style="display: inline-block; overflow: hidden; vertical-align: middle; text-overflow: ellipsis; width: 35%; font-weight: bold; padding-top: 5px;">'+profilename+'</div>';
+			providerarray = parsed[i].providers.toLowerCase().split(',');
+			var uniqueArray = function (arrArg) {
+				return arrArg.filter(function (elem, pos, arr) {
+					return arr.indexOf(elem) == pos;
+				});
+			};
+			providerarray = uniqueArray(providerarray.concat(providerarray));
+			for (var j = 0; j < providerarray.length; j++) {
+				if(providerarray[j]!='') {
+					providerStr = providerStr + '<img id="'+providerarray[j]+'_img" src="'+providerarray[j]+'.svg" width="20" height="20" style="display:inline"/>';
+				}
+			}
+			htmlStr = htmlStr +'<div style=" display:flex; justify-content:space-between; margin-right: 15px;  border-radius:4px; padding:5px; border:1px solid #bdc0c4; flex-basis:40%;">' + profDiv + '<div style="display: flex; align-items: center; justify-content: center;">' + providerStr + '</div></div>';
+		}
+	}
+	var startDiv = '<div style="display: flex; width: 50%; height:40px;">';
+	var endDiv = '</div>';
+	$j(".bodyData").append(startDiv+htmlStr+endDiv);
+	new GlideModal().get("loader").destroy();
+}]]></script>
+        <script_name>final_provider_script</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-22 12:00:25</sys_created_on>
+        <sys_id>4afcce9ddb376300bfa82a9a48961951</sys_id>
+        <sys_mod_count>56</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.final_provider_script</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_script_4afcce9ddb376300bfa82a9a48961951</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-06 10:28:04</sys_updated_on>
+        <ui_type>0</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

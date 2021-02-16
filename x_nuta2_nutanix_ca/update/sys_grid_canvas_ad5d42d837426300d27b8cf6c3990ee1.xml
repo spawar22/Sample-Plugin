@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_grid_canvas">
+    <sys_grid_canvas action="INSERT_OR_UPDATE">
+        <legacy_page/>
+        <name>PA New Tab</name>
+        <sys_class_name>sys_grid_canvas</sys_class_name>
+        <sys_created_by>bharat.vajj</sys_created_by>
+        <sys_created_on>2018-11-24 09:37:43</sys_created_on>
+        <sys_id>ad5d42d837426300d27b8cf6c3990ee1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>PA New Tab</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_grid_canvas_ad5d42d837426300d27b8cf6c3990ee1</sys_update_name>
+        <sys_updated_by>bharat.vajj</sys_updated_by>
+        <sys_updated_on>2018-11-24 09:37:43</sys_updated_on>
+    </sys_grid_canvas>
+</record_update>

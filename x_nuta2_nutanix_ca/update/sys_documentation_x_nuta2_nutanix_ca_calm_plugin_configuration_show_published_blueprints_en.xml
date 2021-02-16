@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="show_published_blueprints" label="Show Un-Published Blueprints" language="en" table="x_nuta2_nutanix_ca_calm_plugin_configuration">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>show_published_blueprints</element>
+            <help/>
+            <hint>Show only published blueprints</hint>
+            <label>Show Un-Published Blueprints</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_calm_plugin_configuration</name>
+            <plural>Show Un-Published Blueprints</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>nitin</sys_created_by>
+            <sys_created_on>2018-10-11 11:31:52</sys_created_on>
+            <sys_id>b0810c5e4fc5630065e48020a310c780</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_name>Show Un-Published Blueprints</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_calm_plugin_configuration_show_published_blueprints_en</sys_update_name>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-11-27 09:29:59</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

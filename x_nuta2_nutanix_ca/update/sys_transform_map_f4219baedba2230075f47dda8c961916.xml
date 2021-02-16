@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_map">
+    <sys_transform_map action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copy_empty_fields>false</copy_empty_fields>
+        <create_new_record_on_empty_coalesce_fields>false</create_new_record_on_empty_coalesce_fields>
+        <enforce_mandatory_fields>No</enforce_mandatory_fields>
+        <name>AWS Providers</name>
+        <order>100</order>
+        <run_business_rules>false</run_business_rules>
+        <run_script>true</run_script>
+        <script><![CDATA[(function transformRow(source, target, map, log, isUpdate) {
+	
+	this.appUtil = new Nutanix_Calm_Utils();
+	this.logger = new Nutanix_Calm_Logger();
+	
+	// Add your code here
+	//gs.error(" uuid " );
+		target.environment = source.environment;
+
+	if(source.login_credential_local_reference){
+		
+		var credJSON = JSON.parse(source.login_credential_local_reference);
+		//gs.error(" credJSON " + credJSON);
+		var credUUID = credJSON.uuid;
+		//gs.error(" credUUID " + credUUID);
+		var gr = new GlideRecord(this.appUtil.configuration.table.Credentials+"");
+		gr.addQuery("uuid",credUUID);							
+		gr.query();
+		if(gr.next()){
+			//gs.error(" uuid " + gr);
+			target.credential = gr.sys_id;
+		}
+	}
+	
+	if(source.create_spec){
+						//this.logger.debug ("out create_spec Key:field  " + key+":"+entity[key]);
+						//var entity = JSON.parse(source.create_spec);
+						var specJSON = JSON.parse(source.create_spec);
+						for (var subKey in specJSON) {
+							if(subKey != "resources" ){
+								if(subKey == "name"){
+									target["provider_name"] = specJSON[subKey]+"";
+								}
+								else if(subKey == "type"){
+									target["provider_type"] = specJSON[subKey]+"";
+								}
+								else if(specJSON[subKey] != null){
+									field = specJSON[subKey];
+									//this.logger.debug ("Inside create_spec Key:field  " + subKey+":"+field+"");
+									target[subKey] =  (field.constructor === Object || field.constructor === Array) ? this.appUtil.stringify(field) : field+"";
+								}
+							}
+							if(subKey == "resources" ){
+								this.logger.debug ("out resources Key:field  " + specJSON[subKey]);
+								var resourceJSON = specJSON[subKey];
+								for (var innerKey in resourceJSON){
+									this.logger.debug ("Inside resources Key:field  " + innerKey+":"+resourceJSON[innerKey]);
+									//	if(resourceJSON[innerKey] != ""){
+									if(innerKey == "type"){
+										target["specific_provider_type"] = resourceJSON[innerKey]+"";
+									}
+									else if(innerKey == "state"){
+										target["specific_provider_state"] = resourceJSON[innerKey]+"";
+									}
+									else if(innerKey == "security_group_list"){
+											if(resourceJSON.security_group_list){
+												var securityJSON = resourceJSON.security_group_list;
+												//gs.error("securityJSON :: "+securityJSON)
+												target.security_group_list = "";
+												for(var i=0; i<securityJSON.length ;i++){
+													//gs.error("i:securityJSON[i].security_group_id "+i+":"+securityJSON[i].security_group_id );
+													target.security_group_list = (i != (securityJSON.length-1)) ? target.security_group_list + securityJSON[i].security_group_id+"," : target.security_group_list + securityJSON[i].security_group_id+"";
+												}
+											}
+									}
+									else {
+										//if(innerKey != "security_group_list"){
+											field = resourceJSON[innerKey];
+											this.logger.debug ("Inside 2nd resources Key:field  " + innerKey+":"+field+"");
+											target[innerKey] =  (field.constructor === Object || field.constructor === Array) ? this.appUtil.stringify(field) : field+"";
+									//	}
+										
+									}
+								}
+							}
+						}
+					}
+				
+})(source, target, map, log, action==="update");]]></script>
+        <source_table>x_nuta2_nutanix_ca_nutanix_staging_aws</source_table>
+        <sys_class_name>sys_transform_map</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-12-26 10:52:36</sys_created_on>
+        <sys_id>f4219baedba2230075f47dda8c961916</sys_id>
+        <sys_mod_count>24</sys_mod_count>
+        <sys_name>AWS Providers</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_map_f4219baedba2230075f47dda8c961916</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-05-02 11:12:34</sys_updated_on>
+        <target_table>x_nuta2_nutanix_ca_aws</target_table>
+    </sys_transform_map>
+</record_update>

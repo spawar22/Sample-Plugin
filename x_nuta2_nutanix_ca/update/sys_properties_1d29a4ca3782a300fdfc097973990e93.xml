@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>This is base64 string of default image on each catalog item.</description>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.default.image</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>default.image</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-29 12:50:12</sys_created_on>
+        <sys_id>1d29a4ca3782a300fdfc097973990e93</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.default.image</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_1d29a4ca3782a300fdfc097973990e93</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-11-29 12:50:12</sys_updated_on>
+        <type>string</type>
+        <value>iVBORw0KGgoAAAANSUhEUgAAAD0AAAArCAYAAADL7YBvAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAABb3JOVAHPoneaAAAFYElEQVRoQ+2Ze1BUVRzHf/tEdnkTrwKyIQYWCAIL0hFriIcgtuIMjkRamUIz/eNMTY1po5M1NZXDn6VIMwqNWqmLQQi5qUGNZjMqxGsmZHAiWRssnhL7uJ2z/TaE3b333N27/iF+di73fM+wM/d7zzm/3++clXEEWGTI8b6ouG96seC0pi22aRgZ/x4VPxEBy8FPGY7KtzQYr2GLn7BANZRkx6JyjZPplp5CmLWMoeKH42ywLuMSKt9R8FYrXOi9iYof6mbym02oXOM0vYt0zcCBDRU/MpkcDJ3ZZHZMYY/0xFYcYzZM2VWZgS33uE1Zhs4nQSZiya9K/BxC/VNRSUPA2nryYlEw0PphEaxIiUTlHt483X/zIPSN1KISJiXmNUiM2IzKcxqMA1BV8yMo5GyOVUo5DNaXQ7BWjT38CBYnt6avQPtv1ahY4ECf/jO2xfPyJx3w9Q+DqIRJeDAIrnymR8WGoGmK2ToB33Y/S1psb57GBP1jF8jUVGAPG2nbTsKQaRKVMM/nJcD+7StQscNk2oHhKlnnJHixwUGBrhE0qhjU/ISWfQEWK1sApdS9vhI2PP0IKnGIKk4KdMexxYIM2nqfwzY/q3e0iTKco4v02DBF1EhTbJwZTvcU26c8Cxz5lKadA6Vcgz3zWfrCVzA6PoOKHxt51B0bM5jSEh+iTTvoGKiC0amrqIQJ06ZBbkIdqjmqan6CI2cHULnHauNgusn7zEDx2DSl31QLfaaDqIRRKbRQkupc4h49OwjbajpQOaNUyOGvk5WovMcr05TRqctk1F9FxYLrlHbtxgSkVxuc8sPS6EDoOrAOlTR4bZpito6TlJZPWiJSWvpFp4rPTIJZiL4B5FiU0GBFo7TUiIre7lApgiAzbhcqYajZpq5cVHOoyDRu+aDIvmkI1Kh8YpgiyUg7mPxnCIz95aTFPuK5CfshXJuFPXcHSU07oNWb2cpeWSVFvQLJUVWofI8k03shJalGMkWtqITpN9WBacJ99JYan5geHmsTVXfT0jYq0Dfr1xWST+/Lv++F67eaUAnjr46CwuRTqO4Oko403ZCwG+agUGdwaZielhw7N4hKeiQz3dydJ2IHBpAcXQ3+LnZgKVtPwNjULGzZ1w4T02bslRZJpndjZzb5y5amKLmPHoAwjfOmIaSsAazW+Y9j/LgYspMeQCUNXpmmEbqx6ymnyso9nD2yqxSBqOfQlB52ezy0e1MmvFGehsp7PDZ923yD7JfpMQ1jIeLmuHjithmiNxwBucAJ4Kr0aGh+rwCVd3hk+o+xM3BpaCcqYeLDSiEz9h1U81my5pC9/GQhLMgPBg6Vk10X+1JyhWjTp7qW20eNlSfi34WHQopQuYZvai+EPm13XRk8HBmAPeIRFb3bB7aKMhyuzRA0TOmpW09WOxt0Fei2nEDlGcwj7et62kKidrC+/v9tpRD06Mj0ZQUE+Kuwhx0m02JT0sqETz3eOWnXHhYMandyfl8JZCWK+xGR1zTd+jV25jCnJLlMCatTWuz7a2+g0XxqxoJKmL0vLYPt61NQCePW9C/X34bhv8+QFttb1/rFQn6SmCNifi72/Qn5b55GJQx1IfRrpQOXQ/hdn54YNpIWm+G40GJJDVNykiNg+OhGYoYp5NgDnJZkAXpqSq/0KgPMzFqh4v3zMElqAX+SGh04mW7tXQPTsyOohFkWvwey4vagkpYgjYqM3ma7CRZoEAwiwZCmP9peolaAxWaDFz9qh52Vj+N/uTAdE/wMeWsypoumpNiQYvym7/i1tsx+d/UMCy+18r99vFqFd6Ucju/OA+UdWUF0cXIvIKo4uVe4b3pxAPAv94j2k8LF7pgAAAAASUVORK5CYII=</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=1d29a4ca3782a300fdfc097973990e93"/>
+</record_update>

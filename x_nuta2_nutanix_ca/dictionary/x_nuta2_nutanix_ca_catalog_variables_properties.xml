@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Catalog Variables Properties" max_length="40" name="x_nuta2_nutanix_ca_catalog_variables_properties" type="collection">
+        <element attributes="edge_encryption_enabled=true" label="Application Profile" max_length="32" name="application_profile" reference="x_nuta2_nutanix_ca_application_profile" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" label="Catalog Item" max_length="32" name="catalog_item" reference="sc_cat_item" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" label="Category Name" max_length="32" name="category_name" reference="item_option_new" type="reference"/>
+        <element label="Data Type" max_length="40" name="data_type" type="string"/>
+        <element label="Default Value" max_length="1000" name="default_value" type="string"/>
+        <element label="Dependencies" max_length="5000" name="dependencies" type="string"/>
+        <element label="Field Json" max_length="8000" name="field_json" type="string"/>
+        <element label="Field Regex" max_length="250" name="field_regex" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="isDisabled?" max_length="40" name="isdisabled" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" label="isProfileVariable" max_length="40" name="isprofilevariable" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" label="isServiceVariable" max_length="40" name="isservicevariable" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" label="isSupported" max_length="40" name="issupported" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" label="Is Hidden" max_length="40" name="is_hidden" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" label="Runtime Config" max_length="40" name="runtime_config" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" label="Service Name" max_length="32" name="service_name" reference="item_option_new" type="reference"/>
+        <element label="Type" max_length="200" name="type" type="string"/>
+        <element label="UUID" max_length="50" name="uuid" type="string"/>
+        <element label="Value Type" max_length="300" name="value_type" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Variable" max_length="32" name="variable" reference="item_option_new" type="reference"/>
+        <index name="index">
+            <element name="category_name"/>
+        </index>
+        <index name="index2">
+            <element name="application_profile"/>
+        </index>
+        <index name="index3">
+            <element name="service_name"/>
+        </index>
+        <index name="index4">
+            <element name="catalog_item"/>
+        </index>
+        <index name="index5">
+            <element name="variable"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description/>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.consumer.entitlement.filter</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin,admin</read_roles>
+        <suffix>consumer.entitlement.filter</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-25 12:39:03</sys_created_on>
+        <sys_id>817baf02db514c10b0732bfa4b9619df</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.consumer.entitlement.filter</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_817baf02db514c10b0732bfa4b9619df</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-25 12:39:03</sys_updated_on>
+        <type>string</type>
+        <value>{"2.4":[{"operator":"IN","left_hand_side":{"entity_type":"image"},"right_hand_side":{"collection":"ALL"}},{"operator":"IN","left_hand_side":{"entity_type":"marketplace_item"},"right_hand_side":{"collection":"SELF_OWNED"}}],"2.5":[{"operator":"IN","left_hand_side":{"entity_type":"image"},"right_hand_side":{"collection":"ALL"}},{"operator":"IN","left_hand_side":{"entity_type":"marketplace_item"},"right_hand_side":{"collection":"SELF_OWNED"}}],"2.6":[{"operator":"IN","left_hand_side":{"entity_type":"image"},"right_hand_side":{"collection":"ALL"}},{"operator":"IN","left_hand_side":{"entity_type":"marketplace_item"},"right_hand_side":{"collection":"SELF_OWNED"}}],"2.7":[{"operator":"IN","left_hand_side":{"entity_type":"image"},"right_hand_side":{"collection":"ALL"}},{"operator":"IN","left_hand_side":{"entity_type":"marketplace_item"},"right_hand_side":{"collection":"SELF_OWNED"}},{"operator":"IN","right_hand_side":{"collection":"ALL"},"left_hand_side":{"entity_type":"app_icon"}},{"operator":"IN","right_hand_side":{"collection":"ALL"},"left_hand_side":{"entity_type":"category"}}],"2.9":[{"operator":"IN","left_hand_side":{"entity_type":"image"},"right_hand_side":{"collection":"ALL"}},{"operator":"IN","left_hand_side":{"entity_type":"marketplace_item"},"right_hand_side":{"collection":"SELF_OWNED"}},{"operator":"IN","right_hand_side":{"collection":"ALL"},"left_hand_side":{"entity_type":"app_icon"}},{"operator":"IN","right_hand_side":{"collection":"ALL"},"left_hand_side":{"entity_type":"category"}},{"operator":"IN","left_hand_side":{"entity_type":"app_task"},"right_hand_side":{"collection":"SELF_OWNED"}},{"operator":"IN","left_hand_side":{"entity_type":"app_variable"},"right_hand_side":{"collection":"SELF_OWNED"}}]}</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin,admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=817baf02db514c10b0732bfa4b9619df"/>
+</record_update>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Perform_Action_Condition</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Perform_Action_Condition</name>
+        <script><![CDATA[var Perform_Action_Condition = Class.create();
+Perform_Action_Condition.prototype = {
+	
+	initialize: function() {
+		this.utils = new Nutanix_Calm_Utils();
+	},
+	
+	performActions: function(parent_uuid, action_name,action_type) {
+		var syncFlag = '';
+		var delFlag = '';
+		var grQueue = new GlideRecord('x_nuta2_nutanix_ca_nutanix_process_queue');
+		grQueue.addEncodedQuery('state!=complete^state!=error^topic!=startInventoryDelete^topic!=processImportedApp^topic!=importRecoveryPoints^topic!=processRecoveryPoints');
+		grQueue.query();
+		if(grQueue.next()) {
+			syncFlag = '1';
+		}
+		if(gs.getProperty('x_nuta2_nutanix_ca.Delete_Flag')=='1') {
+			delFlag = '1';
+		}
+		
+		var app_action = new GlideRecord('x_nuta2_nutanix_ca_app_action_workflow_trigger');
+		app_action.addQuery('actionsysid.parent_uuid',parent_uuid);
+		app_action.addQuery('approval_status','waiting_for_approval');
+		app_action.query();
+		if(app_action.next()){
+			gs.addErrorMessage(app_action.getDisplayValue('actionsysid')+' '+app_action.actionsysid.type+' action on this application is in waiting for approval state');
+			return false;
+		}
+		
+		var gr = new GlideRecord(this.utils.configuration.table.NutanixCalmApplication);
+		var act_name = action_name+'';
+		gr.addQuery('uuid',parent_uuid);
+		gr.query();
+		gr.next();
+		
+		if(syncFlag == '1' || delFlag == '1') {
+			gs.addErrorMessage('A sync or a cleanup task is currently in progress. Please wait for them to finish.');
+			return false;
+		}
+		if(gr.action_flag == '1') {
+			gs.addErrorMessage('An action is currently in progress');
+			return false;
+		}
+		else {
+			
+			if(gr.application_type == "SingleVM" && (gr.attributes + "" == "AWS_VM" || gr.attributes + "" == "GCP_VM")&& (act_name == "action_update"|| act_name == "action_image_create") && action_type == "system") {
+				gs.addErrorMessage('This action is not supported for this version of the plugin.');
+				return false;
+			}
+			
+			else if(gr.state == 'error' && !((act_name=='action_soft_delete' || act_name=='action_delete' || act_name=='action_update') && action_type == 'system')) {
+				gs.addErrorMessage('This action is not applicable for applications in '+gr.state+' state.');
+				return false;
+			}
+			
+			else if(gr.state == 'stopped' && !((act_name == 'action_start' || act_name=='action_soft_delete' || act_name=='action_delete') && action_type == 'system')) {
+				gs.addErrorMessage('This action is not applicable for applications in '+gr.state+' state.');
+				return false;
+			}
+			
+			else if(gr.state == 'running' && ((act_name=='action_create' || act_name=='action_start') && action_type == 'system')) {
+				gs.addErrorMessage('This action is not applicable for applications in '+gr.state+' state.');
+				return false;
+			}
+			
+			else if(gr.state == 'running' && (act_name=='action_install_ngt' && action_type == 'system') && gr.ngt_state == 'INSTALLED') {
+				gs.addErrorMessage('NGT is already installed on this VM.');
+				return false;
+			}
+			
+			else if(gr.state == 'running' && ((act_name=='action_manage_ngt' || act_name=='action_uninstall_ngt') && action_type == 'system') && (gr.ngt_state == 'MOUNTED' || gr.ngt_state == '' || gr.ngt_state == 'UNMOUNTED')) {
+				gs.addErrorMessage('NGT has not been installed on this VM.');
+				return false;
+			}
+			
+			else if(gr.state == 'provisioning' || gr.state == 'deleting' || gr.state == 'stopping' || gr.state == 'starting' || gr.state == 'busy') {
+				gs.addErrorMessage('This application is still in an intermediate state.');
+				return false;
+			}
+			
+			else if(gr.state == 'deleted') {
+				gs.addErrorMessage('This application has been deleted. No actions are permitted.');
+				return false;
+			}
+			
+			else {
+				//this.logger.info('App action '+"'"+act_name+"'"+' started on app: '+gr.name);
+				return true;
+			}
+		}
+	},
+	
+	type: 'Perform_Action_Condition'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>bharat.vajj</sys_created_by>
+        <sys_created_on>2018-11-23 05:50:39</sys_created_on>
+        <sys_id>48fdcc0c37022300d27b8cf6c3990e74</sys_id>
+        <sys_mod_count>160</sys_mod_count>
+        <sys_name>Perform_Action_Condition</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_48fdcc0c37022300d27b8cf6c3990e74</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-09-23 13:55:19</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_application">
+    <sys_ui_application action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <hint/>
+        <name>Nutanix CALM SNOW App</name>
+        <order/>
+        <roles/>
+        <sys_class_name>sys_ui_application</sys_class_name>
+        <sys_created_by>nitin</sys_created_by>
+        <sys_created_on>2018-10-11 11:25:16</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>c4000c1e4fc5630065e48020a310c756</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Nutanix CALM SNOW App</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_application_c4000c1e4fc5630065e48020a310c756</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-07 10:30:30</sys_updated_on>
+    </sys_ui_application>
+</record_update>

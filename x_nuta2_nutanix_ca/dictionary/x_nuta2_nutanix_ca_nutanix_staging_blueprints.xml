@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="sys_import_set_row" label="Nutanix Staging Blueprints" max_length="40" name="x_nuta2_nutanix_ca_nutanix_staging_blueprints" type="collection">
+        <element label="Application Count" max_length="50" name="application_count" type="string"/>
+        <element label="App Profile List" max_length="5000" name="app_profile_list" type="string"/>
+        <element label="Client Attrs" max_length="5000" name="client_attrs" type="string"/>
+        <element label="Creation Time" max_length="200" name="creation_time" type="string"/>
+        <element label="Credential Definition List" max_length="5000" name="credential_definition_list" type="string"/>
+        <element label="Default Credential Local Reference" max_length="5000" name="default_credential_local_reference" type="string"/>
+        <element label="Deleted" max_length="50" name="deleted" type="string"/>
+        <element label="Deletion Time" max_length="200" name="deletion_time" type="string"/>
+        <element label="Description" max_length="300" name="description" type="string"/>
+        <element label="Entities" max_length="255" name="entities" type="string"/>
+        <element label="Entity Verison" max_length="100" name="entity_verison" type="string"/>
+        <element label="Is Cloned" max_length="50" name="is_cloned" type="string"/>
+        <element label="Kind" max_length="255" name="kind" type="string"/>
+        <element label="Last Update Time" max_length="200" name="last_update_time" type="string"/>
+        <element label="Messages" max_length="1000" name="messages" type="string"/>
+        <element label="Name" max_length="200" name="name" type="string"/>
+        <element label="Owner Reference" max_length="255" name="owner_reference" type="string"/>
+        <element label="Package Definition List" max_length="5000" name="package_definition_list" type="string"/>
+        <element label="Project Reference" max_length="255" name="project_reference" type="string"/>
+        <element label="Schema Version" max_length="100" name="schema_version" type="string"/>
+        <element label="Service Definition List" max_length="5000" name="service_definition_list" type="string"/>
+        <element label="Source MPI" max_length="100" name="source_mpi" type="string"/>
+        <element label="Spec Version" max_length="100" name="spec_version" type="string"/>
+        <element label="State" max_length="100" name="state" type="string"/>
+        <element label="Status" max_length="255" name="status" type="string"/>
+        <element label="Substrate Definition List" max_length="5000" name="substrate_definition_list" type="string"/>
+        <element default="Multi Vm/Pod" label="Template Type" max_length="40" name="template_type" type="string"/>
+        <element label="Tenant Uuid" max_length="100" name="tenant_uuid" type="string"/>
+        <element label="UUID" max_length="100" name="uuid" type="string"/>
+    </element>
+</database>

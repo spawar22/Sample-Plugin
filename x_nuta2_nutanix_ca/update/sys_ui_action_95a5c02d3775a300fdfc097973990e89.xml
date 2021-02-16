@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_action">
+    <sys_ui_action action="INSERT_OR_UPDATE">
+        <action_name/>
+        <active>true</active>
+        <client>false</client>
+        <client_script_v2/>
+        <comments/>
+        <condition>current.state+''=='active' &amp;&amp; new Nutanix_ClientServerScriptBridge().checkQueue();</condition>
+        <form_action>true</form_action>
+        <form_button>true</form_button>
+        <form_button_v2>false</form_button_v2>
+        <form_context_menu>false</form_context_menu>
+        <form_link>false</form_link>
+        <form_menu_button_v2>false</form_menu_button_v2>
+        <form_style/>
+        <hint/>
+        <isolate_script>false</isolate_script>
+        <list_action>false</list_action>
+        <list_banner_button>false</list_banner_button>
+        <list_button>false</list_button>
+        <list_choice>false</list_choice>
+        <list_context_menu>false</list_context_menu>
+        <list_link>false</list_link>
+        <list_save_with_form_button>false</list_save_with_form_button>
+        <list_style/>
+        <name>Edit Configuration</name>
+        <onclick/>
+        <order>70</order>
+        <script><![CDATA[var url = '/com.glideapp.servicecatalog_cat_item_guide_view.do?v=1&sysparm_initial=true&sysparm_guide=6ddd772a37112300fdfc097973990e01&sysparm_link_parent=7cf73cb337112300fdfc097973990ead&sysparm_catalog=240abede37112300fdfc097973990e24&sysparm_catalog_view=catalog_nutanix_calm_catalog&performAction=update&sys_id='+current.sys_id;
+
+if(current.state+''=='deleted' ){
+	
+	gs.addErrorMessage("Can't edit the catalog as the catalog item is in deleted state.");
+	url = 'x_nuta2_nutanix_ca_nutanix_runtime_configuration_list.do?sysparm_userpref_module=b2d6d6a54f41230065e48020a310c7b7&sysparm_view=catalog_view&sysparm_clear_stack=true';
+}
+
+action.setRedirectURL(url);]]></script>
+        <show_insert>true</show_insert>
+        <show_multiple_update>false</show_multiple_update>
+        <show_query>false</show_query>
+        <show_update>true</show_update>
+        <sys_class_name>sys_ui_action</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-15 10:43:00</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>95a5c02d3775a300fdfc097973990e89</sys_id>
+        <sys_mod_count>18</sys_mod_count>
+        <sys_name>Edit Configuration</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_action_95a5c02d3775a300fdfc097973990e89</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2019-07-29 02:45:05</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_nutanix_runtime_configuration</table>
+        <ui11_compatible>true</ui11_compatible>
+        <ui16_compatible>false</ui16_compatible>
+    </sys_ui_action>
+</record_update>

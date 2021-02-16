@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="wf_workflow_version">
+    <wf_workflow_version action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <activity_stages>{"stages":{},"ends":["79464214dbc900900a41ab7dca96196d"],"activities":{},"subflows":[]}</activity_stages>
+        <after_business_rules>false</after_business_rules>
+        <checked_out/>
+        <checked_out_by/>
+        <column_renderer display_value="Workflow-driven">a56213111b030100adca1e094f0713ac</column_renderer>
+        <condition/>
+        <condition_type/>
+        <description/>
+        <expected_sequences>f9468a14dbc900900a41ab7dca9619e7,71464214dbc900900a41ab7dca96196c,79464214dbc900900a41ab7dca96196d</expected_sequences>
+        <expected_time>1970-01-01 14:00:00</expected_time>
+        <expected_time_type/>
+        <full_sequences>f9468a14dbc900900a41ab7dca9619e7,71464214dbc900900a41ab7dca96196c,79464214dbc900900a41ab7dca96196d</full_sequences>
+        <journal/>
+        <max_activity_count>100</max_activity_count>
+        <name>Nutanix - User Actions Auto Approval </name>
+        <not_cacheable>false</not_cacheable>
+        <on_cancel><![CDATA[// This script executes if the workflow is cancelled.// The global variable context_sys_id contains the sys_id of the cancelled workflow context.]]></on_cancel>
+        <order>100</order>
+        <pin_type>set_by_activity</pin_type>
+        <published>true</published>
+        <relative_duration display_value="2 business days by 4pm">3bf802c20a0a0b52008e2859cd8abcf2</relative_duration>
+        <requires_ert>true</requires_ert>
+        <run_multiple>false</run_multiple>
+        <schedule/>
+        <stage_field/>
+        <stage_order>computed</stage_order>
+        <start display_value="Begin">f9468a14dbc900900a41ab7dca9619e7</start>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>75464214dbc900900a41ab7dca96196a</sys_id>
+        <sys_mod_count>55</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 09:29:09</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_app_action_workflow_trigger</table>
+        <timezone/>
+        <validated>false</validated>
+        <workflow display_value="Nutanix - User Actions Auto Approval ">2549e2d6db90c0100a41ab7dca961999</workflow>
+    </wf_workflow_version>
+    <wf_workflow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <description/>
+        <name>Nutanix - User Actions Auto Approval </name>
+        <preview/>
+        <sys_class_name>wf_workflow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-10-07 09:20:04</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>2549e2d6db90c0100a41ab7dca961999</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Nutanix - User Actions Auto Approval </sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>wf_workflow_2549e2d6db90c0100a41ab7dca961999</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-06 08:53:17</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_app_action_workflow_trigger</table>
+        <template>false</template>
+        <vars/>
+    </wf_workflow>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Begin">c7a5e32c0a0a0b3a002377c24ed8ea76</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>1</databus_lookup_id>
+        <height/>
+        <input/>
+        <is_parent>false</is_parent>
+        <name>Begin</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>f9468a14dbc900900a41ab7dca9619e7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:26:24</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width>80</width>
+        <workflow_version display_value="Nutanix - User Actions Auto Approval ">75464214dbc900900a41ab7dca96196a</workflow_version>
+        <x>20</x>
+        <y>20</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=f9468a14dbc900900a41ab7dca9619e7"/>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Begin">f9468a14dbc900900a41ab7dca9619e7</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>35468a14dbc900900a41ab7dca9619e8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:26:24</sys_updated_on>
+    </wf_condition>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="End">c7a66f7d0a0a0b3a004544a6d2f14076</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>2</databus_lookup_id>
+        <height/>
+        <input/>
+        <is_parent>false</is_parent>
+        <name>End</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>79464214dbc900900a41ab7dca96196d</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:28:24</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width>80</width>
+        <workflow_version display_value="Nutanix - User Actions Auto Approval ">75464214dbc900900a41ab7dca96196a</workflow_version>
+        <x>864</x>
+        <y>121</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=79464214dbc900900a41ab7dca96196d"/>
+    <wf_activity action="INSERT_OR_UPDATE">
+        <activity_definition display_value="Set Values">1ca8d7cf0a0a0b265e9a000c2c08248c</activity_definition>
+        <activity_definition_updated>false</activity_definition_updated>
+        <databus_lookup_id>3</databus_lookup_id>
+        <height/>
+        <input>{}</input>
+        <is_parent>false</is_parent>
+        <name>Set Approval status  as Approved</name>
+        <new_activity_definition/>
+        <notes/>
+        <out_of_date>false</out_of_date>
+        <parent/>
+        <pinned>false</pinned>
+        <pinned_version/>
+        <stage/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>71464214dbc900900a41ab7dca96196c</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:27:39</sys_updated_on>
+        <timeout>1970-01-01 00:00:00</timeout>
+        <vars/>
+        <width/>
+        <workflow_version display_value="Nutanix - User Actions Auto Approval ">75464214dbc900900a41ab7dca96196a</workflow_version>
+        <x>492</x>
+        <y>6</y>
+    </wf_activity>
+    <sys_variable_value action="delete_multiple" query="document_key=71464214dbc900900a41ab7dca96196c"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>71464214dbc900900a41ab7dca96196c</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>39464214dbc900900a41ab7dca96196c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:26:24</sys_updated_on>
+        <value>approval_status=approved^EQ</value>
+        <variable display_value="">1cb38c8f0a0a0b266fb48e08de35f507</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>wf_activity</document>
+        <document_key>71464214dbc900900a41ab7dca96196c</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>39464214dbc900900a41ab7dca96196c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:26:24</sys_updated_on>
+        <value>approval_status=approved^EQ</value>
+        <variable display_value="">1cb38c8f0a0a0b266fb48e08de35f507</variable>
+    </sys_variable_value>
+    <wf_condition action="INSERT_OR_UPDATE">
+        <activity display_value="Set Approval status  as Approved">71464214dbc900900a41ab7dca96196c</activity>
+        <condition>true</condition>
+        <condition_default/>
+        <condition_type>standard</condition_type>
+        <else_flag>false</else_flag>
+        <error>false</error>
+        <event>false</event>
+        <event_name/>
+        <is_positive>true</is_positive>
+        <name>Always</name>
+        <order>0</order>
+        <short_description/>
+        <skip_during_generate>false</skip_during_generate>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>f1464214dbc900900a41ab7dca96196d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:26:24</sys_updated_on>
+    </wf_condition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">f1464214dbc900900a41ab7dca96196d</condition>
+        <from display_value="Set Approval status  as Approved">71464214dbc900900a41ab7dca96196c</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>b5468a14dbc900900a41ab7dca9619e9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:26:24</sys_updated_on>
+        <to display_value="End">79464214dbc900900a41ab7dca96196d</to>
+    </wf_transition>
+    <wf_transition action="INSERT_OR_UPDATE">
+        <condition display_value="Always">35468a14dbc900900a41ab7dca9619e8</condition>
+        <from display_value="Begin">f9468a14dbc900900a41ab7dca9619e7</from>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:27:44</sys_created_on>
+        <sys_id>dd96ca14dbc900900a41ab7dca96192c</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 09:29:04</sys_updated_on>
+        <to display_value="Set Approval status  as Approved">71464214dbc900900a41ab7dca96196c</to>
+    </wf_transition>
+    <wf_estimated_runtime_config action="INSERT_OR_UPDATE">
+        <estimated_run_time/>
+        <no_of_data_points>1</no_of_data_points>
+        <percentage_threshold_ert>20</percentage_threshold_ert>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-11-07 08:26:24</sys_created_on>
+        <sys_id>39464214dbc900900a41ab7dca96196a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-11-07 08:26:24</sys_updated_on>
+        <workflow_version display_value="Nutanix - User Actions Auto Approval ">75464214dbc900900a41ab7dca96196a</workflow_version>
+    </wf_estimated_runtime_config>
+    <wf_workflow_version action="update_multiple" query="workflow=2549e2d6db90c0100a41ab7dca961999^sys_id!=75464214dbc900900a41ab7dca96196a">
+        <published>false</published>
+    </wf_workflow_version>
+</record_update>

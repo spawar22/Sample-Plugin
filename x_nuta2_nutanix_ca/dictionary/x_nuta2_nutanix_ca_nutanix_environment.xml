@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Environment" max_length="40" name="x_nuta2_nutanix_ca_nutanix_environment" type="collection">
+        <element label="Creation Time" max_length="250" name="creation_time" type="string"/>
+        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element label="Last update time" max_length="40" name="last_update_time" type="string"/>
+        <element label="Name" max_length="500" name="name" type="string"/>
+        <element label="Owner Name" max_length="100" name="owner_name" type="string"/>
+        <element label="Owner UUID" max_length="250" name="owner_uuid" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Project" max_length="40" name="project" reference="x_nuta2_nutanix_ca_nutanix_project" type="reference"/>
+        <element label="Spec Version" max_length="40" name="spec_version" type="string"/>
+        <element label="State" max_length="40" name="state" type="string"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+        <index name="index">
+            <element name="project"/>
+        </index>
+    </element>
+</database>

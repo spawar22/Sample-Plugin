@@ -1,0 +1,1782 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_CreateCatalogVariables</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_CreateCatalogVariables</name>
+        <script><![CDATA[var Nutanix_CreateCatalogVariables = Class.create();
+Nutanix_CreateCatalogVariables.prototype = {
+	initialize: function() {
+		this.start = 110;
+		this.end = 500;
+		this.order = 111;
+		this.subContainerEnd = 160;
+
+		this.fieldLabels = JSON.parse(gs.getProperty('x_nuta2_nutanix_ca.nutanix.fields.labels.mapping'));
+
+		this.exclusionList = gs.getProperty('x_nuta2_nutanix_ca.exclusion.list')+'';
+		this.disabledFields = gs.getProperty('x_nuta2_nutanix_ca.disabled.fields')+'';
+		
+		this.integerValidation = gs.getProperty('x_nuta2_nutanix_ca.integerValidationList')+'';
+		this.boolValidation = gs.getProperty('x_nuta2_nutanix_ca.booleanValidationList')+'';
+		this.profileUUIDSysIDRel = {};
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+		this.diffVar = new Nutanix_ImportApplicationProfiles();
+	},
+	_invalidateCatalogItem: function(CatSysId) {
+		var grCat = new GlideRecord("x_nuta2_nutanix_ca_nutanix_runtime_configuration");
+		grCat.addQuery("blueprint", CatSysId);
+		grCat.query();
+		while(grCat.next()) {
+// 			grCat.state = "inactive";
+// 			grCat.update();
+		}
+	},
+	
+	_checkServiceVarSync: function(cat_sysID, variableList, serviceName, profileUUID, serviceSysId) {
+		
+		var arr_var_current = {};
+		var arr_var_updated = {};
+		
+		var grCatVar = new GlideRecord(this.appUtil.configuration.table.variablesProperties+'');
+		grCatVar.addQuery('service_name', serviceSysId + "");
+		grCatVar.addQuery('type', 'Service');
+		grCatVar.addQuery('catalog_item', cat_sysID + "");
+		grCatVar.query();
+		while(grCatVar.next())
+			arr_var_current[grCatVar.uuid] = {"variable": grCatVar.variable + "", "var_name": grCatVar.variable.question_text + ""};
+		
+		for(var i in variableList)
+			arr_var_updated[variableList[i].uuid] = {"var_name":((variableList[i].label+'').trim() != "") ? variableList[i].label+''  : variableList[i].name+'', "var_value": variableList[i].value + ""};
+		
+		for(var uuid in arr_var_current) {
+			
+			if(!(uuid in arr_var_updated) || (uuid in arr_var_updated && (arr_var_current[uuid].var_name + "" != arr_var_updated[uuid].var_name + ""))) {
+				
+// 				this._invalidateCatalogItem(cat_sysID);
+				
+				var fieldGR = new GlideRecord(this.appUtil.configuration.table.varaiblesTable+'');
+				if (fieldGR.get(arr_var_current[uuid].variable + ""))
+				{	
+				fieldGR.cat_item = "";
+				fieldGR.update();
+				}
+				var grCatVarDel = new GlideRecord(this.appUtil.configuration.table.variablesProperties+'');
+				grCatVarDel.addQuery('catalog_item', cat_sysID + "");
+				grCatVarDel.addQuery('uuid', uuid + "");
+				grCatVarDel.query();
+				while(grCatVarDel.next())
+					grCatVarDel.deleteRecord();
+			}
+		}
+		
+	},
+
+	processCatalogVariables: function(current){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables.processCatalogVariables");
+			this.logger.info("Catalog Variable creation started.");
+			var cat_sysID = current.parameter+'';
+
+			var profileGR = new GlideRecord(this.appUtil.configuration.table.catalogProfileRelation+'');
+			profileGR.addQuery('catalog_item', cat_sysID);
+			profileGR.query();
+			while(profileGR.next()){
+				this.profileUUIDSysIDRel[profileGR.application_profile.uuid+''] = profileGR.application_profile+'';
+			}
+
+			this.logger.debug("Mapping for profile uuid and sys_id created. Relation:- "+JSON.stringify(this.profileUUIDSysIDRel));
+
+			var parsed = JSON.parse(current.payload+'');
+			this._createDefaultVariables(cat_sysID);
+
+			this.logger.debug("Created default project, appName and profile variables on catalog item.");
+
+			var filterJSON = this._filterJSONDatatoService(parsed);
+			this.logger.debug("FilteredJson received for parsing:- "+JSON.stringify(filterJSON));
+
+			
+// 			var createSrvcVarScpt = new Nutanix_CreateServiceVariables();
+// 			createSrvcVarScpt.createServiceVariables(filterJSON, cat_sysID);
+
+			
+			this._createContainerStartandEnd('Service Configuration', cat_sysID, 100, 50000, 'normal');
+
+			this.logger.debug("Created Service Configuration Container.");
+
+			this.start = 110;
+			this.end = 500;
+			this.order = this.start+1;
+			this.subContainerEnd = 160;
+
+			//var projectDetail = parsed.project_list;
+			
+			for(var i in filterJSON){
+
+				var service = filterJSON[i];
+				var serviceSysId = this._createContainerStartandEnd(service.name, cat_sysID, this.start, this.end, 'normal');
+
+				this.logger.debug("Created Container for "+service.name);
+
+				this.start = this.end+10;
+				this.end = this.end+500;
+
+				var service_name = service.name.toLowerCase().replace(/ /g, '_'	);
+
+				this._parseSubstrate(service.substrate, cat_sysID, service_name, serviceSysId);
+				this._parseProfile(service.profile, cat_sysID, service_name, serviceSysId);
+				if(parsed.service_definition_list[0].uuid+"" != "singleVm-default-service-uuid")
+					this._parseVariables(service['service'], (service.profile)?Object.keys(service.profile):Object.keys(service.substrate), cat_sysID, service_name, serviceSysId);
+
+				this.order = this.start+1;
+				this.subContainerEnd = this.order+50;
+			}
+
+			this.logger.info("Variables creatios completed.");
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables.processCatalogVariables :- Exception caught during processing catalog variables. Error :- "+e);
+// 			this.logger.error("Exception caught during processing catalog variables. Error :- "+e);
+		}
+	},
+
+	_parseSubstrate: function(substrateList, cat_sysID, service_name, serviceSysId){
+
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._parseSubstrate. Parsing substrate fields.");
+			
+// 			var tmpOrder = this.order;
+			
+			for(var k in substrateList){
+
+				var substrate = substrateList[k];
+
+// 				this.order = tmpOrder;
+				
+				this._createSubstrateFieldCreateSpec(substrate.create_spec, cat_sysID, k, service_name, serviceSysId, substrate.editables.create_spec);
+
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.block_device_map){
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.block_device_map)?substrate.editables.create_spec.resources.block_device_map:'';
+
+					this._createSubstrateFieldStorage(substrate.create_spec.resources.block_device_map, cat_sysID, k, service_name, serviceSysId, edit);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.disks){
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.disks)?substrate.editables.create_spec.resources.disks:{};
+
+					this._createSubstrateFieldDisks(substrate.create_spec.resources.disks, cat_sysID, k, service_name, serviceSysId, edit);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.blankDisks){
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.blankDisks)?substrate.editables.create_spec.resources.blankDisks:{};
+
+					this._createSubstrateFieldBlankDisks(substrate.create_spec.resources.blankDisks, cat_sysID, k, service_name, serviceSysId, edit);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.networkInterfaces){
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.networkInterfaces)?substrate.editables.create_spec.resources.networkInterfaces:{};
+
+					this._createSubstrateFieldNetworkInterfaces(substrate.create_spec.resources.networkInterfaces, cat_sysID, k, service_name, serviceSysId, edit);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.disk_list){
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.disk_list)?substrate.editables.create_spec.resources.disk_list:{};
+
+					this._createSubstrateFieldDiskList(substrate.create_spec.resources.disk_list, cat_sysID, k, service_name, serviceSysId, edit);
+					
+					
+					if(substrate.create_spec.resources.disk_list[0] && Object.keys(substrate.create_spec.resources.disk_list[0]).toString().includes('data_source_reference')){
+						var bootIndex = (substrate.create_spec.resources.boot_config && substrate.create_spec.resources.boot_config.boot_device && substrate.create_spec.resources.boot_config.boot_device.disk_address && substrate.create_spec.resources.boot_config.boot_device.disk_address.device_index+'') ? substrate.create_spec.resources.boot_config.boot_device.disk_address.device_index : -1;
+
+						this._createSubstrateCreateImage(substrate.create_spec.resources.disk_list, cat_sysID, k, service_name, serviceSysId, edit, bootIndex);	
+					}
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.nic_list){
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.nic_list)?substrate.editables.create_spec.resources.nic_list:{};
+
+					this._createSubstrateFieldNicList(substrate.create_spec.resources.nic_list, cat_sysID, k, service_name, serviceSysId, edit );
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.nw_profile){
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.nw_profile)?substrate.editables.create_spec.resources.nw_profile:{};
+
+					this._createSubstrateFieldNwProfile(substrate.create_spec.resources.nw_profile, cat_sysID, k, service_name, serviceSysId, edit);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.categories){
+
+				//	var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.categories)?substrate.editables.create_spec.categories:{};
+					
+				//	this._createSubstrateFieldCategories(substrate.create_spec.categories, cat_sysID, k, service_name, serviceSysId, edit);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && (substrate.create_spec.resources.guest_customization || substrate.create_spec.resources.guest_customization+''=='null')){
+
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.guest_customization)?substrate.editables.create_spec.resources.guest_customization:{};
+					
+					this._createSubstrateFieldGuestCustomization(substrate.create_spec.resources.guest_customization, cat_sysID, k, service_name, serviceSysId, edit, substrate.create_spec.type+'');
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.guestCustomization){
+
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.guestCustomization)?substrate.editables.create_spec.resources.guestCustomization:{};
+					
+					this._createSubstrateFieldGuestCustomizationGCP(substrate.create_spec.resources.guestCustomization, cat_sysID, k, service_name, serviceSysId, edit, substrate.create_spec.type+'', substrate.create_spec.resources.tags);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.os_profile){
+
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.os_profile)?substrate.editables.create_spec.resources.os_profile:{};
+					
+					this._createSubstrateFieldOsProfile(substrate.create_spec.resources.os_profile, cat_sysID, k, service_name, serviceSysId, edit);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.storage_profile){
+
+					var edit = (substrate.editables && substrate.editables.create_spec && substrate.editables.create_spec.resources && substrate.editables.create_spec.resources.storage_profile)?substrate.editables.create_spec.resources.storage_profile:{};
+					
+					this._createSubstrateFieldStorageProfile(substrate.create_spec.resources.storage_profile, cat_sysID, k, service_name, serviceSysId, edit);
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.sshKeys){	
+					
+					this.order = this.subContainerEnd+2;
+					this.subContainerEnd = this.subContainerEnd + 2 + 5;
+					var categorySysId = this._createContainerStartandEnd('SSH Keys', cat_sysID, this.order, this.subContainerEnd, 'normal', service_name);
+					this.order = this.order+1;
+					
+					var metaData = substrate.create_spec.resources.metadata.items;
+					var blockValue = false;
+					
+					
+					for(var data in metaData)
+						if(metaData[data].key+'' == 'block-project-ssh-keys')
+							blockValue = metaData[data].value+'';
+					
+					this._createField('block_project_wide_ssh_key', blockValue, cat_sysID, this.order, service_name, k, serviceSysId, categorySysId, true);		
+					
+					
+					this.order = this.order+1;
+					
+					var editable = substrate.editables.create_spec;
+					
+					var sshKeys = substrate.create_spec.resources.sshKeys;
+					
+					for(var key in sshKeys)
+						this._createField('key_'+key, sshKeys[key], cat_sysID, this.order, service_name, k, serviceSysId, categorySysId, (editable && editable.resources && editable.resources.sshKeys)?editable.resources.sshKeys[key]:'');		
+				
+				}
+				
+				if(substrate.create_spec && substrate.create_spec.resources && substrate.create_spec.resources.serviceAccounts && substrate.create_spec.resources.serviceAccounts[0]){	
+
+					this.order = this.subContainerEnd+2;
+					this.subContainerEnd = this.subContainerEnd + 2 + 5;
+					var categorySysId = this._createContainerStartandEnd('API ACCESS', cat_sysID, this.order, this.subContainerEnd, 'normal', service_name);
+					this.order = this.order+1;
+
+					var editable = (substrate.editables && substrate.editables.create_spec)?substrate.editables.create_spec.resources:'';
+
+					this._createField('service_account', substrate.create_spec.resources.serviceAccounts[0].email, cat_sysID, this.order, service_name, k, serviceSysId, categorySysId, (editable && editable.serviceAccounts && editable.serviceAccounts[0])?editable.serviceAccounts[0].email:'');
+					
+					this._createField('scopes', (substrate.create_spec.resources.serviceAccounts[0].scopes.length==10)?'Full Access':'Default Access', cat_sysID, this.order, service_name, k, serviceSysId, categorySysId, '');
+				}
+	
+				
+				this._createSubstrateFieldReadinessProbe(substrate.readiness_probe, cat_sysID, k, service_name, serviceSysId, substrate.editables.readiness_probe);
+			}
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._parseSubstrate :- Exception caught during parsing substrate. Error :- "+e);
+// 			this.logger.error("Exception caught during parsing substrate. Error :- "+e);
+		}
+	},
+
+	_createSubstrateCreateImage: function(diskList, cat_sysID, profileUUID, serviceName, serviceSysId, editables, bootIndex){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateCreateImage. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Images', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			var i = 0 ;
+			
+			for(var k in diskList){
+				
+				if(diskList[k].data_source_reference){
+					
+					this.order = this.order+3;
+
+					this._createContainerStartandEnd('Image Device '+i, cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+
+					this._createOnlyField('image', diskList[k].data_source_reference.name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+					this._createOnlyField('device_type', diskList[k].device_properties.device_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+					this._createOnlyField('device_bus', diskList[k].device_properties.disk_address.adapter_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+					this._createOnlyField('bootable', (diskList[k].device_properties.disk_address.device_index+''==bootIndex+'')+'', cat_sysID, this.order+1, serviceName+'_'+k, 7);
+
+					diskList[k].runtime = (editables[k])?editables[k]:{};	
+					diskList[k].disabled = (editables[k])?editables[k]:{};	
+					diskList[k].bootable = (diskList[k].device_properties.disk_address.device_index+''==bootIndex+'')+'';
+
+				}
+				
+				i++;
+			}
+			
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(diskList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateCreateImage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Image. Error :- "+e);
+		}
+
+	},
+	
+	_createSubstrateFieldDiskList: function(diskList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldDiskList. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('VDisks', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			for(var k in diskList){
+				this.order = this.order+3;
+
+				this._createContainerStartandEnd('vdisk', cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+				
+				if(diskList[k].adapter_type){
+
+					this._createOnlyField('adapter_type', diskList[k].adapter_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+					this._createOnlyField('device_type', diskList[k].disk_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+					this._createOnlyField('size', diskList[k].disk_size_mb, cat_sysID, this.order+1, serviceName+'_'+k, 6);	
+					
+				}else if(diskList[k] && diskList[k].data_source_reference && diskList[k].data_source_reference.kind=='image'){
+					
+					continue;
+					
+				}else{		
+					
+					this._createOnlyField('device_type', diskList[k].device_properties.device_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+					this._createOnlyField('device_bus', diskList[k].device_properties.disk_address.adapter_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+					this._createOnlyField('size', diskList[k].disk_size_mib, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				}
+
+				if(!diskList[k])
+					diskList[k] = {};
+				
+				diskList[k].runtime = (editables[k])?editables[k]:{};	
+				diskList[k].disabled = (editables[k])?editables[k]:{};	
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(diskList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldDiskList :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+	
+	_createSubstrateFieldStorageProfile: function(storageProfileList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldStorageProfile. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Storage Profile', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			
+			this._createField('use_custom_image', (storageProfileList.image_details.use_custom_image+''=='true')?'true':'false', cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editables.image_details)?editables.image_details.use_custom_image:'');
+			
+			this._createContainerStartandEnd('VM Image Details', cat_sysID, this.order+1, this.order+3, 'normal', serviceName+'_'+k);
+
+			this._createField('publisher', storageProfileList.image_details.publisher, cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, (editables.image_details)?editables.image_details.publisher:'');
+			this._createField('offer', storageProfileList.image_details.offer, cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, (editables.image_details)?editables.image_details.offer:'');
+			this._createField('sku', storageProfileList.image_details.sku, cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, (editables.image_details)?editables.image_details.sku:'');
+			this._createField('version', storageProfileList.image_details.version, cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, (editables.image_details)?editables.image_details.version:'');
+			
+			
+			
+			this._createField('use_managed_disks', storageProfileList.is_managed, cat_sysID, this.order+4, serviceName, profileUUID, serviceSysId, categorySysId, (editables.is_managed)?editables.is_managed:'');
+			
+			this._createContainerStartandEnd('OS Disk Details', cat_sysID, this.order+5, this.order+7, 'normal', serviceName+'_'+k);
+
+			this._createField('disk_name', storageProfileList.os_disk_details.name, cat_sysID, this.order+6, serviceName, profileUUID, serviceSysId, categorySysId, (editables.os_disk_details)?editables.os_disk_details.name:'');
+			this._createField('storage_type', storageProfileList.os_disk_details.storage_type, cat_sysID, this.order+6, serviceName, profileUUID, serviceSysId, categorySysId, (editables.os_disk_details)?editables.os_disk_details.storage_type:'');
+			this._createField('disk_caching_type', storageProfileList.os_disk_details.caching_type, cat_sysID, this.order+6, serviceName, profileUUID, serviceSysId, categorySysId, (editables.os_disk_details)?editables.os_disk_details.caching_type:'');
+			this._createField('disk_create_options', storageProfileList.os_disk_details.create_option, cat_sysID, this.order+6, serviceName, profileUUID, serviceSysId, categorySysId, (editables.os_disk_details)?editables.os_disk_details.create_option:'');
+			
+			
+			var categorySysId = this._createContainerStartandEnd('Storage Profile Data Disks', cat_sysID, this.order+8, this.order+50, 'normal', serviceName+'');
+			
+			this.order = this.order+9;
+			
+			var dataList = storageProfileList.data_disk_list;
+			
+			for(var k in dataList){
+				this.order = this.order+3;
+				
+				this._createContainerStartandEnd('disk_config_'+k, cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+
+				this._createOnlyField('disk_name', dataList[k].name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('storage_type', dataList[k].storage_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('disk_caching_type', dataList[k].caching_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('size_gb', dataList[k].size_in_gb, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('disk_lun', dataList[k].lun, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				
+				dataList[k].runtime = (editables.data_disk_list)?editables.data_disk_list[k]:{};
+				dataList[k].disabled = (editables.data_disk_list)?editables.data_disk_list[k]:{};
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(dataList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+						
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldStorageProfile :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate _createSubstrateFieldStorageProfile. Error :- "+e);
+		}
+	},
+	
+	_createSubstrateFieldOsProfile: function(osProfileList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldOsProfile. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			
+			if(osProfileList.linux_config){
+				var categorySysId = this._createContainerStartandEnd('OS Profile Script', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+				this.order = this.order+1;	
+				
+				this._createField('cloud_init_script', (osProfileList.linux_config.custom_data)?osProfileList.linux_config.custom_data+'':'', cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, true);
+			
+			
+			
+			
+			
+			}else if(osProfileList.windows_config){
+				
+				
+				var categorySysId = this._createContainerStartandEnd('OS Profiles', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+				this.order = this.order+1;	
+				
+				this._createField('provision_windows_guest_agent', osProfileList.windows_config.provision_vm_agent, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_config)?editables.windows_config.provision_vm_agent:'');
+				this._createField('automatic_os_upgrade', osProfileList.windows_config.auto_updates, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_config)?editables.windows_config.auto_updates:'');
+				
+				this._createField('setting_name', (osProfileList.windows_config.additional_unattend_content && osProfileList.windows_config.additional_unattend_content[0] && osProfileList.windows_config.additional_unattend_content[0].setting_name)?osProfileList.windows_config.additional_unattend_content[0].setting_name:'', cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_config && editables.windows_config.additional_unattend_content && editables.windows_config.additional_unattend_content[0] && editables.windows_config.additional_unattend_content[0].setting_name)?editables.windows_config.additional_unattend_content[0].setting_name:'');
+				
+				this._createField('xml_content', (osProfileList.windows_config.additional_unattend_content && osProfileList.windows_config.additional_unattend_content[0] && osProfileList.windows_config.additional_unattend_content[0].xml_content)?osProfileList.windows_config.additional_unattend_content[0].xml_content:'', cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_config && editables.windows_config.additional_unattend_content && editables.windows_config.additional_unattend_content[0] && editables.windows_config.additional_unattend_content[0].xml_content)?editables.windows_config.additional_unattend_content[0].xml_content:'');
+				
+				var windList = (osProfileList.windows_config.winrm_listeners && osProfileList.windows_config.winrm_listeners[0])?osProfileList.windows_config.winrm_listeners[0].protocol:'';
+				
+				for(var win=1; win< osProfileList.windows_config.winrm_listeners.length; win++)
+					windList = "," + osProfileList.windows_config.winrm_listeners[win].protocol;
+				
+				this._createField('protocol', windList, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, '');
+				
+			}			
+			
+			
+			
+			
+			
+			
+			
+			var categorySysId = this._createContainerStartandEnd('OS Profile', cat_sysID, this.order+1, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+2;
+
+			osProfileList = osProfileList.secrets;
+			
+			for(var k in osProfileList){
+				this.order = this.order+4;
+
+				this._createContainerStartandEnd('secrets_'+k, cat_sysID, this.order, this.order+3, 'normal', serviceName+'_'+k);
+
+				this._createOnlyField('valut_id', (osProfileList[k])?osProfileList[k].source_vault_id:'', cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				
+				if(osProfileList[k] && osProfileList[k].vault_certificates){
+					for(var w in osProfileList[k].vault_certificates){
+
+						this._createOnlyField('certificate_config_url_'+w, osProfileList[k].vault_certificates[w].certificate_url, cat_sysID, this.order+2, serviceName+'_'+k, 6);
+					}	
+					
+					if(!osProfileList[k])
+						osProfileList[k] = {};
+
+					osProfileList[k].runtime = (editables[k])?editables[k]:{};
+					osProfileList[k].disabled = (editables[k])?editables[k]:{};
+					
+				}	
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(osProfileList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldOsProfile :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate _createSubstrateFieldOsProfile. Error :- "+e);
+		}
+	},
+
+	_createSubstrateFieldGuestCustomization: function(guestCustomization, cat_sysID, profileUUID, serviceName, serviceSysId, editables, providerType){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldGuestCustomization. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+
+			if((providerType+'').includes('vmware') || (providerType+'').includes('VMWARE') ){//} guestCustomization.linux_data){
+				
+				var categorySysId = this._createContainerStartandEnd('Guest Customization', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+				this.order = this.order+1;
+
+				this.order = this.order+3;
+				
+				if(guestCustomization.linux_data){
+					
+					this._createField('hostname', guestCustomization.linux_data.hostname, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.linux_data)?editables.linux_data.hostname:'');
+					this._createField('domain', guestCustomization.linux_data.domain, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.linux_data)?editables.linux_data.domain:'');
+					this._createField('timezone', guestCustomization.linux_data.timezone, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.linux_data)?editables.linux_data.timezone:'');
+					this._createField('hardware_clock_utc', guestCustomization.linux_data.hw_utc_clock, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.linux_data)?editables.linux_data.hw_utc_clock:'');
+
+
+					this._createField('dns_primary', guestCustomization.linux_data.dns_primary, cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, (editables.linux_data)?editables.linux_data.dns_primary:'');
+					this._createField('dns_secondary', guestCustomization.linux_data.dns_secondary, cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, (editables.linux_data)?editables.linux_data.dns_secondary:'');
+					this._createField('dns_tertiary', guestCustomization.linux_data.dns_tertiary, cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, (editables.linux_data)?editables.linux_data.dns_tertiary:'');
+					this._createField('dns_search_path', guestCustomization.linux_data.dns_search_path[0], cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, (editables.linux_data && editables.linux_data.dns_search_path)?editables.linux_data.dns_search_path[0]:'');
+
+
+					this.order = this.subContainerEnd+2;
+					this.subContainerEnd = this.subContainerEnd + 2 + 50;
+					var categorySysId = this._createContainerStartandEnd('Guest Customization DHCP', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+					this.order = this.order+1;
+
+					for(var k in guestCustomization.linux_data.network_settings){
+
+						this._createOnlyField('use_dhcp', guestCustomization.linux_data.network_settings[k].is_dhcp, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+
+						guestCustomization.linux_data.network_settings[k].runtime = (editables.linux_data && editables.linux_data.network_settings && editables.linux_data.network_settings[k])?editables.linux_data.network_settings[k]:{};
+						guestCustomization.linux_data.network_settings[k].disabled = (editables.linux_data && editables.linux_data.network_settings && editables.linux_data.network_settings[k])?editables.linux_data.network_settings[k]:{};
+
+					}
+
+					this._insertCatalogVariableProperties(profileUUID, JSON.stringify(guestCustomization.linux_data.network_settings), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+				
+				}else if(guestCustomization.windows_data){
+					
+					
+					this._createField('predefined_guest_customization', '', cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, '');
+					this._createField('computer_name', guestCustomization.windows_data.computer_name, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.computer_name:'');
+					this._createField('full_name', guestCustomization.windows_data.full_name, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.full_name:'');
+					this._createField('organization_name', guestCustomization.windows_data.organization_name, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.organization_name:'');
+					this._createField('product_id', guestCustomization.windows_data.product_id, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.product_id:'');
+					this._createField('timezone', guestCustomization.windows_data.timezone, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.timezone:'');
+					this._createField('admin_password', guestCustomization.windows_data.domain_password, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.domain_password:'');
+					this._createField('automatically_logon_as_admin', guestCustomization.windows_data.auto_logon, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.auto_logon:'');
+					this._createField('num_of_times_to_logon_automatically', guestCustomization.windows_data.login_count, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.login_count:'');
+					this._createField('command_list', guestCustomization.windows_data.command_list[0], cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data && editables.windows_data.command_list)?editables.windows_data.command_list[0]:'');
+					this._createField('join_a_domain', guestCustomization.windows_data.is_domain, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.is_domain:'');
+					this._createField('workgroup', guestCustomization.windows_data.workgroup, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.windows_data)?editables.windows_data.workgroup:'');
+					
+
+					this.order = this.subContainerEnd+2;
+					this.subContainerEnd = this.subContainerEnd + 2 + 50;
+					var categorySysId = this._createContainerStartandEnd('Guest Customization DHCP', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+					this.order = this.order+1;
+
+					for(var k in guestCustomization.windows_data.network_settings){
+
+						this._createOnlyField('use_dhcp', guestCustomization.windows_data.network_settings[k].is_dhcp, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+
+						guestCustomization.windows_data.network_settings[k].runtime = (editables.windows_data && editables.windows_data.network_settings && editables.windows_data.network_settings[k])?editables.windows_data.network_settings[k]:{};
+						guestCustomization.windows_data.network_settings[k].disabled = (editables.windows_data && editables.windows_data.network_settings && editables.windows_data.network_settings[k])?editables.windows_data.network_settings[k]:{};
+
+					}
+
+					this._insertCatalogVariableProperties(profileUUID, JSON.stringify(guestCustomization.windows_data.network_settings), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+				}else{
+					
+					var guestType = (guestCustomization.cloud_init)?'Cloud-init':'Custom Spec';
+
+					this._createField('type', guestType, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, 'false');
+
+					if(guestType == 'Cloud-init'){
+
+						this._createField('predefined_guest_customization', guestCustomization.customization_name, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, editables.customization_name);								
+						if( !guestCustomization.customization_name)
+							this._createField('script', guestCustomization.cloud_init, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, editables.cloud_init);							
+						
+					}
+					
+				}
+				
+				
+
+			}else{
+				
+				var categorySysId = this._createContainerStartandEnd('Guest Customization', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+				this.order = this.order+1;
+
+				this.order = this.order+3;
+
+				if(guestCustomization){
+					var guestType = (guestCustomization.sysprep)?'Sysprep':'Cloud-init';
+
+					this._createField('type', guestType, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, 'false');
+
+					if(guestType == 'Sysprep'){
+
+						this._createField('install_type', guestCustomization.sysprep.install_type, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, 'false');		
+						this._createField('script', guestCustomization.sysprep.unattend_xml, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables)?editables:'');		
+
+					}else{
+
+						this._createField('script', guestCustomization.cloud_init.user_data, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables)?editables:'');		
+						
+					}	
+				}else{
+					
+					this._createField('type', '', cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, 'false');
+					this._createField('install_type', '', cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, 'false');		
+					this._createField('script', '', cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables)?editables:'');		
+				}
+				
+				
+			}
+			
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldGuestCustomization :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+
+	_createSubstrateFieldGuestCustomizationGCP: function(guestCustomization, cat_sysID, profileUUID, serviceName, serviceSysId, editables, providerType, tags){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldGuestCustomizationGCP. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+
+			var categorySysId = this._createContainerStartandEnd('Management Optional', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			this.order = this.order+3;
+
+			this._createField('startup_script', guestCustomization.startupScript, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editables.startupScript)?editables.startupScript:'');
+
+			var groups = (tags.items && tags.items[0])?tags.items[0]:'';
+
+			if(tags.items)
+				for(var i=1; i<tags.items.length; i++)
+					groups = groups + ',' + tags.items[i];
+
+
+			this._createField('network_tags', groups, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, true);
+				
+			
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldGuestCustomizationGCP :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+	
+	_createSubstrateFieldCategories: function(categories, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldCategories. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Categories', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			for(var k in categories){
+
+				this._createField((k+'').toLowerCase(), categories[k], cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, editables);	
+				
+			//	this._createOnlyField((k+'').toLowerCase(), categories[k], cat_sysID, this.order+1, serviceName+'_'+k, 6);
+			}
+
+			//this._insertCatalogVariableProperties(profileUUID, JSON.stringify(categories), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldCategories :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+	
+	_createSubstrateFieldDisks: function(diskList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldDisks. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Disks', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			for(var k in diskList){
+				this.order = this.order+3;
+
+				this._createContainerStartandEnd('disks_'+k, cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+
+				this._createOnlyField('use_existing', (diskList[k].source)?true:false, cat_sysID, this.order+1, serviceName+'_'+k, 7);
+				this._createOnlyField('storage_type', diskList[k].initializeParams.diskType, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('source_image', diskList[k].initializeParams.sourceImage, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('size_in_gb', diskList[k].initializeParams.diskSizeGb, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('delete_when_instance_is_deleted', diskList[k].autoDelete, cat_sysID, this.order+1, serviceName+'_'+k, 7);
+				this._createOnlyField('disk', diskList[k].source, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+
+				if(!diskList[k])
+					diskList[k] = {};
+				
+				diskList[k].runtime = (editables[k])?editables[k]:{};	
+				diskList[k].disabled = (editables[k])?editables[k]:{};	
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(diskList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldDisks :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+	
+	_createSubstrateFieldBlankDisks: function(diskList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldBlankDisks. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Blank Disks', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			for(var k in diskList){
+				this.order = this.order+3;
+
+				this._createContainerStartandEnd('blank_disks_'+k, cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+
+				this._createOnlyField('disk_type', diskList[k].disk_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('disk_name', diskList[k].name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('size_in_gb', diskList[k].sizeGb, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('delete_when_instance_is_deleted', diskList[k].autoDelete, cat_sysID, this.order+1, serviceName+'_'+k, 7);
+
+				if(!diskList[k])
+					diskList[k] = {};
+				
+				diskList[k].runtime = (editables[k])?editables[k]:{};	
+				diskList[k].disabled = (editables[k])?editables[k]:{};	
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(diskList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldBlankDisks :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+	
+	_createSubstrateFieldNetworkInterfaces: function(nicList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldNetworkInterfaces.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Networking', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			for(var k in nicList){
+				this.order = this.order+3;
+
+				this._createContainerStartandEnd('network_'+k, cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+
+				this._createOnlyField('associate_public_ip_address', nicList[k].associatePublicIP, cat_sysID, this.order+1, serviceName+'_'+k, 7);
+				this._createOnlyField('network', nicList[k].network, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('subnetwork', nicList[k].subnetwork, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('access_configuration_name', (nicList[k].accessConfigs && nicList[k].accessConfigs[0])?nicList[k].accessConfigs[0].name:'', cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('access_configuration_type', (nicList[k].accessConfigs && nicList[k].accessConfigs[0])?nicList[k].accessConfigs[0].config_type:'', cat_sysID, this.order+1, serviceName+'_'+k, 6);
+
+				if(!nicList[k])
+					nicList[k] = {};
+				
+				nicList[k].runtime = (editables[k])?editables[k]:{};	
+				nicList[k].disabled = (editables[k])?editables[k]:{};	
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(nicList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldNetworkInterfaces. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+	
+	_createSubstrateFieldNicList: function(nicList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+// 			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldNicList.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Network Adapters', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+			var clusterPosition = '';
+			var clusterName ='';
+			var grSubnet;
+			for(var k in nicList){
+				this.order = this.order+3;
+
+				if(nicList[k].net_name){
+					
+					this._createContainerStartandEnd('network_'+k, cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+					
+					this._createOnlyField('adapter_type', nicList[k].nic_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+					this._createOnlyField('network_type', nicList[k].net_name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				}else{
+					
+					if(k==0){
+						clusterPosition = this.order+1;
+						this.order += 1; 
+					}
+					if(nicList[k].subnet_reference.uuid){
+						grSubnet = new GlideRecord(this.appUtil.configuration.table.subnet+'');
+						grSubnet.addQuery('uuid',nicList[k].subnet_reference.uuid);
+						grSubnet.query();
+						if(grSubnet.next())
+							clusterName = grSubnet.cluster_name ; //
+						
+					}
+					var subnetRegex = '@@{.*}@@';
+					var reg = new RegExp(subnetRegex);
+					var nicVal = (!reg.test(nicList[k].subnet_reference.uuid+'')) ?  nicList[k].subnet_reference.uuid : "";
+					this._createOnlyField('nic_'+(parseInt(k)+1), nicVal , cat_sysID, this.order+1, serviceName+'_'+k, 18 );
+					if(k == nicList.length-1){
+						this._createOnlyField('cluster_name' ,  clusterName , cat_sysID,clusterPosition, serviceName+'', 6);
+						
+					}
+						
+				}
+					
+				
+				if(!nicList[k])
+					nicList[k] = {};
+				
+				nicList[k].runtime = (editables[k])?editables[k]:{};	
+				nicList[k].disabled = (editables[k])?editables[k]:{};	
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(nicList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldNicList. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+	
+	_createSubstrateFieldNwProfile: function(nicList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldNwProfile.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Network Profiles', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			nicList = nicList.nic_list;
+			
+			for(var k in nicList){
+				this.order = this.order+3;
+
+				this._createContainerStartandEnd('nic_'+k, cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+
+				this._createOnlyField('nic_name', nicList[k].nic_name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('security_group', nicList[k].nsg_name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('virtual_network', nicList[k].vnet_name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('subnet', nicList[k].subnet_name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('public_ip_config_name', (nicList[k] && nicList[k].public_ip_info)?nicList[k].public_ip_info.ip_name:'', cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('public_ip_config_adapter_method', (nicList[k] && nicList[k].public_ip_info)?nicList[k].public_ip_info.ip_allocation_method:'', cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('public_ip_config_dns_label', (nicList[k] && nicList[k].public_ip_info)?nicList[k].public_ip_info.dns_label:'', cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('private_ip_config_allocation_method', (nicList[k] && nicList[k].public_ip_info)?nicList[k].private_ip_info.ip_allocation_method:'', cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				
+				if(!nicList[k])
+					nicList[k] = {};
+				
+				nicList[k].runtime = (editables[k])?editables[k]:{};	
+				nicList[k].disabled = (editables[k])?editables[k]:{};	
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(nicList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldNwProfile. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+	
+	_parseProfile: function(profileList, cat_sysID, service_name, serviceSysId){
+
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._parseProfile. Parsing profile/deployment varaibles.");
+			for(var k in profileList){
+				var prof = profileList[k];
+
+				this._createProfileField(prof, cat_sysID, k, service_name, serviceSysId, prof.editables);
+			}
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._parseProfile :- Exception caught during parsing profile. Error :- "+e);
+// 			this.logger.error("Exception caught during parsing profiles. Error :- "+e);
+		}
+	},
+
+	_parseVariables: function(serviceVar, profilesUUIDArray, cat_sysID, service_name, serviceSysId){
+
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._parseVariables");
+			for(var k in profilesUUIDArray){
+				this._createServiceFieldVariableList(serviceVar.variable_list, cat_sysID, profilesUUIDArray[k], service_name, serviceSysId);
+				//this._createServiceFieldPortList(serviceVar.port_list, cat_sysID, profilesUUIDArray[k], service_name, serviceSysId);
+			}
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._parseVariables :- Exception caught during parsing variables. Error :- "+e);
+			this.logger.error("Exception caught during parsing variables. Error :- "+e);
+		}
+	},
+
+	_createSubstrateFieldCreateSpec: function(specs, cat_sysID, profileUUID, serviceName, serviceSysId, editable){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldCreateSpec. Parsing and creating substrate field variables.");
+			var categorySysId = this._createContainerStartandEnd('VM Configuration', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			if(specs){
+				
+				if(specs.name || (specs.resources && specs.resources.name) || (specs.resources && specs.resources.vm_name) ){
+					
+					var edit = '';
+					
+					if(editable){
+						if(editable.name)
+							edit = editable.name;
+						else if(editable.resources)
+							edit = (editable.resources.name)?editable.resources.name:editable.resources.vm_name;
+					}
+					
+					this._createField('name', (specs.name)?specs.name:(specs.resources.name)?specs.resources.name:specs.resources.vm_name, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, edit);
+				}
+					
+				if(specs.host)
+					this._createField('host', specs.host, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.host)?editable.host:'');
+
+				if(specs.template)
+					this._createField('template', specs.template, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.template)?editable.template:'');
+
+				if(specs.datastore)
+					this._createField('datastore', specs.datastore, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.datastore)?editable.datastore:'');
+				
+				if(specs.storage_pod)
+					this._createField('storage_pod', specs.storage_pod, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.storage_pod)?editable.storage_pod:'');
+				
+				if(specs.cluster)
+					this._createField('cluster', specs.cluster, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.cluster)?editable.cluster:'');
+
+				if(specs.address)
+					this._createField('ip_address', specs.address, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.address)?editable.address:'');
+				
+
+
+				
+				
+// 				if(specs.drs_mode)
+// 					this._createField('drs_mode', specs.drs_mode, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.drs_mode)?editable.drs_mode:'');
+				
+// 				if(/* (specs.drs_mode && specs.drs_mode+''=='true') || */specs.cluster || specs.storage_pod)
+// 					this._createField('drs_mode', true, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.datastore)?editable.datastore:'');
+// 				else if(/* (specs.drs_mode && specs.drs_mode+''=='false') ||*/ specs.datastore || specs.host)
+// 					this._createField('drs_mode', false, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.datastore)?editable.datastore:'');
+				
+
+				
+				if(specs.cluster || specs.storage_pod || specs.datastore || specs.host || specs.template){
+					
+					var drsVal = (specs.cluster || specs.storage_pod)?true:false;
+					
+					this._createField('drs_mode', drsVal, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.drs_mode)?editable.drs_mode:'');
+// 					this._createField('host', specs.host, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.host)?editable.host:'');
+// 					this._createField('template', specs.template, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.template)?editable.template:'');
+// 					this._createField('datastore', specs.datastore, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.datastore)?editable.datastore:'');
+// 					this._createField('cluster', specs.cluster, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.cluster)?editable.cluster:'');
+// 					this._createField('storage_pod', specs.storage_pod, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.storage_pod)?editable.storage_pod:'');
+				}
+					
+				
+				
+				
+				
+				
+				
+
+				this.order++;
+
+				var resource = specs.resources;
+
+				for(var i in resource){
+
+					if( i == 'security_group_list'){
+						var secStr = (resource[i][0])?resource[i][0].security_group_id+'':'';
+
+						for(var k=1; k<resource[i].length; k++)
+							secStr = secStr + ',' + resource[i][k].security_group_id+'';
+
+						this._createField(i, secStr, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.resources)?editable.resources[i]:'');
+					}else if( i == 'block_device_map' || i == 'guest_customization' || i == 'guestCustomization'){
+						continue;
+					}else if( i == 'tag_list'){
+						
+						continue;
+						
+// 						for(var k in resource[i]){
+// 							this._createField(resource[i][k].key+'', resource[i][k].value+'', cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.resources && editable.resources[i] && editable.resources[i])?editable.resources[i]:'');
+// 						}
+
+					}
+
+					else if(i == 'hw_profile'){
+
+						this._createField('hardware_profile', resource[i].vm_size, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.resources && editable.resources[i])?editable.resources[i].vm_size:'');
+
+					}
+
+					else if (resource[i] && (resource[i].constructor === Object || resource[i].constructor === Array)){
+
+						continue;
+
+					}else if(i == 'zone'){
+						
+						this._createField(i, resource[i], cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.resources)?editable.resources[i]:'');
+					}else if(this.exclusionList.includes(i) || i=='vm_name'){
+						continue;
+						
+					}else{
+						this._createField(i, resource[i], cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.resources)?editable.resources[i]:'');
+					}
+
+				}
+			}
+			
+			
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldCreateSpec :- Exception caught during creation of Substrate Field Specs. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Specs. Error :- "+e);
+		}
+
+	},
+
+	_createSubstrateFieldStorage: function(diskList, cat_sysID, profileUUID, serviceName, serviceSysId, editables){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldStorage. Parsing Substrate Field Disk/Storage Data.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Storage', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			diskList.root_disk.runtime = (editables && editables.root_disk && editables.root_disk.size_gb)?editables.root_disk.size_gb+'':'false';
+			diskList.root_disk.disabled = (editables && editables.root_disk && editables.root_disk.size_gb)?editables.root_disk.size_gb+'':'false';
+			
+			this._createContainerStartandEnd('Root Disk', cat_sysID, this.order, this.order+2, 'normal', serviceName);
+
+			this._createOnlyField('device_name', diskList.root_disk.device_name, cat_sysID, this.order+1, serviceName, 6);
+			this._createOnlyField('size_gb', diskList.root_disk.size_gb, cat_sysID, this.order+1, serviceName, 6);
+			this._createOnlyField('volume_type', diskList.root_disk.volume_type, cat_sysID, this.order+1, serviceName, 6);
+			this._createOnlyField('delete_on_termination', diskList.root_disk.delete_on_termination, cat_sysID, this.order+1, serviceName, 7);
+
+			var dataDiskList = diskList.data_disk_list;
+
+			for(var k in dataDiskList){
+				this.order = this.order+3;
+
+				this._createContainerStartandEnd('ebs', cat_sysID, this.order, this.order+2, 'normal', serviceName+'_'+k);
+
+				this._createOnlyField('device_name', dataDiskList[k].device_name, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('size_gb', dataDiskList[k].size_gb, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('volume_type', dataDiskList[k].volume_type, cat_sysID, this.order+1, serviceName+'_'+k, 6);
+				this._createOnlyField('delete_on_termination', dataDiskList[k].delete_on_termination, cat_sysID, this.order+1, serviceName+'_'+k, 7);
+
+				if(!dataDiskList[k])
+					dataDiskList[k] = {};
+				
+				dataDiskList[k].runtime = (editables && editables.data_disk_list && editables.data_disk_list[k] && editables.data_disk_list[k].size_gb)?editables.data_disk_list[k].size_gb+'':'false';
+				dataDiskList[k].disabled = (editables && editables.data_disk_list && editables.data_disk_list[k] && editables.data_disk_list[k].size_gb)?editables.data_disk_list[k].size_gb+'':'false';
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(diskList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldStorage :- Exception caught during creation of Substrate Field Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Storage. Error :- "+e);
+		}
+
+	},
+
+	_createSubstrateFieldReadinessProbe: function(connectionList, cat_sysID, profileUUID, serviceName, serviceSysId, editable){
+		try{
+
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createSubstrateFieldReadinessProbe. Parsing Connection Probe variables.");
+			this.order = this.subContainerEnd + 2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Connection', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			for(var i in connectionList){
+
+				var connection = connectionList[i];
+
+				if( i == 'login_credential_local_reference'){
+
+					this._createField('credential', connection.name+'', cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, (editable && editable.login_credential_local_reference)?editable.login_credential_local_reference.name:'');
+
+				}else{
+					
+					if(i == 'disable_readiness_probe'){
+						
+						this._createField(i, (connection+''=='true')?false:true, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editable)?editable[i]:'');
+					}else{
+						
+						this._createField(i, connection+'', cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, (editable)?editable[i]:'');	
+					}
+					
+				}
+
+			}
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createSubstrateFieldReadinessProbe :- Exception caught during creation of Substrate Field Readiness Probe. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of Substrate Field Readiness Probe. Error :- "+e);
+		}
+	},
+
+	_createProfileField: function(profile, cat_sysID, profileUUID, serviceName, serviceSysId, editable){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createProfileField. Parsing profile deployment vairables.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Deployment Config', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+
+			this._createField('min_number_of_replicas', profile.min_replicas, cat_sysID, this.order+1, serviceName, profileUUID, serviceSysId, categorySysId, editable.min_replicas);
+			this._createField('max_number_of_replicas', profile.max_replicas, cat_sysID, this.order+2, serviceName, profileUUID, serviceSysId, categorySysId, editable.max_replicas);
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createProfileField :- Exception caught during creation of profile field. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of profile field. Error :- "+e);
+		}
+	},
+
+	_createServiceFieldPortList: function(portList, cat_sysID, profileUUID, serviceName, serviceSysId){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createServiceFieldPortList. Parsing Service Field Configuration variables.");
+
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+			var categorySysId = this._createContainerStartandEnd('Port List', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+
+			for(var i in portList){
+				this.order = this.order+1;
+				this._createOnlyField('protocol', portList[i].protocol, cat_sysID, this.order+1, serviceName+'_'+i, 6);
+				this._createOnlyField('target_port', portList[i].target_port, cat_sysID, this.order+1, serviceName+'_'+i, 6);
+				this._createOnlyField('endpoint_name', portList[i].endpoint_name, cat_sysID, this.order+1, serviceName+'_'+i, 6);
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, JSON.stringify(portList), 'false', categorySysId, cat_sysID, serviceSysId, categorySysId);
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createServiceFieldPortList :- Exception caught during creation of service field port list. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of service field port list. Error :- "+e);
+		}
+	},
+
+	_createOnlyField: function( name, value, catSysID, order, serviceName, type){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createOnlyField");
+			var variable = new GlideRecord(this.appUtil.configuration.table.varaiblesTable+'');
+			variable.addEncodedQuery('cat_item='+catSysID+'^name='+serviceName+'_'+name+'');
+			variable.query();
+
+			if(variable.next()){
+				variable.variable_width = 50;
+				
+				variable.type = type;
+				
+				variable.default_value = (value)?value:'';
+				
+				if(type+''==18){
+					
+					variable.lookup_table = 'x_nuta2_nutanix_ca_subnet';
+					variable.lookup_value = 'uuid';
+					variable.lookup_label = 'name,cluster_name';
+					variable.include_none = true;
+
+				}
+				variable.question_text = (this.fieldLabels[name] && this.fieldLabels[name].label)?this.fieldLabels[name].label+'':this._toTitleCase(name.replace(/_/g, ' '));//'profile_configuration';
+				
+				variable.update();
+
+			}else{
+				variable.initialize();
+				variable.type = type;
+				
+				if(type+''==18){
+					
+					variable.lookup_table = 'x_nuta2_nutanix_ca_subnet';
+					variable.lookup_value = 'uuid';
+					variable.lookup_label = 'name,cluster_name';
+					variable.include_none = true;
+					
+				}
+				
+				variable.cat_item = catSysID;
+				variable.active = true;
+				variable.question_text = (this.fieldLabels[name] && this.fieldLabels[name].label)?this.fieldLabels[name].label+'':this._toTitleCase(name.replace(/_/g, ' '));//'profile_configuration';
+				variable.name = serviceName+'_'+name+'';
+				variable.default_value = (value)?value:'';
+				variable.order = order;
+				variable.variable_width = 50;
+				var fieldSysd = variable.insert();
+				
+				this.logger.debug("Created a new field "+ name +" on Catalog Item "+variable.cat_item.name);
+				
+			}
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createOnlyField :- Exception caught while adding field in item_option_new table. Error :- "+e);
+// 			this.logger.error("Exception caught wjile adding field in variables table. Error :- "+e);
+		}
+	},
+
+	_createServiceFieldVariableList: function(variableList, cat_sysID, profileUUID, serviceName, serviceSysId, editable){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createServiceFieldVariableList. Parsing Service variable list.");
+			this.order = this.subContainerEnd+2;
+			this.subContainerEnd = this.subContainerEnd + 2 + 50;
+
+			if(variableList.length==0){
+				this.order = this.order+1;
+				return;
+			}
+
+			var categorySysId = this._createContainerStartandEnd('Variables', cat_sysID, this.order, this.subContainerEnd, 'normal', serviceName);
+			this.order = this.order+1;
+			
+			this._checkServiceVarSync(cat_sysID, variableList, serviceName, profileUUID, serviceSysId);
+			
+			for(var index = 0; index < variableList.length; index++){
+				
+				var edit = (variableList[index].editables && variableList[index].editables.value == true && variableList[index].is_hidden == false) ? true : false;
+				this._createField(variableList[index].name, variableList[index].value, cat_sysID, this.order, serviceName, profileUUID, serviceSysId, categorySysId, edit , 'serviceVariables',true,variableList[index]);
+				this.order = this.order+1;
+			}
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createServiceFieldVariableList :- Exception caught during creation of service field variables. Error :- "+e);
+// 			this.logger.error("Exception caught during creation of service field variables. Error :- "+e);
+		}
+
+	},
+
+	_createField: function( name, value, catSysID, order, serviceName, profileUUID, serviceSysId, categorySysId, editable, isServiceVariable, serviceVar, field){
+		try{
+			
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createField");
+			var variable = new GlideRecord(this.appUtil.configuration.table.varaiblesTable+'');
+			variable.addEncodedQuery('cat_item='+catSysID+'^name='+serviceName+'_'+name+'');
+			variable.query();
+			
+			var fieldSysd = '';
+			var varType = (serviceVar) ? this.diffVar._returnVarType(field) : '';
+
+			if(variable.next()){
+				
+				variable.variable_width = 50;
+				
+				if(this.boolValidation.includes(','+name+','))
+					variable.type = 7;
+				
+				if(name === 'drs_mode' && variable.question_text != 'DRS mode')
+					variable.question_text = 'DRS mode';
+				
+				if(serviceVar){
+					
+					variable.question_text = (serviceVar && (field.label+'').trim() != "") ? field.label+''  : field.name+'';
+					
+					variable.show_help = true;
+					variable.type = varType.type+'';
+					variable.tooltip = field.description+'';
+					variable.help_text = (field.description+'') ? field.description+'' : '';
+					variable.mandatory = (field.is_mandatory+'') ? field.is_mandatory : '';
+					if(varType.type == 21){
+						variable.list_table = this.appUtil.configuration.table.dropDownTable+'';
+						variable.attributes = "glide_list";
+					}
+				}
+				
+				
+				fieldSysd = variable.update();
+
+				if(serviceVar && (varType.type+'' == '5' || varType.type+'' == '21')){
+					this.diffVar._updateOtions(fieldSysd ,varType.opt ,varType.type );
+				}
+				
+			}else {
+				
+				variable.initialize();
+				variable.type = (serviceVar) ? varType.type+'' : this.boolValidation.includes(','+name+',') ? 7 :  ((name=='user_data' || name=='script' || name=='startup_script' || name=='cloud_init_script' || name=='command_list' || name=='xml_content')?2:6); //
+				variable.cat_item = catSysID+'';
+				variable.active = true;
+				variable.question_text = (serviceVar && (field.label+'').trim() != "") ? field.label+''  : (this.fieldLabels[name] && this.fieldLabels[name].label)?this.fieldLabels[name].label+'':this._toTitleCase(name.replace(/_/g, ' '));//'profile_configuration';
+				variable.name = serviceName+'_'+name+'';
+				variable.default_value = (value)?value+'':'';
+				variable.variable_width = 50;
+				variable.tooltip = (serviceVar) ?  field.description+'' : '';
+				variable.order = order;
+				
+				if(this.boolValidation.includes(','+name+','))
+					variable.type = 7;
+				
+				if(name === 'drs_mode' && variable.question_text != 'DRS mode')
+					variable.question_text = 'DRS mode';
+				
+				if(serviceVar){
+					
+					variable.question_text = (serviceVar && (field.label+'').trim() != "") ? field.label+''  : field.name+'';
+					
+					variable.show_help = true;
+					variable.type = varType.type+'';
+					variable.tooltip = field.description+'';
+					variable.help_text = (field.description+'') ? field.description+'' : '';
+					variable.mandatory = (field.is_mandatory+'') ? field.is_mandatory : '';
+					if(varType.type == 21){
+						variable.list_table = this.appUtil.configuration.table.dropDownTable+'';
+						variable.attributes = "glide_list";
+					}
+				}
+				//field.uuid;
+				
+				
+				fieldSysd = variable.insert();
+				
+				if(serviceVar && (varType.type+'' == '5' || varType.type+'' == '21')){
+					this.diffVar._updateOtions(fieldSysd ,varType.opt ,varType.type );
+				}
+				
+				this.logger.debug("Created a new field "+ name +" on Catalog Item "+variable.cat_item.name);
+			}
+
+			this._insertCatalogVariableProperties(profileUUID, value, editable, fieldSysd, catSysID, serviceSysId, categorySysId, isServiceVariable, name, field);
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createField :- Exception caught wjile adding field in item_option_new table. Error :- "+e);
+// 			this.logger.error("Exception caught wjile adding field in variables table. Error :- "+e);
+		}
+	},
+
+	_insertCatalogVariableProperties: function(profileUUID, default_value, runtime_config, fieldSysd, catalogSysId, serviceSysId, categorySysId, isServiceVariable, fieldName, field){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._insertCatalogVariableProperties");
+			var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties+'');
+			gr.addQuery('application_profile', this.profileUUIDSysIDRel[profileUUID]+'');
+			gr.addQuery('catalog_item', catalogSysId+'');
+			gr.addQuery('variable', fieldSysd+'');
+			gr.query();
+
+			if(gr.next()){
+				
+				var notSupported = (default_value+''=='Cloud-init' || default_value+''=='Sysprep' || (fieldName+'').startsWith('key_') || (this.disabledFields.includes(","+fieldName+",") && fieldName+''!='name')) ? false : true;
+				
+				if(isServiceVariable == "serviceVariables" && field.is_hidden && (field.is_hidden+'' != gr.is_hidden + "")) {
+// 					this._invalidateCatalogItem(catalogSysId);
+// 					this.logger.info("Deactivated catalog due to private variable field.is_hidden!");
+				}//Check Service Varibale.
+				
+				if(isServiceVariable == "serviceVariables" && gr.runtime_config + "" != runtime_config + "") {
+// 					this._invalidateCatalogItem(catalogSysId);
+// 					this.logger.info("Deactivated catalog due to private variable runtime_config!");
+				}
+				
+				if(isServiceVariable == "serviceVariables" && field.val_type+"" != gr.value_type + "") {
+// 					this._invalidateCatalogItem(catalogSysId);
+// 					this.logger.info("Deactivated catalog due to private variable val_type!");
+				}
+
+				gr.application_profile = this.profileUUIDSysIDRel[profileUUID]+'';
+				gr.catalog_item = catalogSysId+'';
+				gr.default_value = (field && (field.val_type+'' == 'DATE'|| field.val_type+'' == 'DATE_TIME')) ? this.diffVar._formttedDateTime(field.value+'', field.val_type+'') : (default_value)?default_value+'':'';//(this.disabledFields.includes(","+fieldName+","))?'Use Calm to set/edit this field':(default_value)?default_value+'':'';
+				gr.runtime_config = ((default_value+'').indexOf('@@') != -1 || notSupported+''=='false') ? false : runtime_config+'';
+				gr.variable = fieldSysd+'';
+				gr.isprofilevariable = false;
+				
+				gr.isservicevariable = (isServiceVariable == "serviceVariables") ? true : false;
+				
+				gr.type = (isServiceVariable == "serviceVariables") ? "Service" : "";
+				gr.service_name = serviceSysId+'';
+				gr.category_name = categorySysId+'';
+				
+				gr.isdisabled = ( (default_value+'').indexOf('@@') != -1 || notSupported+''=='false') ? true : (runtime_config+'' == 'true') ? false : true;//(runtime_config+'' == 'true') ? false : true;
+				
+				gr.issupported = notSupported;
+				
+				/**advanced var**/
+				
+				gr.value_type = (field) ? field.val_type+'' : this.integerValidation.includes(','+fieldName+',') ? 'INT': "";
+				gr.data_type = (field) ? (field.type+'' == "LOCAL" && field.options && field.options.type+'' == "PREDEFINED" && field.options.choices && (field.options.choices).length > 0) ? "PREDEFINED" : field.type+'' : '' ;
+				
+				/*regex validation*/
+				
+				var validation = (field) ? ((field.regex && field.regex.should_validate) ? field.regex.value+'' : this.diffVar._fieldRegex(field) ) :  this.integerValidation.includes(','+fieldName+',') ? '^[\\d]*$' : "";
+				if(field && gr.data_type+'' == "LOCAL" && (field.val_type+'' == "DATE" || field.val_type+'' == "DATE_TIME") )
+					validation = this.diffVar._fieldRegex(field);
+				gr.field_regex = validation;
+				
+				/* End regex Validation */
+				
+				
+				//gr.field_regex = (field) ? ((field.regex && field.regex.should_validate) ? field.regex.value+'' : this.diffVar._fieldRegex(field) ) :  this.integerValidation.includes(','+fieldName+',') ? '^[\\d]*$' : "";
+				gr.uuid = (field) ? field.uuid+'' : '' ;
+				gr.is_hidden = ((field) && field.is_hidden+'' == 'true') ? true : false;
+				/**advanced var**/
+				
+				if(isServiceVariable == "serviceVariables") {
+					if(field) {
+					gr.field_json = JSON.stringify(field);
+				}
+				}
+				
+				gr.update();
+
+				this.logger.debug("Updated the entry of variable "+gr.variable.name+" with default value and runtime in "+gr.catalog_item.name);
+				
+			}else{
+				
+				var notSupported = (default_value+''=='Cloud-init' || default_value+''=='Sysprep' || (fieldName+'').startsWith('key_') || (this.disabledFields.includes(","+fieldName+",") && fieldName+''!='name')) ? false : true;
+				
+				gr.initialize();
+				gr.application_profile = this.profileUUIDSysIDRel[profileUUID]+'';
+				gr.catalog_item = catalogSysId+'';
+				gr.default_value =  (field && (field.val_type+'' == 'DATE'|| field.val_type+'' == 'DATE_TIME')) ? this.diffVar._formttedDateTime(field.value+'', field.val_type+'') : (default_value)?default_value+'':'';//(this.disabledFields.includes(","+fieldName+","))?'Use Calm to set/edit this field':(default_value)?default_value+'':'';
+				gr.runtime_config = ((default_value+'').indexOf('@@') != -1 || notSupported+''=='false') ? false : runtime_config+'';
+				gr.variable = fieldSysd+'';
+				gr.isprofilevariable = false;
+				
+				gr.isservicevariable = (isServiceVariable == "serviceVariables") ? true : false;
+				gr.type = (isServiceVariable == "serviceVariables") ? "Service" : "";
+				gr.service_name = serviceSysId+'';
+				gr.category_name = categorySysId+'';
+				gr.isdisabled = ( (default_value+'').indexOf('@@') != -1 || notSupported+''=='false') ? true : (runtime_config+'' == 'true') ? false : true;//(runtime_config+'' == 'true') ? false : true;
+				
+				gr.issupported = notSupported;
+				
+				/**advanced var**/
+				
+				gr.value_type = (field) ? field.val_type+'' : this.integerValidation.includes(','+fieldName+',') ? 'INT': "" ;
+				gr.data_type = (field) ? (field.type+'' == "LOCAL" && field.options && field.options.type+'' == "PREDEFINED" && field.options.choices && (field.options.choices).length > 0) ? "PREDEFINED" : field.type+'' : '' ;
+				
+				/*regex validation*/
+				
+				var validation = (field) ? ((field.regex && field.regex.should_validate) ? field.regex.value+'' : this.diffVar._fieldRegex(field) ) :  this.integerValidation.includes(','+fieldName+',') ? '^[\\d]*$' : "";
+				if(field && gr.data_type+'' == "LOCAL" && (field.val_type+'' == "DATE" || field.val_type+'' == "DATE_TIME") )
+					validation = this.diffVar._fieldRegex(field);
+				gr.field_regex = validation;
+				
+				/* End regex Validation */
+				
+				//gr.field_regex = (field) ? ((field.regex && field.regex.should_validate) ? field.regex.value+'' : this.diffVar._fieldRegex(field) ) : this.integerValidation.includes(','+fieldName+',') ? '^[\\d]*$' : "" ;
+				gr.uuid =  (field) ?  field.uuid+'' : '';
+				gr.is_hidden = ((field) && field.is_hidden+'' == 'true') ? true : false;
+				/**advanced var**/
+				if(isServiceVariable == "serviceVariables") {
+					if(field) {
+					gr.field_json = JSON.stringify(field);
+				}
+				}
+				
+				gr.insert();
+
+				this.logger.debug("Created a entry of variable "+gr.variable.name+" with default value and runtime in "+gr.catalog_item.name);
+			}
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._insertCatalogVariableProperties :- Exception caught while adding field in catalog variables properties table. Error :- "+e);
+// 			this.logger.error("Exception caught while adding field in catalog variables properties table. Error :- "+e);
+		}
+
+	},
+
+	_createContainerStartandEnd: function( name, catSysID, start, end, type, serviceName ){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createContainerStartandEnd");
+			serviceName = (serviceName)?serviceName+'_':'';
+
+			var startSysId = '';
+
+			var variable = new GlideRecord(this.appUtil.configuration.table.varaiblesTable+'');
+			variable.addQuery('name', (serviceName+name).toLowerCase().replace(/ /g, '_'	));
+			variable.addQuery('cat_item', catSysID+'');
+			//variable.addQuery('order', start);
+			variable.query();
+
+			if(variable.next()){
+				startSysId = variable.sys_id+'';
+			}else{
+				variable.initialize();
+				variable.type = '19';
+				variable.display_title = 'true';
+				variable.cat_item = catSysID;
+				variable.active = 'true';
+				variable.order = start;
+				variable.question_text = name;
+				variable.name = (serviceName+name).toLowerCase().replace(/ /g, '_'	); //(name+((serviceName)?serviceName:'')).toLowerCase().replace(/ /g, '_'	);//'profile_configuration';
+				variable.layout = (type)?type:'2across';
+				startSysId = variable.insert();
+
+				variable.initialize();
+				variable.type = '20';
+				variable.cat_item = catSysID;
+				variable.active = 'true';
+				variable.order = end;
+				variable.insert();
+			}
+
+			return startSysId;
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createContainerStartandEnd :- Exception caught while creating start and end containers. Error :- "+e);
+// 			this.logger.error("Exception caught while creating start and end containers. Error :- "+e);
+		}
+	},
+
+	_filterJSONDatatoService: function(parsed){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._filterJSONDatatoService");
+			var sub_deploy_rel = {};
+			var deploy_pack_rel = {};
+			var app_profile_list = parsed.app_profile_list;
+
+			for(var i=0; i<app_profile_list.length; i++){
+				var appProfile = app_profile_list[i];
+				var deployment_create_list = appProfile.deployment_create_list;
+
+				for(var j=0; j<deployment_create_list.length; j++ ){
+
+					var deployemnt = deployment_create_list[j];
+					sub_deploy_rel[deployemnt.substrate_local_reference.uuid] = {
+						"name": deployemnt.substrate_local_reference.name,
+						"deployemnt_uuid": deployemnt.uuid,
+						"deployemnt_name": deployemnt.name,
+						"profile_uuid": appProfile.uuid
+					};
+
+					var package_local_reference_list = deployemnt.package_local_reference_list;
+					for(k=0; k<package_local_reference_list.length; k++){
+						var pack = package_local_reference_list[k];
+						if(!deploy_pack_rel[deployemnt.uuid])
+							deploy_pack_rel[deployemnt.uuid] = [];
+
+						deploy_pack_rel[deployemnt.uuid].push({
+							"name": deployemnt.name,
+							"package_uuid": pack.uuid,
+							"package_name": pack.name
+						});
+					}
+				}
+			}
+
+			this.logger.debug("Substrate and Deployment mapping created:- "+JSON.stringify(sub_deploy_rel));
+			this.logger.debug("Deployment and Package mapping created:- "+JSON.stringify(deploy_pack_rel));
+
+			var packageList = parsed.package_definition_list;
+			var pack_serv_rel = {};
+			for(var i=0; i<packageList.length; i++){
+
+				var pack = packageList[i];
+				var uuid = pack.uuid;
+				var serviceList = pack.service_local_reference_list;
+
+				for(var j=0; j<serviceList.length; j++){
+					var service = serviceList[j];
+					if(!pack_serv_rel[uuid])
+						pack_serv_rel[uuid]=[];
+
+					pack_serv_rel[uuid].push({
+						"name": pack.name,
+						"serv_name": service.name,
+						"serv_uuid": service.uuid
+					});
+				}
+			}
+
+			this.logger.debug("Package and Service mapping created:- "+JSON.stringify(pack_serv_rel));
+
+			var variablesJson = {};
+
+			var serviceList = parsed.service_definition_list;
+			for(var i=0; i<serviceList.length; i++){
+
+				var service = serviceList[i];
+
+				variablesJson[service.uuid] = {};
+				variablesJson[service.uuid].service = {};
+
+				variablesJson[service.uuid].service.port_list = service.port_list;
+				variablesJson[service.uuid].service.editables = service.editables;
+				variablesJson[service.uuid].service.variable_list = service.variable_list;
+				variablesJson[service.uuid].name = service.name;
+			}
+
+			var profileList = parsed.app_profile_list;
+			for(var i=0; i<profileList.length; i++){
+				var profile = profileList[i];
+				var deploymentList = profile.deployment_create_list;
+
+				for(var j=0; j<deployment_create_list.length; j++ ){
+
+					var deployment = deploymentList[j];
+					var servUUID = "";
+					if(parsed.service_definition_list[0].uuid == "singleVm-default-service-uuid"){
+						servUUID = "singleVm-default-service-uuid";
+					}else{
+						var packUUID = deploy_pack_rel[deployment.uuid][0].package_uuid;
+						servUUID = pack_serv_rel[packUUID][0].serv_uuid;
+					}
+
+					if(!variablesJson[servUUID].profile)
+						variablesJson[servUUID].profile = {};
+
+					if(!variablesJson[servUUID].profile[profile.uuid])
+						variablesJson[servUUID].profile[profile.uuid]={};
+
+
+					variablesJson[servUUID].profile[profile.uuid].min_replicas = deployment.min_replicas;
+					variablesJson[servUUID].profile[profile.uuid].max_replicas = deployment.max_replicas;
+					variablesJson[servUUID].profile[profile.uuid].editables = deployment.editables;
+					variablesJson[servUUID].profile[profile.uuid].variable_list = deployment.variable_list;
+					variablesJson[servUUID].profile[profile.uuid].uuid = profile.uuid;
+					variablesJson[servUUID].profile[profile.uuid].name = profile.name;
+				}
+			}
+
+			var substrateList = parsed.substrate_definition_list;
+			for(var i=0; i<substrateList.length; i++){
+
+				var substrate = substrateList[i];
+
+				var deployUUID = sub_deploy_rel[substrate.uuid].deployemnt_uuid;
+				
+				var servUUID = "";
+
+				if(parsed.service_definition_list[0].uuid == "singleVm-default-service-uuid"){
+					
+					servUUID = "singleVm-default-service-uuid";
+				}else{
+					
+					var packUUID = deploy_pack_rel[deployUUID][0].package_uuid;
+					servUUID = pack_serv_rel[packUUID][0].serv_uuid;
+				}
+
+				if(!variablesJson[servUUID].substrate)
+					variablesJson[servUUID].substrate = {};
+
+				if(!variablesJson[servUUID].substrate[sub_deploy_rel[substrate.uuid].profile_uuid])
+					variablesJson[servUUID].substrate[sub_deploy_rel[substrate.uuid].profile_uuid]={};
+
+				variablesJson[servUUID].substrate[sub_deploy_rel[substrate.uuid].profile_uuid].readiness_probe = substrate.readiness_probe;
+				variablesJson[servUUID].substrate[sub_deploy_rel[substrate.uuid].profile_uuid].editables = substrate.editables;
+				variablesJson[servUUID].substrate[sub_deploy_rel[substrate.uuid].profile_uuid].create_spec = substrate.create_spec;
+				variablesJson[servUUID].substrate[sub_deploy_rel[substrate.uuid].profile_uuid].variable_list = substrate.variable_list;
+				variablesJson[servUUID].substrate[sub_deploy_rel[substrate.uuid].profile_uuid].name = substrate.name;
+
+			}
+
+			return variablesJson;
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._filterJSONDatatoService :- Exception caught while filtering JSON data for variables creation. Error :- "+e);
+// 			this.logger.error("Exception caught while filtering JSON data for variables creation. Error :- "+e);
+		}
+	},
+
+	_createDefaultVariables: function(cat_sysID){
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables.proc_createDefaultVariablesessCatalogVariables");
+			var variableGR = new GlideRecord(this.appUtil.configuration.table.varaiblesTable+'');
+			variableGR.addEncodedQuery('cat_item=' + cat_sysID + '^nameINdefault_project,default_app_name,default_profile');
+			variableGR.query();
+
+			if(!variableGR.hasNext()){
+				
+				variableGR.initialize();
+				variableGR.type = 15;
+				variableGR.cat_item = cat_sysID + '';
+				variableGR.active = true;
+				variableGR.question_text = 'Providers';
+				variableGR.name = 'provider_icons';
+				variableGR.ui_page = gs.getProperty('x_nuta2_nutanix_ca.variableGR.ui_page')+'';
+				variableGR.order = 0;
+				variableGR.insert();
+
+				variableGR.initialize();
+				variableGR.type = 5;
+				variableGR.cat_item = cat_sysID+'';
+				variableGR.active = true;
+				variableGR.question_text = 'Project';
+				variableGR.name = 'default_project';
+				variableGR.order = 1;
+				variableGR.insert();
+
+				variableGR.initialize();
+				variableGR.type = 6;
+				variableGR.cat_item = cat_sysID+'';
+				variableGR.active = true;
+				variableGR.question_text = 'Name of the Application';
+				variableGR.name = 'default_app_name';
+				variableGR.mandatory = 'true';
+				variableGR.order = 2;
+				variableGR.insert();
+
+				variableGR.initialize();
+				variableGR.type = 5;
+				variableGR.cat_item = cat_sysID+'';
+				variableGR.active = true;
+				variableGR.question_text = 'Profile';
+				variableGR.name = 'default_profile';
+				variableGR.order = 3;
+				variableGR.insert();
+
+			}
+
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._createDefaultVariables :- Exception caught while creating default variables of blueprint. Error :- "+e);
+// 			this.logger.error("Exception caught while creating default variables of blueprint. Error :- "+e);
+		}
+	},
+
+	_toTitleCase: function (str) {
+		try{
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._toTitleCase");
+			str = str.toLowerCase().split(' ');
+			for (var i = 0; i < str.length; i++) {
+				str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+			}
+			return str.join(' ');
+			return str;
+		}catch(e){
+			this.logger.debug("Nutanix_CreateCatalogVariables._toTitleCase :- Exception caught while changing case of string to title case. Error :- "+e);
+// 			this.logger.error("Exception caught while changing case of string to title case. Error :- "+e);
+		}
+	},
+	type: 'Nutanix_CreateCatalogVariables'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-17 22:31:26</sys_created_on>
+        <sys_id>2f2b341e37f52300fdfc097973990e10</sys_id>
+        <sys_mod_count>408</sys_mod_count>
+        <sys_name>Nutanix_CreateCatalogVariables</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_2f2b341e37f52300fdfc097973990e10</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-23 09:21:46</sys_updated_on>
+    </sys_script_include>
+</record_update>

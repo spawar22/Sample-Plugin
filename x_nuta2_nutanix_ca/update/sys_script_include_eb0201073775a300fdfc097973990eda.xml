@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_CatalogFormScripts</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_CatalogFormScripts</name>
+        <script><![CDATA[var Nutanix_CatalogFormScripts = Class.create();
+Nutanix_CatalogFormScripts.prototype = {
+    initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();	
+		this.logger = new Nutanix_Calm_Logger();
+    },
+	
+	fetchProjectAndProfileList: function(catSysID){
+		try{
+			this.logger.debug("Inside Nutanix_CatalogFormScripts.fetchProjectAndProfileList");
+			var gr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig+'');
+			gr.addQuery('item_name', catSysID);
+			gr.query();
+
+			var ans = {};
+
+			if(gr.next()){
+
+				var blueprintSysId = gr.blueprint+'';
+				var profileList = gr.application_profile.getDisplayValue();
+
+				ans.profileList = profileList;
+				ans.projectList = [];
+
+				ans.projectList.push({
+					'name': gr.project.name+'',
+					'uuid': gr.project.uuid+''
+				});
+				
+			}
+			return JSON.stringify(ans);
+		}catch(e){
+			this.logger.debug("Nutanix_CatalogFormScripts.fetchProjectAndProfileList :- Exception caught during fetching projects and profile list. Error :- "+e);
+			this.logger.error("Exception caught during fetching projects and profile list. Error :- "+e);
+		}
+	},
+
+	fetchOrderFormData: function(profile, catSysID){
+		try{
+			this.logger.debug("Inside Nutanix_CatalogFormScripts.fetchProjectAndProfileList");
+			profile = profile.trim();
+
+			var variableData = new GlideRecord(this.appUtil.configuration.table.variablesProperties+'');
+			variableData.addEncodedQuery('catalog_item='+catSysID+'^application_profile.name='+profile+'^ORapplication_profileISEMPTY');
+			variableData.query();
+			
+			
+			var ans = {};
+
+			while(variableData.next()){
+				
+				if(variableData.variable.question_text+'' == 'Storage'){
+					var diskList = JSON.parse(variableData.default_value+'');
+
+					var rootDisk = diskList.root_disk;
+					
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+					
+					if(rootDisk){
+						ans[servicename + '_device_name'] = {
+							"value": rootDisk.device_name+'',
+							"readOnly": true
+						};
+						ans[servicename + '_size_gb'] = {
+							"value": rootDisk.size_gb+'',
+							"readOnly": true//disable in 1.1(rootDisk.runtime+''=='true')?false:true,
+						};
+						ans[servicename + '_volume_type'] = {
+							"value": rootDisk.volume_type+'',
+							"readOnly": true//disable in 1.1true
+						};
+						ans[servicename + '_delete_on_termination'] = {
+							"value": rootDisk.delete_on_termination+'',
+							"readOnly": true//disable in 1.1true
+						};		
+					}
+
+					
+					var dataList = diskList.data_disk_list;
+					for(var k in dataList){
+						ans[servicename + '_' + k + '_device_name'] = {
+							"value": dataList[k].device_name+'',
+							"readOnly": true
+						};
+						ans[servicename + '_' + k + '_size_gb'] = {
+							"value": dataList[k].size_gb+'',
+							"readOnly": true//disable in 1.1(dataList[k].runtime+''=='true')?false:true,
+						};
+						ans[servicename + '_' + k + '_volume_type'] = {
+							"value": dataList[k].volume_type+'',
+							"readOnly": true
+						};
+						ans[servicename + '_' + k + '_delete_on_termination'] = {
+							"value": dataList[k].delete_on_termination+'',
+							"readOnly": true
+						};	
+					}
+
+				}else if(variableData.variable.question_text+'' == 'Port List'){
+
+					var portList = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in portList){
+						ans[servicename + '_' + k + '_protocol'] = {
+							"value": portList[k].protocol+'',
+							"readOnly": true
+						};
+						ans[servicename + '_' + k + '_target_port'] = {
+							"value": portList[k].target_port+'',
+							"readOnly": true
+						};
+						ans[servicename + '_' + k + '_endpoint_name'] = {
+							"value": portList[k].endpoint_name+'',
+							"readOnly": true
+						};
+					}
+				}
+				
+				
+				
+				
+				
+				else if(variableData.variable.question_text+'' == 'Images'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_image'] = {
+							"value": (list[k].data_source_reference)?list[k].data_source_reference.name+'':'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.data_source_reference && list[k].runtime.data_source_reference.name && list[k].runtime.data_source_reference.name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_device_type'] = {
+							"value": (list[k].device_properties)?list[k].device_properties.device_type+'':'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.device_properties && list[k].runtime.device_properties.device_type && list[k].runtime.device_properties.device_type+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_device_bus'] = {
+							"value": (list[k].disk_address && list[k].disk_address.adapter_type)?list[k].disk_address.adapter_type+'':'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.disk_address && list[k].runtime.disk_address.adapter_type && list[k].runtime.disk_address.adapter_type+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_bootable'] = {
+							"value": list[k].bootable+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.bootable && list[k].runtime.bootable+''=='true')?false:true
+						};
+					}
+				
+				}else if(variableData.variable.question_text+'' == 'Storage Profile Data Disks'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_disk_name'] = {
+							"value": list[k].name+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.name && list[k].runtime.name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_storage_type'] = {
+							"value": list[k].storage_type+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.storage_type && list[k].runtime.storage_type+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_disk_caching_type'] = {
+							"value": list[k].caching_type+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.caching_type && list[k].runtime.caching_type+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_size_gb'] = {
+							"value": list[k].size_in_gb+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.size_in_gb && list[k].runtime.size_in_gb+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_disk_lun'] = {
+							"value": list[k].lun+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.lun && list[k].runtime.lun+''=='true')?false:true
+						};
+					}
+				}else if(variableData.variable.question_text+'' == 'OS Profile'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_valut_id'] = {
+							"value": list[k].source_vault_id+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.source_vault_id && list[k].runtime.source_vault_id+''=='true')?false:true
+						};
+						
+						if(osProfileList[k] && osProfileList[k].vault_certificates){
+							for(var w in osProfileList[k].vault_certificates){
+								ans[servicename + '_' + k + '_certificate_config_url_'+w] = {
+									"value": list[k].vault_certificates[w].certificate_url+'',
+									"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.vault_certificates && list[k].runtime.vault_certificates[w] && list[k].runtime.vault_certificates[w].certificate_url && list[k].runtime.vault_certificates[w].certificate_url+''=='true')?false:true
+								};
+							}
+						}
+					}
+				}else if(variableData.variable.question_text+'' == 'Guest Customization DHCP'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_use_dhcp'] = {
+							"value": list[k].is_dhcp+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.is_dhcp && list[k].runtime.is_dhcp+''=='true')?false:true
+						};
+					}
+				}else if(variableData.variable.question_text+'' == 'Disks'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_use_existing'] = {
+							"value": (list[k].source)?true:false,
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.source && list[k].runtime.source+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_storage_type'] = {
+							"value": (list[k].initializeParams)?list[k].initializeParams.diskType+'':'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.initializeParams && list[k].runtime.initializeParams.diskType && list[k].runtime.initializeParams.diskType+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_source_image'] = {
+							"value": (list[k].initializeParams)?list[k].initializeParams.sourceImage+'':'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.initializeParams && list[k].runtime.initializeParams.sourceImage && list[k].runtime.initializeParams.sourceImage+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_size_in_gb'] = {
+							"value": (list[k].initializeParams)?list[k].initializeParams.diskSizeGb+'':'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.initializeParams && list[k].runtime.initializeParams.diskSizeGb && list[k].runtime.initializeParams.diskSizeGb+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_delete_when_instance_is_deleted'] = {
+							"value": list[k].autoDelete+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.autoDelete && list[k].runtime.autoDelete+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_disk'] = {
+							"value": list[k].source+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.source && list[k].runtime.source+''=='true')?false:true
+						};
+					}
+				}else if(variableData.variable.question_text+'' == 'Blank Disks'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_disk_type'] = {
+							"value": list[k].disk_type+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.disk_type && list[k].runtime.disk_type+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_disk_name'] = {
+							"value": list[k].name+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.name && list[k].runtime.name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_size_in_gb'] = {
+							"value": list[k].sizeGb+'',
+							"readOnly":true//disable in 1.1 (list[k].runtime && list[k].runtime.sizeGb && list[k].runtime.sizeGb+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_delete_when_instance_is_deleted'] = {
+							"value": list[k].autoDelete+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.autoDelete && list[k].runtime.autoDelete+''=='true')?false:true
+						};
+					}
+				}else if(variableData.variable.question_text+'' == 'Networking'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_associate_public_ip_address'] = {
+							"value": list[k].associatePublicIP+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.associatePublicIP && list[k].runtime.associatePublicIP+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_network'] = {
+							"value": list[k].network+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.network && list[k].runtime.network+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_subnetwork'] = {
+							"value": list[k].subnetwork+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.subnetwork && list[k].runtime.subnetwork+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_access_configuration_name'] = {
+							"value": (list[k].accessConfigs && list[k].accessConfigs[0])?list[k].accessConfigs[0].name+'':'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.accessConfigs && list[k].runtime.accessConfigs[0] && list[k].runtime.accessConfigs[0].name && list[k].runtime.accessConfigs[0].name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_access_configuration_type'] = {
+							"value": (list[k].accessConfigs && list[k].accessConfigs[0])?list[k].accessConfigs[0].config_type+'':'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.accessConfigs && list[k].runtime.accessConfigs[0] && list[k].runtime.accessConfigs[0].config_type && list[k].runtime.accessConfigs[0].config_type+''=='true')?false:true
+						};
+					}
+					
+				}else if(variableData.variable.question_text+'' == 'VDisks'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_adapter_type'] = {
+							"value": list[k].adapter_type+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.adapter_type+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_device_type'] = {
+							"value": (list[k].disk_type)?list[k].disk_type:(list[k].device_properties)?list[k].device_properties.device_type+'':'',
+							"readOnly":true//disable in 1.1 (list[k].runtime && list[k].runtime.disk_type && list[k].disk_type+''=='true')?false:(list[k].runtime && list[k].runtime.device_properties && list[k].runtime.device_properties.device_type && list[k].runtime.device_properties.device_type+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_size'] = {
+							"value": (list[k].disk_size_mb)?list[k].disk_size_mb:list[k].disk_size_mib+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.disk_size_mb)?list[k].runtime.disk_size_mb:(list[k].runtime && list[k].runtime.disk_size_mib+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_device_bus'] = {
+							"value": (list[k].device_properties && list[k].device_properties.disk_address)?list[k].device_properties.disk_address.adapter_type+'':'',
+							"readOnly":true//disable in 1.1 (list[k].runtime && list[k].runtime.device_properties && list[k].runtime.device_properties.disk_address && list[k].runtime.device_properties.disk_address.adapter_type+''=='true')?false:true
+						};
+					}
+					
+				}else if(variableData.variable.question_text+'' == 'Network Adapters'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					var clusterReadOnly = true;
+					
+					for(var k in list){
+						ans[servicename + '_' + k + '_adapter_type'] = {
+							"value": list[k].nic_type+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.nic_type && list[k].runtime.nic_type+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_network_type'] = {
+							"value": list[k].net_name+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.net_name && list[k].runtime.net_name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_nic_'+(parseInt(k)+1)] = {
+							"value": (list[k].subnet_reference)?list[k].subnet_reference.uuid+'':'',
+							"readOnly": (list[k].runtime && list[k].runtime.subnet_reference && list[k].runtime.subnet_reference+''=='true')?false:true
+						};						
+						
+						if(list[k].runtime && list[k].runtime.subnet_reference && list[k].runtime.subnet_reference+''=='true')
+							clusterReadOnly = false;
+						
+					}
+					
+					ans[servicename + '_cluster_name'] = {
+						"value": '',
+						"readOnly": clusterReadOnly
+					};
+					
+				}else if(variableData.variable.question_text+'' == 'Network Profiles'){
+
+					var list = JSON.parse(variableData.default_value+'');
+
+					var servicename = variableData.service_name.question_text.toLowerCase().replace(/ /g, '_');
+
+					for(var k in list){
+						ans[servicename + '_' + k + '_nic_name'] = {
+							"value": list[k].nic_name+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.nic_name && list[k].runtime.nic_name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_security_group'] = {
+							"value": list[k].nsg_name+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.nsg_name && list[k].runtime.nsg_name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_virtual_network'] = {
+							"value": list[k].vnet_name+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.vnet_name && list[k].runtime.vnet_name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_subnet'] = {
+							"value": list[k].subnet_name+'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.subnet_name && list[k].runtime.subnet_name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_public_ip_config_name'] = {
+							"value": (list[k] && list[k].public_ip_info)?list[k].public_ip_info.ip_name:'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.public_ip_info && list[k].runtime.public_ip_info.ip_name && list[k].runtime.public_ip_info.ip_name+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_public_ip_config_adapter_method'] = {
+							"value": (list[k] && list[k].public_ip_info)?list[k].public_ip_info.ip_allocation_method:'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.public_ip_info && list[k].runtime.public_ip_info.ip_allocation_method && list[k].runtime.public_ip_info.ip_allocation_method+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_public_ip_config_dns_label'] = {
+							"value": (list[k] && list[k].public_ip_info)?list[k].public_ip_info.dns_label:'',
+							"readOnly": true//disable in 1.1(list[k].runtime && list[k].runtime.public_ip_info && list[k].runtime.public_ip_info.dns_label && list[k].runtime.public_ip_info.dns_label+''=='true')?false:true
+						};
+						ans[servicename + '_' + k + '_private_ip_config_allocation_method'] = {
+							"value": (list[k] && list[k].public_ip_info)?list[k].private_ip_info.ip_allocation_method+'':'',
+							"readOnly":true//disable in 1.1 (list[k].runtime && list[k].runtime.private_ip_info && list[k].runtime.private_ip_info.ip_allocation_method && list[k].runtime.private_ip_info.ip_allocation_method+''=='true')?false:true
+						};
+					}
+					
+				}
+				
+				
+				else if( variableData.variable.type+'' == 21 ){
+					var listValue = variableData.default_value+'';
+					var gr = new GlideRecord(this.appUtil.configuration.table.dropDownTable+'');
+					//gr.addEncodedQuery('variable='+variableData.variable+'^valueIN'+listValue);
+					gr.addEncodedQuery(variableData.variable.reference_qual+'^valueIN'+listValue);
+					gr.query();
+					
+					var listValSys = '';
+					while(gr.next()){
+						listValSys += gr.sys_id+',';
+						
+					}
+						
+					
+					if(listValSys.endsWith(','))
+						listValSys = listValSys.substr(0,listValSys.length-1);
+					
+					ans[variableData.variable.name+''] = {
+						"value": listValSys+'',
+						"readOnly": (variableData.runtime_config+''=='true')?false:true,
+						//"container": variableData.category_name.name+''
+					};	
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				else{
+					ans[variableData.variable.name+''] = {
+						"value": variableData.default_value+'',
+						"readOnly": (variableData.runtime_config+''=='true')?false:true,
+						//"container": variableData.category_name.name+''
+					};	
+				}
+			}		
+			return JSON.stringify(ans);
+		}catch(e){
+			this.logger.debug("Nutanix_CatalogFormScripts.fetchProjectAndProfileList :- Exception caught during fetching launch page variables values. Error :- "+e);
+			this.logger.error("Exception caught during fetching launch page variables values. Error :- "+e);
+		}
+	},
+	fetchMultipleProjectAndProfileList: function(catSysID){
+		try{
+			this.logger.debug("Inside Nutanix_CatalogFormScripts.fetchMultipleProjectAndProfileList");
+			var gr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig+'');
+			gr.addQuery('item_name', catSysID);
+			gr.query();
+
+			var ans = {};
+
+			if(gr.next()){
+
+				var blueprintSysId = gr.blueprint+'';
+				var profileList = gr.multiple_application_profile.getDisplayValue();
+
+				ans.profileList = profileList;
+				ans.projectList = [];
+
+				var projects = gr.multiple_projects;
+				var project = projects.split(',');
+				
+				var pro = new GlideRecord('x_nuta2_nutanix_ca_nutanix_project');
+				for(var i in project){
+					if(pro.get(project[i])){
+						ans.projectList.push({
+							'name': pro.name+'',
+							'uuid': pro.uuid+''
+						});
+					}
+				}
+								
+			}
+			return JSON.stringify(ans);
+		}catch(e){
+			this.logger.debug("Nutanix_CatalogFormScripts.fetchMultipleProjectAndProfileList :- Exception caught during fetching projects and profile list. Error :- "+e);
+			this.logger.error("Exception caught during fetching projects and profile list. Error :- "+e);
+		}
+	},
+    type: 'Nutanix_CatalogFormScripts'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-20 06:58:59</sys_created_on>
+        <sys_id>eb0201073775a300fdfc097973990eda</sys_id>
+        <sys_mod_count>55</sys_mod_count>
+        <sys_name>Nutanix_CatalogFormScripts</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_eb0201073775a300fdfc097973990eda</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-14 18:03:22</sys_updated_on>
+    </sys_script_include>
+</record_update>

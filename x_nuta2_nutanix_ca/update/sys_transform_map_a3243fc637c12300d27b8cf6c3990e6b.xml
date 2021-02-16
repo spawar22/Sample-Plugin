@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_map">
+    <sys_transform_map action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copy_empty_fields>false</copy_empty_fields>
+        <create_new_record_on_empty_coalesce_fields>false</create_new_record_on_empty_coalesce_fields>
+        <enforce_mandatory_fields>No</enforce_mandatory_fields>
+        <name>Nutanix Calm Application - Map</name>
+        <order>100</order>
+        <run_business_rules>false</run_business_rules>
+        <run_script>true</run_script>
+        <script><![CDATA[(function transformRow(source, target, map, log, isUpdate) {
+
+	var utils = new Nutanix_Calm_Utils();
+	var logger = new Nutanix_Calm_Logger();
+	var act_utils = new Nutanix_Action_Utils();
+	// inserting into action related table
+	
+	if(source.action_list && source.state != "deleted") {
+		
+		act_utils.negative_sync_actions(source.uuid, source.action_list); // Negative sync function for actions
+		
+		var parseAction = JSON.parse(source.action_list);
+		for(var i = 0; i<parseAction.length; i++){
+			
+			var action_name = '';
+			var aname = '';
+			var grAction = new GlideRecord(utils.configuration.table.NutanixCalmAction);
+			grAction.addQuery('uuid',parseAction[i].uuid);
+			grAction.addQuery('parent_uuid',source.uuid);
+			grAction.query();
+			if(grAction.next()){
+				grAction.name = parseAction[i].name;
+				
+				action_name = parseAction[i].name;
+				
+				var action_name_vars = ['action_install_ngt','action_manage_ngt','action_uninstall_ngt','action_update','action_image_create'];
+				if(action_name_vars.indexOf(action_name) != -1) {
+					var action_name_json = {'action_install_ngt':'Install NGT',
+											'action_manage_ngt':'Manage NGT',
+											'action_uninstall_ngt':'Uninstall NGT',
+											'action_update' : 'App Edit',
+											'action_image_create':'Create Image'};
+					action_name = action_name_json[action_name];
+				}
+				else {
+					if(parseAction[i].type == "system") {
+						aname = action_name.replace('action_','').replace('_',' ');
+						aname = aname.split(" ");
+						for (var j = 0, x = aname.length; j < x; j++) {
+							aname[j] = aname[j][0].toUpperCase() + aname[j].substr(1);
+						}
+						action_name = aname.join(" ");
+					}
+				}
+				
+				grAction.action_name = action_name;
+				grAction.uuid = parseAction[i].uuid;
+				grAction.state = parseAction[i].state;
+				grAction.critical = parseAction[i].critical;
+				grAction.type = parseAction[i].type;
+				grAction.description = parseAction[i].description;
+				grAction.parent_uuid = source.uuid;
+				grAction.parent_name = source.name;
+				grAction.action_variables = JSON.stringify(parseAction[i].runbook.variable_list);
+				
+				grAction.update();
+				
+			} else {
+				
+				grAction.initialize();
+				
+				grAction.name = parseAction[i].name;
+				
+				action_name = parseAction[i].name;
+				
+				var action_name_vars = ['action_install_ngt','action_manage_ngt','action_uninstall_ngt','action_update','action_image_create'];
+				if(action_name_vars.indexOf(action_name) != -1) {
+					var action_name_json = {'action_install_ngt':'Install NGT',
+											'action_manage_ngt':'Manage NGT',
+											'action_uninstall_ngt':'Uninstall NGT',
+											'action_update' : 'App Edit',
+											'action_image_create':'Create Image'};
+					action_name = action_name_json[action_name];
+				}
+				else {
+					if(parseAction[i].type == "system") {
+						aname = action_name.replace('action_','').replace('_',' ');
+						aname = aname.split(" ");
+						for (var j = 0, x = aname.length; j < x; j++) {
+							aname[j] = aname[j][0].toUpperCase() + aname[j].substr(1);
+						}
+						action_name = aname.join(" ");
+					}
+				}			
+				
+				grAction.action_name = action_name;
+				grAction.uuid = parseAction[i].uuid;
+				grAction.state = parseAction[i].state;
+				grAction.critical = parseAction[i].critical;
+				grAction.type = parseAction[i].type;
+				grAction.description = parseAction[i].description;
+				grAction.parent_uuid = source.uuid;
+				grAction.parent_name = source.name;
+				grAction.action_variables = JSON.stringify(parseAction[i].runbook.variable_list);
+				grAction.insert();
+			}
+		}
+	}
+	
+	var template_type = '';
+	if(source.app_metadata) {
+		var appMetadata = JSON.parse(source.app_metadata);
+			
+		target.project_uuid = (appMetadata.project_reference && appMetadata.project_reference.name) ? appMetadata.project_reference.name + '' : '';
+			
+		if(appMetadata.categories && appMetadata.categories.TemplateType && appMetadata.categories.TemplateType == 'Vm') {
+			template_type = 'single_vm';
+			target.application_type = 'SingleVM';
+		}
+		else
+			target.application_type = 'MultiVM';
+	}
+	
+	// inserting into Deployment related table
+	if(source.deployment_list && source.state != "deleted") {
+		
+		var parseDeploy = JSON.parse(source.deployment_list);
+		
+		for(var j = 0; j<parseDeploy.length; j++) {
+			
+			var elements = (parseDeploy[j].substrate_configuration && parseDeploy[j].substrate_configuration.element_list) ? parseDeploy[j].substrate_configuration.element_list : [] ;
+			//var l = 1;
+			var name = '';
+			
+			for(var p in elements){
+				
+				if(elements.length>1)
+					target.nutanix_ip_address[elements[p].name+'['+p+']'] = elements[p].address+'';
+				else
+					target.nutanix_ip_address[elements[p].name+''] = elements[p].address+'';
+				
+				if(template_type == 'single_vm' && utils.versionNewCheck()) {
+					
+					target.attributes = elements[p].type + '';
+					
+					var substrate_uuid = elements[p].uuid + '';
+					var app_uuid = source.uuid + '';
+					var recovery_param_json = {"substrate_uuid":substrate_uuid, "app_uuid":app_uuid, "substrate_provider":elements[p].type + ""};
+					
+					var current_supported_providers = ["AHV_VM","AWS_VM","VMWARE_VM"];
+					
+					if(current_supported_providers.indexOf(elements[p].type) != -1)
+						utils.insertIntoQueue("importRecoveryPoints", 'POST', JSON.stringify(recovery_param_json) + '', '', 'Imports Recovery Points', 'This job imports the recovery points of an application.');
+					
+					var platform_data = elements[p].platform_data ? JSON.parse(elements[p].platform_data) : {};
+					
+					if(platform_data && platform_data.status && platform_data.status.resources && platform_data.status.resources.guest_tools && platform_data.status.resources.guest_tools.nutanix_guest_tools) {
+						
+						var ngt_json = platform_data.status.resources.guest_tools.nutanix_guest_tools;
+						var services_arr = [];
+						if(ngt_json && ngt_json.enabled_capability_list && ngt_json.enabled_capability_list.indexOf('SELF_SERVICE_RESTORE') != -1)
+							services_arr.push('SSR');
+						if(ngt_json && ngt_json.enabled_capability_list && ngt_json.enabled_capability_list.indexOf('VSS_SNAPSHOT') != -1)
+							services_arr.push('VSS');
+						target.services_enabled = services_arr.toString();
+						
+						target.ngt_state = (ngt_json.ngt_state && ngt_json.ngt_state == 'UNINSTALLED') ? ngt_json.iso_mount_state + '' : ngt_json.ngt_state + '';
+					}
+					else {
+						target.services_enabled = '';
+						target.ngt_state = '';
+					}
+				}
+			}
+// 			for(var p = 0; p < elements.length ; p++){
+// 				if(target.nutanix_ip_address[elements[p].name+'']){
+// 					name = elements[p].name+'_'+l;
+// 					l++;
+// 				}else
+// 					name = elements[p].name+'';
+// 				var address = elements[p].address+'';
+// 				target.nutanix_ip_address[name] = address;
+// 			}
+		}
+	}
+	
+	if(source.owner_reference)
+		target.applicatoin_created_by = JSON.parse(source.owner_reference).name;
+	
+	if(!target.assigned_to) {
+		var user = new GlideRecord('sys_user');
+		if (user.get(source.applicatoin_created_by))
+			target.assigned_to = source.applicatoin_created_by;
+	}
+	
+	
+	if(source.app_blueprint_reference){
+		var parseBp = JSON.parse(source.app_blueprint_reference);
+		target.blueprint_name = parseBp.name;
+		target.blueprint_uuid = parseBp.uuid;
+	}
+	
+	if(source.cloned_from_reference) {
+		target.cloned_from = JSON.parse(source.cloned_from_reference).name + '';
+	}
+	
+	target.description_html = utils.markdown_renderer(source.description) + '';
+	
+})(source, target, map, log, action==="update");]]></script>
+        <source_table>x_nuta2_nutanix_ca_nutanix_staging_application</source_table>
+        <sys_class_name>sys_transform_map</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-10-11 10:34:39</sys_created_on>
+        <sys_id>a3243fc637c12300d27b8cf6c3990e6b</sys_id>
+        <sys_mod_count>169</sys_mod_count>
+        <sys_name>Nutanix Calm Application - Map</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_map_a3243fc637c12300d27b8cf6c3990e6b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-04 04:59:35</sys_updated_on>
+        <target_table>x_nuta2_nutanix_ca_nutanix_calm_application</target_table>
+    </sys_transform_map>
+</record_update>

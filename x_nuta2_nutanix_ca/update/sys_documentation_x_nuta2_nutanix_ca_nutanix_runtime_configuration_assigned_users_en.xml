@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="assigned_users" label="Assigned Users" language="en" table="x_nuta2_nutanix_ca_nutanix_runtime_configuration">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>assigned_users</element>
+            <help/>
+            <hint/>
+            <label>Assigned Users</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_runtime_configuration</name>
+            <plural>Assigned Users</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>girishgyani</sys_created_by>
+            <sys_created_on>2018-11-08 22:35:19</sys_created_on>
+            <sys_id>18e52edf37e12300fdfc097973990e0a</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Assigned Users</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_nutanix_runtime_configuration_assigned_users_en</sys_update_name>
+            <sys_updated_by>girishgyani</sys_updated_by>
+            <sys_updated_on>2018-11-08 22:35:19</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_Import_Marketplace_Items</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_Import_Marketplace_Items</name>
+        <script><![CDATA[var Nutanix_Import_Marketplace_Items = Class.create();
+Nutanix_Import_Marketplace_Items.prototype = {
+	initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+		this.pageBreaker = 5;
+		this.version = gs.getProperty('x_nuta2_nutanix_ca.calm_version');
+		//this.totalMPI = 0;
+		//this.countPublishMPI = 0;
+		
+		this.activeMPI = [];		
+	},
+	
+	
+	_deactivateDeletedMPIandcatalogs: function(){
+		
+		try{
+			this.logger.debug("Inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs");
+			
+			var queryString = 'stateANYTHING';
+			
+
+			for(var i in this.activeMPI)
+				queryString += '^uuid!='+this.activeMPI[i];
+							
+
+			var inactiveMPISysID = [];
+			
+			var gr = new GlideRecord(this.appUtil.configuration.table.marketplaceItem+"");
+			gr.addEncodedQuery(queryString);
+			gr.query();		
+
+			while(gr.next()){
+				gr.state = 'inactive';
+				gr.app_state = 'UNPUBLISHED';
+				inactiveMPISysID.push(gr.update());
+				this.logger.debug("Inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs. Deactivated MPI : "+gr.sys_id);
+			}
+			
+			var inactiveCatItems = [];
+
+			var catGr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig+'');
+			catGr.addEncodedQuery('state!=inactive^state!=deleted^state!=draft^blueprintIN' + inactiveMPISysID.toString());
+			catGr.query();
+			
+			while(catGr.next()){
+				
+				inactiveCatItems.push(catGr.item_name.name);
+				
+				catGr.state = 'inactive';
+				catGr.update();				
+				this.logger.debug("Inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs. Deactivated MPI : "+catGr.item_name.name+" Logic associated MPI mark inactive");
+			}
+			this.logger.info("Deactivated " + catGr.getRowCount() + " catalog items (" + inactiveCatItems.toString() + ") as there MPI got into a Non-Active State.");
+			
+			
+			
+// 			var activeMPISysID = [];
+			
+// 			var gr = new GlideRecord(this.appUtil.configuration.table.marketplaceItem+"");
+// 			gr.addEncodedQuery('uuidIN'+this.activeMPI.toString());
+// 			gr.query();		
+
+// 			while(gr.next()){
+// 				activeMPISysID.push(gr.sys_id+'');
+// 			}
+			
+// 			var reactiveCatItems = [];
+			
+// 			var catGr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig+'');
+// 			catGr.addEncodedQuery('state=inactive^blueprint.sys_idIN' + activeMPISysID.toString());
+// 			catGr.query();
+
+// 			while(catGr.next()){
+
+// 				reactiveCatItems.push(catGr.item_name.name);
+
+// 				catGr.state = 'active';
+// 				catGr.update();				
+// 			}
+// 			this.logger.info("Re-activated " + catGr.getRowCount() + " catalog items (" + reactiveCatItems.toString() + ") as there MPI got into an Active State.");
+		}catch(e){
+			this.logger.error("Exception caught inside Nutanix_ImportBlueprints._deactivateDeletedBPandcatalogs. Error :- "+e);
+		}		
+	},
+	
+	
+	
+	startImportMPI : function(){
+		try{
+			this.logger.debug("Inside Nutanix_Import_Marketplace_Items.startImportMPI");
+			
+			var body = this.appUtil.generateRequestBody("startImportMPI", this.version, 0, 1);
+			var response = this.appUtil.makeCalmApiCall("POST", this.appUtil.configuration.api.getMarketplaceItem+"", this.appUtil.stringify(body));
+			
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				
+				this.logger.info("Connection established to "+this.appUtil.configuration.api.getMarketplaceItem);
+				
+				var parsed = this.appUtil.parse(response.getBody());
+				var records = parsed.metadata.total_matches;
+				
+				var pages = parseInt(records/this.pageBreaker);
+				this.logger.debug("Number of MarketplaceItems JSON pages "+(pages+1));
+				
+				for(var i=0, k=0; i<=pages; i++, k+=4) {
+					
+					var presetOffset;
+					presetOffset = i+k;
+					
+					body = this.appUtil.generateRequestBody("importMPIData", this.version, presetOffset, this.pageBreaker);
+					
+					//this.appUtil.insertIntoQueue("importMPIData", "POST", this.appUtil.stringify(body), this.appUtil.configuration.api.getMarketplaceItem+"", 'Import marketplace items', 'This process invokes the import of MPI data.');
+					var answer = {
+						"method": "POST",
+						"parameter": this.appUtil.stringify(body),
+						"payload": this.appUtil.configuration.api.getMarketplaceItem+""
+					};
+
+					this.importMPIData(answer);					
+				}
+				
+				this._deactivateDeletedMPIandcatalogs();								
+				
+			} else {
+				
+				this.logger.debug("Nutanix_Import_Marketplace_Items.startImportMPI :- Connection to /marketplace_items/list not established :- "+response.haveError()+" Status code:- "+response.getStatusCode());
+			}
+			
+		} catch(e) {
+			
+			this.logger.debug("Nutanix_Import_Marketplace_Items.startImportMPI :- Exception caught during retrieval of MarketPlaceItem. Error :- "+e);
+			this.logger.error("Exception caught during retrieval of MarketPlaceItem. Error :- "+e);
+		}
+	},
+	
+	importMPIData: function(current){
+		
+		try{
+			this.logger.debug("Inside Nutanix_Import_Marketplace_Items.importMPIData");
+			var response = this.appUtil.makeCalmApiCall(current.method+'', current.payload+'', current.parameter+'');
+			
+			this.logger.debug("Inside Nutanix_Import_Marketplace_Items.importMPIData :- "+current.parameter+" :- "+response.getStatusCode());
+			
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				
+				this.logger.info("Connection established to "+this.appUtil.configuration.api.getMarketplaceItem);
+				
+				var parsedJSON = this.appUtil.parse(response.getBody());
+				var entities = parsedJSON.entities;
+				
+				this.logger.info("Number of imported MarketplaceItems:"+entities.length+"  "+current.parameter);
+				
+				for(var i=0; i<entities.length; i++){
+					
+					var entity = entities[i];
+					var entityUUID = entity.metadata.uuid+"";
+					
+					if(!this.appUtil.versionNewCheck()){
+						
+						var entityAppState = (entity.status.resources.app_state) ? entity.status.resources.app_state : "" ;
+						var entityApptype = (entity.status.resources.type) ? entity.status.resources.type : "" ;//restrict runbooks
+						if( entityAppState == "PUBLISHED" && entityApptype != "runbook") {
+							
+							this.activeMPI.push(entityUUID+'');
+							
+							var uuidResponse = this.appUtil.makeCalmApiCall('GET',  this.appUtil.configuration.api.getMarketplaceItemDetail+entityUUID, '');
+							if(uuidResponse.getStatusCode() == '200' || uuidResponse.getStatusCode() == '201'){
+								
+								this.appUtil.insertIntoQueue("processImportMPIData", "", '', uuidResponse.getBody(), 'Process marketplace items', 'This job processes the imported MPI data.');
+							}else{
+								
+								this.logger.debug("Nutanix_Import_Marketplace_Items.importMPIData :- Connection to /marketplace_items/uuid not established :- "+uuidResponse.haveError()+" Status code:- "+uuidResponse.getStatusCode());
+							}
+						}
+					}else{
+						
+						this.activeMPI.push(entityUUID+'');
+						
+						var uuidResponse = this.appUtil.makeCalmApiCall('GET',  this.appUtil.configuration.api.getMarketplaceItemDetail+entityUUID, '');
+						if(uuidResponse.getStatusCode() == '200' || uuidResponse.getStatusCode() == '201'){
+							
+							this.appUtil.insertIntoQueue("processImportMPIData", "", '', uuidResponse.getBody(), 'Process marketplace items', 'This job processes the imported MPI data.');
+						}else {
+							
+							this.logger.debug("Nutanix_Import_Marketplace_Items.importMPIData :- Connection to /marketplace_items/uuid not established :- "+uuidResponse.haveError()+" Status code:- "+uuidResponse.getStatusCode());
+						}
+					}
+				}
+			} else {
+				this.logger.debug("Nutanix_Import_Marketplace_Items.importMPIData :- Connection to /marketplace_items/list not established :- "+response.haveError()+" Status code:- "+response.getStatusCode());
+			}
+			
+		} catch(e) {
+			
+			this.logger.debug("Nutanix_Import_Marketplace_Items.importMPIData :- Exception caught during retrieval of MarketPlaceItem. Error :- "+e);
+			this.logger.error("Exception caught during retrieval of MarketPlaceItem. Error :- "+e);
+		}
+	},
+	
+	processImportMPIData: function(current){
+		try{
+			this.logger.debug("Inside Nutanix_Import_Marketplace_Items.processImportMPIData");
+			var insertData = new GlideRecord(this.appUtil.configuration.table.stagingMarketplaceItem+"");
+			insertData.initialize();
+			var entity = this.appUtil.parse(current.payload);
+			var status = entity.status;
+			var resource = entity.status.resources;
+			var metadata = entity.metadata;
+			var field;
+			//To insert status data
+			for(var key in status){
+				field = status[key];
+				if( key!='resources' && field)
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+			}
+			//To insert resources data
+			for(var key in resource){
+				field = resource[key];
+				if(field)
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+			}
+			//To insert metadata
+			for(var key in metadata){
+				field = metadata[key];
+				if(field)
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+			}
+			insertData.insert();
+			//this.countPublishMPI++;
+		}
+		catch(e){
+			this.logger.debug("Nutanix_Import_Marketplace_Items.processImportMPIData :- Exception caught during processing of MarketPlaceItem. Error :- "+e);
+			this.logger.error("Exception caught during processing of MarketPlaceItem. Error :- "+e);
+		}
+	},
+	
+	processingIcon : function(current){
+		// This is where we'll save the attachment
+		try{
+			this.logger.debug("Inside Nutanix_Import_Marketplace_Items.ProcessingIcon");
+			var tablename   = 'sc_cat_item';
+			var recordSysId = current.parameter+"";
+			var filename    = 'picture';
+			var iconReference = this.appUtil.parse(current.payload);
+			
+			for(var i in iconReference){
+				var icon = iconReference[i];
+				var iconUUID = icon.icon_reference.uuid+'';
+				
+				this.logger.debug("Importing of MPI Icon API:- "+this.appUtil.configuration.api.getIcon+iconUUID+"");
+				
+				// Let's download the icon
+				var response = this.appUtil.makeCalmApiCallForIcon('GET',this.appUtil.configuration.api.getIcon+iconUUID+"" , "" , recordSysId);
+				// Configure the request to save the response as an attachment
+				var httpResponseStatus = response.getStatusCode();
+				var httpResponseContentType = response.getHeader('Content-Type');
+				var newAttachmentSysId = response.getResponseAttachmentSysid();
+				this.logger.debug("Image http response UUID :- "+iconUUID+" SysID: " + newAttachmentSysId);
+				this.logger.debug("Image http response content-type :- " + httpResponseContentType);
+				
+			}
+		}
+		catch(e){
+			this.logger.debug("Nutanix_Import_Marketplace_Items.ProcessingIcon :- Exception caught during processing of MarketPlaceItem Icon. Error :- "+e);
+			this.logger.error("Exception caught during processing of MarketPlaceItem Icon. Error :- "+e);
+		}
+	},
+	type: 'Nutanix_Import_Marketplace_Items'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-24 10:38:03</sys_created_on>
+        <sys_id>d6716e92db1d230084249235ca96194b</sys_id>
+        <sys_mod_count>90</sys_mod_count>
+        <sys_name>Nutanix_Import_Marketplace_Items</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_d6716e92db1d230084249235ca96194b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-02-08 08:58:09</sys_updated_on>
+    </sys_script_include>
+</record_update>

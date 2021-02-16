@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="io_set_item">
+    <io_set_item action="INSERT_OR_UPDATE">
+        <order>100</order>
+        <sc_cat_item display_value="Configure Calm Settings">6ddd772a37112300fdfc097973990e01</sc_cat_item>
+        <sys_class_name>io_set_item</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-28 22:35:50</sys_created_on>
+        <sys_id>d08cfd7f37912300fdfc097973990ed2</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Configure Settings Variables.Configure Settings</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>io_set_item_d08cfd7f37912300fdfc097973990ed2</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-10-28 22:35:50</sys_updated_on>
+        <variable_set display_value="Configure Settings Variables">d12cf97f37912300fdfc097973990e8e</variable_set>
+    </io_set_item>
+</record_update>

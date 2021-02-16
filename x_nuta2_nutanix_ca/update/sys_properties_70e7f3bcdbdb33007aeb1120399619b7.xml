@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>Value will be updated in the script include "Nutanix_CreateCatalogVariables".</description>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.variableGR.ui_page</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>variableGR.ui_page </suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-09-09 11:44:06</sys_created_on>
+        <sys_id>70e7f3bcdbdb33007aeb1120399619b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.variableGR.ui_page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_70e7f3bcdbdb33007aeb1120399619b7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-09-09 11:44:06</sys_updated_on>
+        <type>string</type>
+        <value>e7ed5c40db332300bfa82a9a48961965</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=70e7f3bcdbdb33007aeb1120399619b7"/>
+</record_update>

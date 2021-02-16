@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category/>
+        <format/>
+        <height/>
+        <image/>
+        <name>ahv.svg</name>
+        <size_bytes>3528</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:49:58</sys_created_on>
+        <sys_id>fcaf10c0db332300bfa82a9a48961955</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>ahv.svg</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>db_image_fcaf10c0db332300bfa82a9a48961955</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-18 06:50:15</sys_updated_on>
+        <thumbnail/>
+        <width/>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color/>
+        <chunk_size_bytes/>
+        <compressed>true</compressed>
+        <content_type>image/svg+xml</content_type>
+        <file_name>image</file_name>
+        <hash/>
+        <image_height/>
+        <image_width/>
+        <size_bytes>3528</size_bytes>
+        <size_compressed>1443</size_compressed>
+        <state/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:50:06</sys_created_on>
+        <sys_id>3cbf50c0db332300bfa82a9a489619aa</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-18 06:50:06</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>fcaf10c0db332300bfa82a9a48961955</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="3cbf50c0db332300bfa82a9a489619aa">3cbf50c0db332300bfa82a9a489619aa</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:50:06</sys_created_on>
+        <sys_id>7cbf50c0db332300bfa82a9a489619aa</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>pVdNb9s4EP0rhnuVaPGbLJIA2VMPXWBPPeTmxm5krOqkrevk5+97Q1KWi8UCi6LxMz2kyJk3b4bqzY/z0+rt63T8cbseT6eX95vN6+urerXq+fvTxgzDsMGKdVny/m06HP/+t4U657yR2fXq9bA7jbfrMKxX4/7wNJ7K+HzYv/7x/Ha7HlbDKvBvfXez23/5cXfzOB1e/tqextVhd7vewvzCHxj/2evse62N8nY0yrnJKq07p7zvOOoxsh96new20CYw8B9mNH9bMdoCMoOnQ8JvEx97bKmx1qps5q+pbzs7jniYHrHST04522NL87BefTlM0+36+Hzcr1d0v//+c9rfrvfn/fF5t1tv7m42Lapf4vt8HV9yKqZeD0llu/XKuE6AjmoOPZwIj1oFLa47rXzH4JPvi/Na6YwveL41DECgcIChA5j0iFUhSIhDUJGBgQ78SODNkh3b2FEudu4+YKoTEEeu3fyt8B+vw49BuYB9kRQ7avi7ZXjlUKcSIo7CiCnQJkJEXBE2hOEvqQUtptMI4R4j3QkUKq4O+q0AdtcBuEC1kBifoERIFIRnYXQcODa9jA11hYQl5oQkI29bKI5eZl0DUz6A305kWbRZzMmo4GBJuUBNijKBWslqyAWa3eIIfcbAxwlhqyFCG77jp2U5cCm4KFCtPvRKUkwvqs3ChkN08RlQ7VCmsrGrSppTADUivDwxcGju4WvP/CgdRrp17qWUNcR0rqOgP4G+OFKi+sxq2yJHuRMYZs+gDZXnM7AXK3pxLKlg7hvMakbwo7JpizNzJ9ACSwg28HDUPLJHli7ig0EEhfW2PURqtQW1pMPLpy6GHpku8GMLVLvFanQbj6ZRoNrxl+2596MkCySRob6w5NM54SFO+fTwdejtbCc0u/AK32wmiRFzwY0Dwsx0oeZPI0x6x1r3BarZI30BioiuQDVHeAb30UaaJdGtqcQknQknJRBW6OM3O0/Xeg4aExvSwhAhK54RC1QrEpPZXMunGjUlZtzZMciYhJdMv6OBgC2b28yhplKt/4YwHB3Bg1npBPEM6GCEuqnPvAo0z9YLBzzLh1VoC1Sz9SWHl/TSL/Rgr9ADk7vInHcNdVig6c3zyjEk2jS2Kd8E11gmukAzx5qWXKCaA0poYKmbCtUOkRlqOMUCbRek0tNn6wu0kkAFxvyAJhUMVG62uBnmy6HDCcolhSvlUulQ9qgMajdKmk1Ang3bB5Vcvhz5oEu/Kq2HcqT4tC7Q6ghOMHTnCrTs4SaLAUWRTIFmD1RAJ9e3wFXhgaxucZ4jyzoWaKUITUbajS5Q7cZRMlSidQWqwE3u5UhsYgq0WoiyE3JvChQ7hQci8jfFipV2g+90Ylk7yI+ta05Zau1C8nPJOzlEchbtyND3S5PjliBP7okKrXKcpGFRYV5qlMfqAtUu7wxos6ZAvQmZSitu2wJznXSadZdZa4G3UJibCLmT8osVqh1CTa67vmy11LAkJ7LeYis66Y9kiS8cJhWYnwi0o9J1gWbX9TK0sUDrStK4Ll1KilijYegBAfQkVlrmpz6D0tozf+fa319f+6iVYHFYhk+lLSvDC9dq3PrSPDBCCjGu1nMxySp2cQiA1w5X2r6ssvCf17Vmp0clasvFGFgMYB1Zz2cM/m8km/KefTqcpv3d8edpezy89dPz0/PNptguoeF4g5cJa+7BfmUXtpS6/MHn7cUoekEJf0Qhp87wvfgyS7eRm4/WIejO6OVzpfjnEN4N1u23hh5fO+EHXFzzg9IWIZilE6wkFm9zAsIO6TJ77YS9eq5o8T+dQNNPdCIuwkJ3gVI/6CsTXQhxMsggXpTRihcHiRPxo7RmbBUXrGowijO0XZIj+0/GyGvgsJjh25q7JP7d52FnrJc84z9od/8ABxojcsgNAAA=</data>
+        <length>1912</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="3cbf50c0db332300bfa82a9a489619aa">3cbf50c0db332300bfa82a9a489619aa</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:50:06</sys_created_on>
+        <sys_id>fcbf50c0db332300bfa82a9a489619aa</sys_id>
+    </sys_attachment_doc>
+</record_update>

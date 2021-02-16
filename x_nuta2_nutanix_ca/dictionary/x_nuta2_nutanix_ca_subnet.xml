@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Subnet" max_length="40" name="x_nuta2_nutanix_ca_subnet" type="collection">
+        <element label="Cluster Name" max_length="100" name="cluster_name" type="string"/>
+        <element label="Cluster UUID" max_length="250" name="cluster_uuid" type="string"/>
+        <element label="Name" max_length="500" name="name" type="string"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+    </element>
+</database>

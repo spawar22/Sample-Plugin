@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_CheckCatalogItemValidity</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_CheckCatalogItemValidity</name>
+        <script><![CDATA[var Nutanix_CheckCatalogItemValidity = Class.create();
+Nutanix_CheckCatalogItemValidity.prototype = {
+    initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+    },
+
+	checkCatalogValidity: function(type, uuid, profileSysId, projectUUID){
+		try{
+						
+			this.logger.debug("Inside Nutanix_CheckCatalogItemValidity.checkProjectValidity");
+			
+			var ProjectResponse = this.appUtil.makeCalmApiCall("get", '/projects/'+projectUUID, "");
+// 			gs.info("### project satuscode "+ProjectResponse.getStatusCode()+" project body : "+JSON.stringify(ProjectResponse.getBody()));
+			if(ProjectResponse.getStatusCode() == '404' ){
+				var message= this.appUtil.parse(ProjectResponse.getBody()).message_list[0];
+                if(message.reason == "ENTITY_NOT_FOUND"){
+//					gs.info("### Project active");
+					return 'INACTIVE';
+				}
+//				gs.info("### Project inactive");
+				return 'CANTCHECK';
+			}
+			if(type+''=='x_nuta2_nutanix_ca_nutanix_marketplaceitems')
+				return this._checkMPIValidity(uuid, projectUUID);
+						
+			var response = this.appUtil.makeCalmApiCall("get", this.appUtil.configuration.api.getBlueprintDetail+''+uuid, "");
+//             gs.info("### blueprint "+response.getStatusCode()+" body  "+JSON.stringify(response.getBody()));
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+
+				var responseBody = this.appUtil.parse(response.getBody());
+				var status = responseBody.status.state;
+//                 gs.info("### blueprint status code : "+status);
+				if(status+'' == 'ACTIVE' && this._checkProfileValidity(responseBody.status.resources.app_profile_list, profileSysId)+'' == 'ACTIVE')
+					return 'ACTIVE';
+				else
+					return 'INACTIVE';
+
+			}else{
+				this.logger.debug("### Error while retrieving Blueprints  " + this.appUtil.configuration.api.getBlueprintDetail+uuid + " :"+response.getBody());
+				this.logger.error("### Error while retrieving Blueprints  " + this.appUtil.configuration.api.getBlueprintDetail+uuid);
+
+				return 'CANTCHECK';
+			}	
+		}catch(e){
+			
+			this.logger.error("Exception caught inside Nutanix_CheckCatalogItemValidity.checkBlueprintValidity. Error :- "+e);
+		}
+	},
+	
+	_checkMPIValidity: function(uuid, projectUUID){
+		
+		try{
+			
+			this.logger.debug("Inside Nutanix_CheckCatalogItemValidity.checkBlueprintVali_checkMPIValiditydity");
+			var response = this.appUtil.makeCalmApiCall("get", this.appUtil.configuration.api.getMarketplaceItemDetail+uuid, "");
+
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+
+				var responseBody = this.appUtil.parse(response.getBody());
+				var state = responseBody.status.resources.app_state;
+
+				var flag = 0;
+				var projectList = responseBody.status.resources.project_reference_list;
+				
+				for(var i in projectList)
+					if(projectList[i].uuid+'' == projectUUID+''){
+						flag = 1;
+						break;
+					}
+				
+				if(state+'' == 'PUBLISHED' && flag==1)
+					return 'ACTIVE';
+				else
+					return 'INACTIVE';
+         
+			}else{
+				this.logger.debug("Error while retrieving MPI  " + this.appUtil.configuration.api.getMarketplaceItemDetail+uuid + ": "+response.getBody());
+				this.logger.error("Error while retrieving MPI  " + this.appUtil.configuration.api.getMarketplaceItemDetail+uuid);
+
+				return 'CANTCHECK';
+			}	
+		}catch(e){
+
+			this.logger.error("Exception caught inside Nutanix_CheckCatalogItemValidity._checkMPIValidity. Error :- "+e);
+		}
+	},
+	
+	_checkProfileValidity: function(profileList, profileSysId){
+		
+		var gr = new GlideRecord(this.appUtil.configuration.table.applicationProfiles+'');
+		if(gr.get(profileSysId+'')){
+// 		gs.info("### profileList "+JSON.stringify(profileList)+"  Profile uuid "+gr.uuid);	
+			
+			for(var i in profileList){
+				
+				var profile = profileList[i];
+				
+				if(profile.uuid+'' == gr.uuid+''){
+// 					gs.info("*** profile active")
+					return 'ACTIVE';
+				}
+			}
+			
+		}
+// 		gs.info("### profile inactive");
+		return 'INACTIVE';
+		
+	},
+		
+	checkCatalogValidityMultiProjectProfile: function(type, uuid, profileSysIds, projectSysIds){
+		try{
+						
+			this.logger.debug("Inside Nutanix_CheckCatalogItemValidity.checkProjectValidity");
+			
+			var projectSysId = projectSysIds.split(',');
+			for(var k=0; k< projectSysId.length; k++){
+				
+				var project = new GlideRecord('x_nuta2_nutanix_ca_nutanix_project');
+				if(project.get(projectSysId[k])){
+					var projectUUID = project.uuid;
+				}
+				var ProjectResponse = this.appUtil.makeCalmApiCall("get", '/projects/'+projectUUID, "");
+			
+				if(ProjectResponse.getStatusCode() == '404' ){
+					var message= this.appUtil.parse(ProjectResponse.getBody()).message_list[0];
+					if(message.reason == "ENTITY_NOT_FOUND"){
+						return 'INACTIVE';
+					}
+					return 'CANTCHECK';
+				}
+				
+				if(type+''=='x_nuta2_nutanix_ca_nutanix_marketplaceitems')
+						return this._checkMPIValidity(uuid, projectUUID);
+				var response = this.appUtil.makeCalmApiCall("get", this.appUtil.configuration.api.getBlueprintDetail+''+uuid, "");
+				
+				if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+					var responseBody = this.appUtil.parse(response.getBody());
+					var status = responseBody.status.state;
+					var profileSysId = profileSysIds.split(',');
+					for(var j =0; j< profileSysId.length; j++){
+							if(status+'' == 'ACTIVE' && this._checkProfileValidity(responseBody.status.resources.app_profile_list, profileSysId[j])+'' == 'ACTIVE')
+								return 'ACTIVE';
+							else
+								return 'INACTIVE';
+					}
+					
+					
+
+				}else{
+					this.logger.debug("Error while retrieving Blueprints  " + this.appUtil.configuration.api.getBlueprintDetail+uuid + " :"+response.getBody());
+					this.logger.error("Error while retrieving Blueprints  " + this.appUtil.configuration.api.getBlueprintDetail+uuid);
+
+					return 'CANTCHECK';
+				}
+			}
+		}catch(e){
+			this.logger.error("Exception caught inside Nutanix_CheckCatalogItemValidity.checkBlueprintValidity. Error :- "+e);
+		}
+	},
+	
+    type: 'Nutanix_CheckCatalogItemValidity'
+	
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2019-07-29 04:11:28</sys_created_on>
+        <sys_id>5023457f4f3633002aca224f9310c7c6</sys_id>
+        <sys_mod_count>34</sys_mod_count>
+        <sys_name>Nutanix_CheckCatalogItemValidity</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_5023457f4f3633002aca224f9310c7c6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-10-22 06:51:45</sys_updated_on>
+    </sys_script_include>
+</record_update>

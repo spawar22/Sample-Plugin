@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_ProcessProviders</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_ProcessProviders</name>
+        <script><![CDATA[var Nutanix_ProcessProviders = Class.create();
+Nutanix_ProcessProviders.prototype = {
+	initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+	},
+	
+	getProviderTableName: function(type){	
+		this.logger.debug ("Inside Nutanix_ProcessProviders.getProviderTableName");
+		return 'x_nuta2_nutanix_ca_nutanix_staging_cloud_providers';
+		switch(type+""){
+
+			case "AWS_VM"   :    return 'x_nuta2_nutanix_ca_nutanix_staging_aws';//processAWS(entity);
+								 break;
+
+			case "GCP_VM" :      return this.appUtil.configuration.table.StagingGCP+'';//processGCP(entity);
+								 break;
+
+			case "AZURE_VM" :    return this.appUtil.configuration.table.stagingAzure+'';//processAZURE(entity);
+								 break;
+
+			case "AHV_VM" :      return 'x_nuta2_nutanix_ca_staging_nutanix';//processAHV(entity);
+								 break;
+
+			case "VMWARE_VM" :   return 'x_nuta2_nutanix_ca_staging_vmware';//processVM(entity);
+								 break;
+
+		}
+	},
+	
+	processProviders : function(current) {
+		try{
+			this.logger.debug ("Inside Nutanix_ProcessProviders.processProviders");
+			var ProvidersJSON = this.appUtil.parse(current.payload+'');
+			//this.logger.debug ("ProvidersJSON " + ProvidersJSON);
+			for (var i = 0; i<ProvidersJSON.length ; i++){
+				
+				var envSysID = current.parameter+"";
+				var entity = ProvidersJSON[i];
+				
+				var insertData = new GlideRecord(this.getProviderTableName(entity.type+''));
+				insertData.initialize();
+				insertData.environment = envSysID;
+				this.logger.debug("Inside Nutanix_ProcessProviders.processProviders processing " + entity.type+'');
+
+				for (var key in entity){
+					var field = entity[key];
+					//this.logger.debug ("Key:field  " + key+":"+field+"");
+					insertData["vm_type"] = entity["type"];
+					if (key != "readiness_probe"){
+						insertData[key] =  (field.constructor === Object || field.constructor === Array) ? this.appUtil.stringify(field) : field+"";
+					}
+					if(key == "readiness_probe" ){
+						//this.logger.debug ("out readiness_probe Key:field  " + key+":"+JSON.stringify(entity[key]));
+						var connectiomJSON = entity[key];
+						for (var subKey in connectiomJSON) {
+							//this.logger.debug ("in readiness_probe Key:field  " + subKey+":"+connectiomJSON[subKey]);
+							field = connectiomJSON[subKey];
+							//this.logger.debug ("Inside readiness_probe Key:field  " + connectiomJSON+":"+field+"");
+							insertData[subKey] =  (field.constructor === Object || field.constructor === Array) ? this.appUtil.stringify(field) : field+"";
+						}
+					}
+				}
+				insertData.insert();
+			}
+		} catch(e) {
+			this.logger.debug("Nutanix_ProcessProviders.processProviders :- Exception caught during processing of provider. Error :- "+e);
+			this.logger.error("Exception caught during processing of provider. Error :- "+e);
+		}
+	},
+	
+//  	processAWStorage : function(current){
+		
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processAWStorage");
+// 			var insertData = new GlideRecord(this.appUtil.configuration.table.awsStorage+"");
+// 			var providerSysid = current.parameter+"";
+// 			var storageData = this.appUtil.parse(current.payload+'');
+// 			this.deleteRelatedListData(providerSysid,this.appUtil.configuration.table.awsStorage+"");
+// 			for(var key in storageData){
+				
+// 				if(key == "root_disk"){
+// 					insertData.initialize();
+// 					insertData.is_root_disk = true;
+// 					insertData.provider = providerSysid;
+// 					insertData.device_name = storageData[key].device_name+"";
+// 					insertData.size_gb = storageData[key].size_gb+"";
+// 					insertData.volume_type = storageData[key].volume_type+"";
+// 					insertData.delete_on_termination = storageData[key].delete_on_termination+"";
+// 					insertData.insert();
+				
+// 				} else if(key == "data_disk_list") {
+					
+// 					var dataJSON = storageData[key];
+// 					for(var i=0; i<dataJSON.length ; i++){
+// 						insertData.initialize();
+// 						insertData.provider = providerSysid;
+// 						var dataEntity = dataJSON[i];
+// 						insertData.device_name = dataEntity.device_name+"";
+// 						insertData.size_gb = dataEntity.size_gb+"";
+// 						insertData.volume_type = dataEntity.volume_type+"";
+// 						insertData.delete_on_termination = dataEntity.delete_on_termination+"";
+// 						insertData.insert();
+// 					}
+// 				}
+// 			}
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processAWStorage :- Exception caught during processing of Storage. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of Storage. Error :- "+e);
+// 		}
+// 	},
+	
+//  	processTags : function(current){
+		
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processTags");
+// 			var insertData = new GlideRecord(this.appUtil.configuration.table.awsTag+"");
+// 			var tagsJSON = this.appUtil.parse(current.payload);
+// 			var providerSysID = current.parameter+"";
+// 			this.deleteRelatedListData(providerSysID,this.appUtil.configuration.table.awsTag+"");
+			
+// 			for(var i=0; i<tagsJSON.length; i++){
+// 				var entity = tagsJSON[i];
+// 				insertData.initialize();
+// 				insertData.provider = providerSysID;
+// 				insertData.key = entity.key;
+// 				insertData.value = entity.value;
+// 				insertData.insert();	
+// 			}
+			
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processTags :- Exception caught during processing of Tags. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of Tags. Error :- "+e);
+// 		}
+// 	},
+	
+//  	processBlankDisk : function(current){
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processBlankDisk");
+// 			var insertData = new GlideRecord(this.appUtil.configuration.table.blankDisks+"");
+// 			var blankDiskJSON = this.appUtil.parse(current.payload);
+// 			var providerSysID = current.parameter+"";
+// 			this.deleteRelatedListData(providerSysID,this.appUtil.configuration.table.blankDisks+"");
+			
+// 			for(var i=0; i<blankDiskJSON.length; i++){	
+// 				var entity = blankDiskJSON[i];
+// 				insertData.initialize();
+// 				insertData.provider = providerSysID;
+// 				insertData.disk_type = entity.disk_type;
+// 				insertData.name = entity.name;
+// 				insertData.sizegb = entity.sizeGb;
+// 				insertData.autodelete = entity.autoDelete
+// 				insertData.insert();
+// 			}
+			
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processBlankDisk :- Exception caught during processing of BlankDisk. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of BlankDisk. Error :- "+e);
+// 		}
+// 	},
+	
+//  	processNetworkInterfaces : function(current){
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processNetworkInterfaces");
+// 			var insertData = new GlideRecord(this.appUtil.configuration.table.networking+"");
+// 			var networkJSON = this.appUtil.parse(current.payload);
+// 			var providerSysID = current.parameter+"";
+// 			this.deleteRelatedListData(providerSysID,this.appUtil.configuration.table.networking+"");
+			
+// 			for(var i=0; i<networkJSON.length; i++){	
+// 				var entity = networkJSON[i];
+// 				insertData.initialize();
+// 				insertData.provider = providerSysID;
+// 				insertData.network = entity.network;
+// 				insertData.subnetwork = entity.subnetwork;
+// 				insertData.config_type = entity.accessConfigs[0].config_type;
+// 				insertData.name = entity.accessConfigs[0].name;
+// 				insertData.insert();
+// 			}
+			
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processTags :- Exception caught during processing of Network Interfaces. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of Network Interfaces. Error :- "+e);
+// 		}
+// 	},
+	
+//  	processDisks : function(current){
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processDisks");
+// 			var insertData = new GlideRecord(this.appUtil.configuration.table.disks+"");
+// 			var diskJSON = this.appUtil.parse(current.payload);
+// 			var providerSysID = current.parameter+"";
+// 			this.deleteRelatedListData(providerSysID,this.appUtil.configuration.table.disks+"");
+			
+// 			for(var i=0; i<diskJSON.length; i++){	
+// 				var entity = diskJSON[i];
+// 				insertData.initialize();
+// 				insertData.provider = providerSysID;
+// 				insertData.sourceimage = entity.initializeParams.sourceImage;
+// 				insertData.disktype = entity.initializeParams.diskType;
+// 				insertData.autodelete = entity.autoDelete;
+// 				insertData.disksizegb = entity.initializeParams.diskSizeGb
+// 				insertData.insert();
+// 			}
+			
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processDisks :- Exception caught during processing of Disks. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of Disks. Error :- "+e);
+// 		}
+// 	},
+	
+//  	processOSProfile : function(current){
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processOSProfile");
+// 			var insertData = new GlideRecord(this.appUtil.configuration.table.security+"");
+// 			var entityJSON = this.appUtil.parse(current.payload);
+// 			entityJSON = entityJSON.secrets;
+			
+// 			if(entityJSON){
+// 				var providerSysID = current.parameter+""; 
+// 				this.deleteRelatedListData(providerSysID,this.appUtil.configuration.table.security+"");
+			
+// 				for(var i=0; i<entityJSON.length; i++){
+// 					var entity = entityJSON[i];
+// 					insertData.initialize();
+// 					insertData.provider = providerSysID;
+// 					insertData.source_vault_id = entity.source_vault_id;
+// 					insertData.vault_certificates = "";
+// 					if(entity.vault_certificates){
+// 						for(var k=0; k<entity.vault_certificates.length ; k++){
+// 							var certificate = entity.vault_certificates[k];
+// 							insertData.vault_certificates = (k != (entity.vault_certificates.length-1)) ? insertData.vault_certificates + certificate.certificate_url + "," : insertData.vault_certificates + certificate.certificate_url;
+// 						}
+// 					}
+// 					insertData.insert();
+// 				}
+// 			}
+			
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processOSProfile :- Exception caught during processing of OS Profile. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of OS Profile. Error :- "+e);
+// 		}
+// 	},
+	
+//  	processNetworkProfiles : function(current){
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processNetworkProfiles");
+// 			var insertData = new GlideRecord(this.appUtil.configuration.table.nw_profiles+"");
+// 			var entityJSON = this.appUtil.parse(current.payload);
+// 			entityJSON = entityJSON.nic_list;
+			
+// 			if(entityJSON){
+// 				var providerSysID = current.parameter+"";
+// 				this.deleteRelatedListData(providerSysID,this.appUtil.configuration.table.nw_profiles+"");
+			
+// 				for(var i=0; i<entityJSON.length; i++){
+// 					var entity = entityJSON[i];
+// 					insertData.initialize();
+// 					insertData.provider = providerSysID;
+// 					insertData.nsg_name = entity.nsg_name;
+// 					insertData.vnet_name = entity.vnet_name;
+// 					insertData.nic_name = entity.nic_name;
+// 					insertData.subnet_name = entity.subnet_name;
+// 					insertData.private_ip_allocation_method = entity.private_ip_info.ip_allocation_method;
+// 					insertData.ip_name = entity.public_ip_info.ip_name;
+// 					insertData.dns_label = entity.public_ip_info.ip_name;
+// 					insertData.ip_allocation_method = entity.public_ip_info.ip_allocation_method;
+
+// 					insertData.insert();
+// 				}
+// 			}
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processNetworkProfiles :- Exception caught during processing of Network Profile. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of Network Profile. Error :- "+e);
+// 		}
+// 	},
+	
+//  	processDataDisk : function(current){
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processDataDisk");
+// 			var insertData = new GlideRecord(this.appUtil.configuration.table.dataDisk+"");
+// 			var entityJSON = this.appUtil.parse(current.payload);
+// 			//entityJSON = entityJSON.nic_list;
+			
+// 			if(entityJSON){
+// 				var providerSysID = current.parameter+"";
+// 				this.deleteRelatedListData(providerSysID,this.appUtil.configuration.table.dataDisk+"");
+			
+// 				for(var i=0; i<entityJSON.length; i++){
+// 					var entity = entityJSON[i];
+// 					insertData.initialize();
+// 					insertData.provider = providerSysID;
+// 					insertData.size_in_gb = entity.size_in_gb;
+// 					insertData.name = entity.name;
+// 					insertData.storage_type = entity.storage_type;
+// 					insertData.lun = entity.lun;
+// 					insertData.caching_type = entity.caching_type;
+					
+// 					insertData.insert();
+// 				}
+// 			}
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processDataDisk :- Exception caught during processing of Data Disk. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of Data Disk. Error :- "+e);
+// 		}
+// 	},
+	
+//  	processNutanixDisk: function(current){
+		
+// 		try{
+// 			this.logger.debug ("Inside Nutanix_ProcessProviders.processNutanixDisk");
+// 			var insertData = new GlideRecord('x_nuta2_nutanix_ca_disk_list');
+// 			var entityJSON = this.appUtil.parse(current.payload);
+
+// 			if(entityJSON){
+// 				var providerSysID = current.parameter+"";
+// 				this.deleteRelatedListData(providerSysID,"x_nuta2_nutanix_ca_disk_list");
+			
+// 				for(var i=0; i<entityJSON.length; i++){
+					
+// 					var entity = entityJSON[i];
+					
+// 					insertData.initialize();
+// 					insertData.provider = providerSysID;
+// 					insertData.data_source_reference = (entity.data_source_reference)?entity.data_source_reference.name:'';
+// 					insertData.kind = (entity.data_source_reference)?entity.data_source_reference.kind:'';
+// 					insertData.adapter_type = (entity.device_properties && entity.device_properties.disk_address)?entity.device_properties.disk_address.adapter_type:'';
+// 					insertData.device_index = (entity.device_properties && entity.device_properties.disk_address)?entity.device_properties.disk_address.device_index:'';
+// 					insertData.device_type = (entity.device_properties)?entity.device_properties.device_type:'';
+// 					insertData.disk_size_mib = entity.disk_size_mib;
+// 					insertData.volume_group_reference = entity.volume_group_reference;
+
+// 					insertData.insert();
+// 				}
+// 			}
+// 		} catch(e) {
+// 			this.logger.debug("Nutanix_ProcessProviders.processNutanixDisk :- Exception caught during processing of Nutanix Disk. Error :- "+e);
+// 			this.logger.error("Exception caught during processing of Nutanix Disk. Error :- "+e);
+// 		}
+// 	},
+	
+// 	deleteRelatedListData :function(sysid,tableName){
+		
+// 		var gr = new GlideRecord(tableName);
+// 		gr.addQuery('provider',sysid);
+// 		gr.query();
+// 		while (gr.next()) {
+// 		  gr.deleteRecord();
+// 		}
+		
+// 	},
+	type: 'Nutanix_ProcessProviders'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-12-24 07:32:23</sys_created_on>
+        <sys_id>8b3094cadb62630075f47dda8c961973</sys_id>
+        <sys_mod_count>81</sys_mod_count>
+        <sys_name>Nutanix_ProcessProviders</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_8b3094cadb62630075f47dda8c961973</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-06-28 15:26:50</sys_updated_on>
+    </sys_script_include>
+</record_update>

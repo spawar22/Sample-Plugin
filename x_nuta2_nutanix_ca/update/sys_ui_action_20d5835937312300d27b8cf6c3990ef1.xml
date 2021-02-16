@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_action">
+    <sys_ui_action action="INSERT_OR_UPDATE">
+        <action_name>perform_action</action_name>
+        <active>true</active>
+        <client>true</client>
+        <client_script_v2><![CDATA[function onClick(g_form) {
+
+}]]></client_script_v2>
+        <comments/>
+        <condition>new Perform_Action_Condition().performActions(current.parent_uuid, current.name,current.type);</condition>
+        <form_action>true</form_action>
+        <form_button>true</form_button>
+        <form_button_v2>false</form_button_v2>
+        <form_context_menu>false</form_context_menu>
+        <form_link>false</form_link>
+        <form_menu_button_v2>false</form_menu_button_v2>
+        <form_style/>
+        <hint/>
+        <isolate_script>false</isolate_script>
+        <list_action>true</list_action>
+        <list_banner_button>false</list_banner_button>
+        <list_button>false</list_button>
+        <list_choice>false</list_choice>
+        <list_context_menu>true</list_context_menu>
+        <list_link>false</list_link>
+        <list_save_with_form_button>false</list_save_with_form_button>
+        <list_style/>
+        <name>Perform Action</name>
+        <onclick>performCondition()</onclick>
+        <order>100</order>
+        <script><![CDATA[var act_sys_id = '';
+var appName = '';
+var template = '<div id="#{HTML:id}" tabindex="-1" ' + 'aria-hidden="true" class="modal fade " role="dialog" ' + 'aria-labelledby="#{HTML:id}_title" data-readonly="#{HTML:readOnly}" data-has-help="#{HTML:showHelp}" focus-escape="#{HTML:focusEscape}" style="overflow-y: scroll;">' +
+    '	<div class="modal-dialog #{size}">' +
+    '		<div class="modal-content">' +
+    '			<header class="modal-header">' +
+    '				<button data-dismiss="GlideModal" class="btn btn-icon close icon-cross" id="#{HTML:id}_closemodal">' +
+    '					<span class="sr-only">Close</span>' +
+    '				</button>' +
+    '			<h1 id="#{HTML:id}_title" class="modal-title h4">' +
+    '				#{HTML:title}' +
+    '			<button class="btn btn-icon icon-help help">' +
+    '				<span class="sr-only">Help</span>' +
+    '			</button>' +
+    '			</h1>' +
+    '			</header>' +
+    '			<div class="modal-body container-fluid"></div>' +
+    '		</div>' +
+    '	</div>' +
+    '</div>';
+
+function performCondition() {
+    var sysId = ' ';
+    if (typeof rowSysId == 'undefined') {
+        sysId = gel('sys_uniqueValue').value;
+    } else {
+        sysId = rowSysId;
+    }
+    act_sys_id = sysId + '';
+    var appName = g_form.getValue('parent_name');
+    var gax = new GlideAjax('Nutanix_ClientServerScriptBridge');
+    gax.addParam('sysparm_name', 'appFlag');
+    gax.addParam('sysparm_actId', sysId + '');
+    gax.getXML(appFlagResponse);
+
+    var loadingHTML = "<div class='loading-container'><div class='loading-indicator icon-loading icon-lg'></div></div>";
+    var loadingDialog = new GlideModal("action_modal", true);
+	loadingDialog.template = template;
+    loadingDialog.setTitle('Performing action...'); //Set the loading dialog title here...
+    loadingDialog.renderWithContent('' + loadingHTML);
+}
+
+function appFlagResponse(response) {
+    var appFlag = response.responseXML.documentElement.getAttribute("answer");
+    if (appFlag == '0') {
+        performAction();
+    } else {
+        g_form.addErrorMessage('An action is currently in progress');
+        return;
+    }
+}
+
+function performAction() {
+    g_form.clearMessages();
+    var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+    ga.addParam('sysparm_name', 'fetchActionVariables');
+    ga.addParam('sysparm_actSysId', act_sys_id);
+    ga.getXML(responseParse);
+}
+
+function getSingleVmProvider(act_sys_id, act_name) {
+	var ajax_parameter_array = JSON.stringify([act_name,act_sys_id]);
+	var ga = new GlideAjax('Run_App_Actions');
+    ga.addParam('sysparm_name', 'getProviderTypeSingleVM');
+    ga.addParam('sysparm_actionsysid', act_sys_id);
+	ga.addParam('sysparm_sysid_type', "actions");
+    ga.getXML(getProviderAjax, null, ajax_parameter_array);
+}
+
+function getProviderAjax(response, ajax_parameter_array) {
+	var provider_name = response.responseXML.documentElement.getAttribute("answer") + '';
+	var param_array = JSON.parse(ajax_parameter_array);
+	var page_selector = {"AHV_VM":"x_nuta2_nutanix_ca_Save_snapshot","AWS_VM":"x_nuta2_nutanix_ca_Save_snapshot_aws","VMWARE_VM":"x_nuta2_nutanix_ca_Save_snapshot_vmware"};
+	
+	var gm = new GlideModal("action_modal");
+	gm.setDialog(page_selector[provider_name]);
+	gm.setWidth(450);
+    gm.setTitle('Start Action: ' + param_array[0]);
+    gm.setPreference('sysparm_sysId', param_array[1]);
+    gm.backdropStatic = true;
+    gm.template = template;
+    gm.render();
+}
+
+function responseParse(response) {
+
+	var answer = response.responseXML.documentElement.getAttribute("answer");
+    var respJSON = JSON.parse(answer);
+    var trueName = respJSON.true_name + '';
+    var actionType = respJSON.type + '';
+
+    if (actionType == 'system') {
+
+        switch (trueName) {
+			
+			case 'action_image_create':
+                var gm = new GlideModal("action_modal");
+				gm.setDialog("x_nuta2_nutanix_ca_Nutanix_Image_Create_Page");
+                gm.setWidth(450);
+                gm.setTitle('Create Image');
+                gm.setPreference('sysparm_sysId', act_sys_id);
+                gm.backdropStatic = true;
+                gm.template = template;
+                gm.render();
+                break;
+				
+            case 'action_clone':
+                var gm = new GlideModal("action_modal");
+				gm.setDialog("x_nuta2_nutanix_ca_Clone_UI_page");
+                gm.setWidth(450);
+                gm.setTitle('Start Action: ' + respJSON.name);
+                gm.setPreference('sysparm_sysId', act_sys_id);
+                gm.backdropStatic = true;
+                gm.template = template;
+                gm.render();
+                break;
+
+            case 'action_install_ngt':
+
+                var gm = new GlideModal("action_modal");
+				gm.setDialog("x_nuta2_nutanix_ca_Install_NGT");
+                gm.setWidth(450);
+                gm.setTitle('Start Action: ' + respJSON.name);
+                gm.setPreference('sysparm_sysId', act_sys_id);
+                gm.setPreference('sysparm_actVarsArr', JSON.stringify(respJSON.vars));
+                gm.backdropStatic = true;
+                gm.template = template;
+                gm.render();
+                break;
+
+            case 'action_manage_ngt':
+                var gm = new GlideModal("action_modal");
+				gm.setDialog("x_nuta2_nutanix_ca_Manage_NGT");
+                gm.setWidth(450);
+                gm.setTitle('Start Action: ' + respJSON.name);
+                gm.setPreference('sysparm_sysId', act_sys_id);
+                gm.backdropStatic = true;
+                gm.template = template;
+                gm.render();
+                break;
+
+
+            case 'action_snapshot_create':
+				getSingleVmProvider(act_sys_id, respJSON.name);
+				break;
+
+            case 'action_update':
+                var gajax = new GlideAjax('Run_App_Actions');
+                gajax.addParam('sysparm_name', 'fetchAppOriginalBlueprint');
+                gajax.addParam('sysparm_actionsysid', act_sys_id);
+                gajax.addParam('sysparm_appName', appName);
+                gajax.getXML(updateResponse);
+
+                break;
+
+            default:
+                userActions(respJSON);
+        }
+    } else
+        userActions(respJSON);
+}
+
+function updateResponse(response) {
+
+    var answer = response.responseXML.documentElement.getAttribute("answer");
+
+    if (!answer) {
+        g_form.addErrorMessage("Error connecting to CALM!");
+        new GlideModal().get("action_modal").destroy();
+        return;
+    }
+
+    var gm = new GlideModal("action_modal");
+	gm.setDialog("x_nuta2_nutanix_ca_Update_ui_page");
+    gm.setWidth(800);
+    gm.setTitle('Start Action: Update');
+    gm.setPreference('sysparm_sysId', act_sys_id);
+    gm.setPreference('sysparm_actVarsArr', answer);
+    gm.backdropStatic = true;
+    gm.template = template;
+    gm.render();
+}
+
+function userActions(respJSON) {
+	
+    if ('vars' in respJSON && JSON.parse(respJSON.vars).length != 0) {
+        {
+            var gm = new GlideModal("action_modal");
+			gm.setDialog("x_nuta2_nutanix_ca_Set_Runtime_Action_Variables");
+            //gm.setSize('550', '450');
+            gm.setTitle('Start Action: ' + respJSON.name);
+            gm.setPreference('sysparm_sysId', act_sys_id);
+            gm.setPreference('sysparm_actVarsArr', respJSON.vars);
+            gm.setPreference('sysparm_actName', respJSON.name);
+            gm.backdropStatic = true;
+            gm.template = template;
+            gm.render();
+        }
+    } else {
+        var gajax = new GlideAjax('Run_App_Actions');
+        gajax.addParam('sysparm_name', 'runAction');
+        gajax.addParam('sysparm_actionsysid', act_sys_id);
+        gajax.addParam('sysparm_actionVars', '');
+        gajax.addParam('sysparm_userID', '' + g_user.userID);
+        gajax.getXML(getResponse);
+
+        function getResponse(response) {
+            new GlideModal().get("action_modal").destroy();
+            var answer = response.responseXML.documentElement.getAttribute("answer");
+            g_form.addInfoMessage(answer + '');
+        }
+
+        //_form.addInfoMessage('Action '+respJSON.name+' has started');
+    }
+}]]></script>
+        <show_insert>true</show_insert>
+        <show_multiple_update>false</show_multiple_update>
+        <show_query>false</show_query>
+        <show_update>true</show_update>
+        <sys_class_name>sys_ui_action</sys_class_name>
+        <sys_created_by>bharat.vajj</sys_created_by>
+        <sys_created_on>2018-11-15 06:25:08</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>20d5835937312300d27b8cf6c3990ef1</sys_id>
+        <sys_mod_count>307</sys_mod_count>
+        <sys_name>Perform Action</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_action_20d5835937312300d27b8cf6c3990ef1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-08-04 04:58:28</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_nutanix_calm_action</table>
+        <ui11_compatible>true</ui11_compatible>
+        <ui16_compatible>false</ui16_compatible>
+    </sys_ui_action>
+</record_update>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var $j = jQuery.noConflict();
+
+$j("textarea#clone_desc").val("");
+
+$j('#cloneAct').mousedown(preValidate);
+$j('#cancelAct').mousedown(cancelDialog);
+$j("input").click( function(){ $j(".error_body").html(''); } );
+	
+	new GlideModal().get("dialog_loading").destroy();
+	
+	function preValidate() {
+		var clone_name = $j('#clone_input').val() + '';
+		//	if(!(/^[_-\w ]+$/.test(clone_name) && (clone_name.trim().lastIndexOf('-') != (clone_name.trim().length - 1))))
+		if(/^\s|[!@#$%^*=()+":>?<>?/.,';`~/*-]|\s$/g.test(clone_name)){
+			$j(".error_body").html('<div class="info-message" style="padding: 5px 16px; background-color: #e8f0fa; color: #5f96e3; position: relative; margin: 5px 0px;">Name '+clone_name+' is invalid. Only alphanumeric characters, underscores(_), hyphens(-) and spaces are allowed and cannot end with hyphens(-), no leading/ trailing whitespaces </div>');
+		}
+		else{
+			var gajax = new GlideAjax('Run_App_Actions');
+			gajax.addParam('sysparm_name', 'applicationNameExist');
+			gajax.addParam('sysparm_applicationName', clone_name+'');
+			gajax.getXML(getApplicationNameResponse);
+		}
+	}
+	
+	function cancelDialog() {
+		GlideModal.get().destroy();
+	}
+	
+	function runAction() {
+		
+		$j('#cloneAct').prop("disabled", true);
+		$j('#cancelAct').prop("disabled", true);
+		
+		var clonedAppName = $j('#clone_input').val();
+		var cloneDescription = $j('#clone_desc').val();
+		var actSysId = "${JS:sysparm_sysId}";
+			
+			var modVarString = {"name":clonedAppName,"description":cloneDescription};
+				
+				var gajax = new GlideAjax('Run_App_Actions');
+				gajax.addParam('sysparm_name', 'runAction');
+				gajax.addParam('sysparm_actionsysid', actSysId+'');
+				gajax.addParam('sysparm_actionVars', JSON.stringify(modVarString));
+				gajax.getXML(getResponse);
+				
+				function getResponse(response) {
+					var answer = response.responseXML.documentElement.getAttribute("answer");
+					g_form.addInfoMessage(answer);
+					GlideModal.get().destroy();
+				}
+	}
+	/*function applicationNameExist(clonedAppName){
+				var gajax = new GlideAjax('Run_App_Actions');
+				gajax.addParam('sysparm_name', 'applicationNameExist');
+				gajax.addParam('sysparm_applicationName', clonedAppName+'');
+				gajax.getXML(getResponse);
+				
+				function getResponse(response) {
+					var answer = response.responseXML.documentElement.getAttribute("answer");
+					return answer;
+				}
+	}*/
+	function getApplicationNameResponse(response) {
+				var answer = response.responseXML.documentElement.getAttribute("answer");
+				if(answer == 'true')
+					$j(".error_body").html('<div class="info-message" style="padding: 5px 16px; background-color: #e8f0fa; color: #5f96e3; position: relative; margin: 5px 0px;"> Application namme is alredy in used </div>');
+				else
+					runAction();
+	}
+			]]></client_script>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Clone_UI_page.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+    <j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+
+        <body>
+			<div class="error_body"></div>
+            <div class="bodyData">
+                <div class="form-group">
+                    <label style="margin-bottom: 7px;" class="control-label" id="clone_name_label">Cloned Application Name</label>
+                    <input type="text" class="form-control" id="clone_input" placeholder="Cloned Application Name"/>
+                </div>
+                <div class="form-group">
+                    <label style="margin-bottom: 7px;" class="control-label" id="clone_desc_label">Description</label>
+                    <textarea class="form-control" id="clone_desc" placeholder="Description"/>
+                </div>
+                <div class="info-message" style="padding: 5px 16px; background-color: #e8f0fa; color: #5f96e3; position: relative; margin: 5px 0px;">Cloned application's configuration will be the same as the current application.</div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-sm-9 pull-right" style="width: max-content;">
+                            <button class="btn btn-default" id="cancelAct">Cancel</button>
+                            <button class="btn btn-primary" id="cloneAct">Clone</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+
+        <div class="bodyData">
+        </div>
+
+    </j:jelly>]]></html>
+        <name>Clone_UI_page</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-06-26 12:02:59</sys_created_on>
+        <sys_id>629270594f9233008373224f9310c72e</sys_id>
+        <sys_mod_count>55</sys_mod_count>
+        <sys_name>Clone_UI_page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_629270594f9233008373224f9310c72e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-02-27 05:07:39</sys_updated_on>
+    </sys_ui_page>
+</record_update>

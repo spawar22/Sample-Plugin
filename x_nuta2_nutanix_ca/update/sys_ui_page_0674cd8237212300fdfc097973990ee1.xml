@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script/>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Calm_Catalog_Service_Configure_Page.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js" integrity="sha384-7N66VCkbpJUVwHKCEz5qEgog94BLAJpgfXvD55ThBuHpdPrffMfva/Kl1WH8Y8FS" crossorigin="anonymous"></script>
+
+	<style>
+
+		.main-list, .category-list {
+		list-style-type: none;
+		}
+		.category-list {
+		padding: 0px;
+		}
+		.main-list-item {
+		padding: 10px 15px 10px 15px;
+		display: block;
+		background: #e6e8ea;
+		font-weight: bold;
+		border-bottom: 1px solid #d0d0d0;
+		}
+		.main-list-item-profile {
+	
+		display: block;
+		background: #e6e8ea;
+		font-weight: bold;
+		border-style: solid;
+		}
+
+		.category-list-item{
+		padding: 10px 15px 10px 35px;
+		border-bottom: 1px solid #d0d0d0;
+		}
+
+		.selected {
+		background: #f5f5f5;
+		}
+
+		.main-list-item:hover {
+		cursor: pointer;
+		background: #f5f5f5;
+		}
+		.category-list-item:hover {
+		cursor: pointer;
+		background: #f5f5f5;
+		}
+
+		.form-container {
+		display: flex;
+		align-content: flex-start;
+		flex-wrap: wrap;
+		}
+
+		.form-display {
+		padding: 5px 10px 5px 10px; 
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: 50%;
+		}
+
+		.padded-fields {
+		padding: 10px !important;
+		}
+		.runtime {
+		padding-right: 4px;
+		float: right;
+		}
+		.title-container {
+		padding: 10px;
+		width: 100%;
+		border-bottom: 1px solid #d0d0d0;
+		background: #e6e8ea;
+		font-weight: bold;
+		}
+		.flex-50 {
+		flex-basis: 50% !important;
+		}
+
+		input[type=checkbox] {
+		margin: 0px 5px 0px 0px;
+		width: 16px;
+		height: 16px;
+		}
+		.main-div {
+		padding: 5px;
+		}
+		.form-control-feedback {
+		position: relative;
+		float: right;
+		margin-top: -23px;
+		}
+		#main {
+		padding-left: 0px;
+		}
+
+		.icon-cross, .icon-edit {
+		font-size: 12px;
+		}
+
+		select option {
+		padding: 5px !important;
+		margin: 5px !important;
+		}
+
+		label {
+		margin: 5px !important;
+		}
+		.col-md-6 {
+		padding: 5px 12px 0px 12px;
+		}
+		.field-icon {
+		cursor: pointer;
+		float: right;
+		margin-right: .5%;
+		padding-right: 5px;
+		margin-top: -24px;
+		z-index: 2;
+		}
+		//
+		//---------------------------disk related CSS------------------------------
+		//
+
+		.disk_main-container {
+		padding: 15px; 
+		border: 1px solid #d0d0d0;
+		}
+
+		.disk_running {
+		color: #1f88df;
+		fill : #1f88df;
+		}
+
+		.disk_btn-global {
+		border-radius: 3px;
+		padding: 6px 9px;
+		margin-right: 10px;
+		min-width: 70px;
+		}
+		.disk_btn-modal {
+		border-radius: 3px;
+		padding: 6px 9px;
+		min-width: 70px;
+		}
+
+		.disk_disabled-option {
+		color: #bbbbbb;
+		}
+		.disk_right-indent {
+		float: right;
+		}
+
+		.disk_btn-global#addBtn {
+		margin-rightL: 10px;
+		}
+		.disk_icon-edit#rootDataIcon {
+		margin-right: 5px;
+		}
+		.disk_icon-edit#ebsDataIcon {
+		margin-right: 10px;
+		}
+		.disk_runtime-checkbox {
+		float: right;
+		}
+
+		//
+		//----------------------------------------portlist related css-------------------------
+		//
+
+
+		.portlist_main-container {
+		padding: 15px; 
+		border: 1px solid #d0d0d0;
+		}
+		.portlist_running {
+		color: #1f88df;
+		fill : #1f88df;
+		}
+
+		.portlist_btn-global {
+		border-radius: 3px;
+		padding: 6px 9px;
+		margin-right: 10px;
+		min-width: 70px;
+		}
+		.portlist_btn-modal {
+		border-radius: 3px;
+		padding: 6px 9px;
+		min-width: 70px;
+		}
+
+		.portlist_disabled-option {
+		color: #bbbbbb;
+		}
+		.portlist_right-indent {
+		float: right;
+		}
+
+		.portlist_btn-global#addBtn {
+		margin-rightL: 10px;
+		}
+		.icon-edit#rootDataIcon {
+		margin-right: 5px;
+		}
+		.icon-edit#ebsDataIcon {
+		margin-right: 10px;
+		}
+		.portlist_runtime-checkbox {
+		float: right;
+		}
+		.cluster{
+		padding : 10px;
+		}
+		.checkbox-type-row{
+		padding-top: 30px;
+		}
+		.checkbox-type-inner{
+		display: flex;
+		}
+		.checkbox-type{
+		margin: 5px !important; 
+		}
+
+	</style>
+	<body ng-init="getProfileVariableData();" ng-app="configApp" ng-controller="configController">
+		<div class="main-div" ng-if="!showMessage">
+			<div ng-repeat="body in JSONdata"> <span class="col-md-3; main-list-item" data-toggle="collapse" data-target="#{{body.profile}}_main"><span style="font-size: 20px;font-weight: bold">&#43; </span>{{body.profile}}</span>
+			<div class="row collapse" id="{{body.profile}}_main">
+				<div class="col-md-3">
+					<ul class="main-list">
+						<li ng-repeat="(titleKey, title) in body.service_configuration"><span class="main-list-item" data-toggle="collapse" data-target="#{{body.profile}}_{{titleKey}}">{{titleKey| capitalize}}</span>
+							<ul class="category-list collapse" id="{{body.profile}}_{{titleKey}}">
+								<li class="category-list-item" 
+									data-parent="#main"
+									ng-repeat="(categoryKey, category) in title"
+									ng-class="{'selected': categoryKey == selectedCategory}"
+									ng-click="selectCategory(categoryKey)">{{categoryKey | capitalize:titleKey}}</li>
+							</ul>
+						</li>
+					</ul>
+				</div>       
+				<div class="col-md-9">
+					<div ng-repeat="(titleKey, title) in body.service_configuration" >
+						<div ng-repeat="(categoryKey, category) in title" ng-if="categoryKey == selectedCategory" style="display: flex;  flex-wrap: wrap;" >
+							<div class="title-container">{{categoryKey | capitalize:titleKey}}</div>
+							<div ng-repeat="(sysId, innerJSON) in category" ng-if="innerJSON.isHidden+''!='true'" ng-class="{'flex-50': checkUiPage(category, innerJSON.type)}" style="flex-basis: 100%;">
+
+								<div ng-if="categoryKey == titleKey+'_storage'" disk-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_port'" portlist-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+
+
+								<div ng-if="categoryKey == titleKey+'_vdisks'" vdisklist-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_images'" images-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_network_adapters'" network-adapter-ui-page="" passed-options="{{nicOptions}}" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_network_profiles'" network-profiles-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_disks'" simple-disk-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_blank_disks'" blank-disks-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_networking'" networking-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_storage_profile_data_disks'" storage-profile-data-disks-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_os_profile'" os-profile-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+								<div ng-if="categoryKey == titleKey+'_guest_customization_dhcp'" guest-customization-dhcp-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+
+
+
+								<div ng-if="drsCheck(innerJSON.name, titleKey)">
+
+									<div ng-if="checkGuestType(categoryKey, titleKey, innerJSON.question_text)">
+
+										<div ng-if="checkUiPage(category)" class="form-group form-display" id="{{body.profile}}_{{categoryKey}}">
+
+											<div class="row" ng-class = "(innerJSON.type == 7) ? 'checkbox-type-row' : ''">
+												<div class="col-md-6" ng-class = "(innerJSON.type == 7) ? 'checkbox-type-inner' : ''">
+													<input  type="checkbox" 
+														   ng-if="innerJSON.type == 7" 
+														   class="form-control checkbox-type" 
+														   ng-change="updateData()"  
+														   ng-true-value="'true'"  
+														   ng-false-value="'false'" 
+														   ng-model="innerJSON.value"  
+														   ng-disabled="innerJSON.isdisabled+''=='true'"/>
+													<label><strong>{{innerJSON.question_text}}</strong></label>
+												</div>
+												<div class="col-md-6">
+													<div class="runtime">
+														<input id="" type="checkbox" ng-model="innerJSON.runtime_config" ng-change="updateData()" ng-true-value="'true'" ng-false-value="'false'" ng-disabled="disableRuntimeConfig(innerJSON)"/>
+														<label>Runtime</label>
+													</div>
+												</div>
+											</div>
+											<div style="padding: 5px 1px; margin-bottom: 10px; background-color: #e8f0fa; color: #007eff; position: relative;" ng-if="innerJSON.description != ''">{{innerJSON.description}}</div>
+											<div style="padding: 5px 1px; margin-bottom: 10px; background-color: #e8f0fa; color: #007eff; position: relative;" ng-if="innerJSON.field_json.all_dep.length">Depends on {{innerJSON.field_json.all_dep.toString()}}</div>
+											
+											<input type="text" ng-if="innerJSON.type == 6" class="form-control" ng-change="updateData(); triggerEscript(body.profile ,titleKey, innerJSON.name);" ng-model-options="{ updateOn: 'blur'}" ng-model="innerJSON.value" ng-disabled="innerJSON.isdisabled+''=='true'"/>
+											
+											
+											
+											
+											
+											
+											<div ng-if="innerJSON.type == 9">
+												<span class="input-group"><input type="text" id="{{sysId}}" class="form-control" style="background-color:white;" ReadOnly="true" onchange="triggerChange(this.id, this.value)" ng-change="updateData(); triggerEscript(body.profile ,titleKey, innerJSON.name);" ng-model-options="{ updateOn: 'blur'}" ng-model="innerJSON.value" value="{{innerJSON.value}}"/><span class="input-group-btn"><button class="btn btn-default" ng-disabled="innerJSON.isdisabled+''=='true'" ng-click="GwtDTPicker(sysId, 'yyyy-MM-dd', false)"><span class="icon-calendar icon"></span></button></span></span>
+											</div>
+											
+											<div ng-if="innerJSON.type == 10">
+												<span class="input-group"><input type="text" id="{{sysId}}" class="form-control" style="background-color:white;" ReadOnly="true" onchange="triggerChange(this.id, this.value)" ng-change="updateData(); triggerEscript(body.profile ,titleKey, innerJSON.name);" ng-model-options="{ updateOn: 'blur'}" ng-model="innerJSON.value" value="{{innerJSON.value}}"/><span class="input-group-btn"><button class="btn btn-default" ng-disabled="innerJSON.isdisabled+''=='true'" ng-click="GwtDTPicker(sysId, 'yyyy-MM-dd HH:mm:ss', true)"><span class="icon-calendar icon"></span></button></span></span>
+											</div>
+											
+											
+											
+											
+											
+											
+											
+											
+											<div ng-if="innerJSON.type == 21" multi-select-ui-page="" passed-json="{{innerJSON}}" passed-title="{{titleKey}}" passed-category="{{categoryKey}}" passed-sys-id="{{sysId}}"></div>
+
+											<div ng-if="innerJSON.type == 5" >
+												<select
+														class="form-control"
+														ng-change="updateData(); triggerEscript(body.profile ,titleKey, innerJSON.name);"
+														ng-model-options="{ updateOn: 'blur'}"
+														ng-model="innerJSON.value" 
+														ng-disabled="innerJSON.isdisabled+''=='true'"
+														ng-if="innerJSON.type == 5">
+													<option ng-repeat="option in innerJSON.options" value="{{option}}">{{option}}</option>
+												</select>
+											</div>
+											
+											
+
+											<input type="password" ng-if="innerJSON.type == 25" id="{{sysId}}" class="form-control" ng-change="updateData(); triggerEscript(body.profile ,titleKey, innerJSON.name);" ng-model-options="{ updateOn: 'blur'}" ng-model="innerJSON.value" ng-disabled="innerJSON.isdisabled+''=='true'"/><span ng-if="innerJSON.type == 25" class="field-icon toggle-password glyphicon glyphicon-eye-open spanField0" ng-click="togglePassword(sysId)"></span>
+											<textarea type="textarea" ng-if="innerJSON.type == 2" class="form-control" ng-change="updateData(); triggerEscript(body.profile ,titleKey, innerJSON.name);" ng-model-options="{ updateOn: 'blur'}" ng-model="innerJSON.value" ng-disabled="innerJSON.isdisabled+''=='true'" style="height:200px"/>
+
+											<p ng-if="innerJSON.isSupported+''=='false'" style="padding-top:5px; margin-bottom:0px; color:indianred; padding-left:2px;">Use Calm to set/edit this field.</p>
+
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>		
+		</div>
+		<!--<input id="hiddenFieldData" type="text" onchange="renderConfiguration('value')" ></input>-->
+
+		<div class="main-div" ng-if="showMessage">
+			<p>No service configuration is available for this blueprint.</p>
+		</div>
+	</body>
+
+	<g:requires name="x_nuta2_nutanix_ca.Calm_Catalog_Service_.jsdbx"/>
+	
+</j:jelly>]]></html>
+        <name>Calm_Catalog_Service_Configure_Page</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-04 18:33:56</sys_created_on>
+        <sys_id>0674cd8237212300fdfc097973990ee1</sys_id>
+        <sys_mod_count>400</sys_mod_count>
+        <sys_name>Calm_Catalog_Service_Configure_Page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_0674cd8237212300fdfc097973990ee1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-10 07:19:57</sys_updated_on>
+    </sys_ui_page>
+</record_update>

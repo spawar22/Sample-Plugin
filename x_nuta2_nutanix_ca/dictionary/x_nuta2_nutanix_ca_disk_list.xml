@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Disk List" max_length="40" name="x_nuta2_nutanix_ca_disk_list" type="collection">
+        <element label="Adapter Type" max_length="250" name="adapter_type" type="string"/>
+        <element label="Data Source Reference" max_length="250" name="data_source_reference" type="string"/>
+        <element label="Device Index" max_length="250" name="device_index" type="string"/>
+        <element label="Device Type" max_length="250" name="device_type" type="string"/>
+        <element label="Disk Size" max_length="250" name="disk_size_mib" type="string"/>
+        <element label="Kind" max_length="250" name="kind" type="string"/>
+        <element label="Volume Group Reference" max_length="250" name="volume_group_reference" type="string"/>
+    </element>
+</database>

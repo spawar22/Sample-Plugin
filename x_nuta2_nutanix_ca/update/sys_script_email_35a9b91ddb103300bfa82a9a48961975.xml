@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_email">
+    <sys_script_email action="INSERT_OR_UPDATE">
+        <name>application_success_script</name>
+        <new_lines_to_html>false</new_lines_to_html>
+        <script><![CDATA[(function runMailScript(current, template, email, email_action, event) {
+
+	var spacing = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+	var gr_proj = new GlideRecord('x_nuta2_nutanix_ca_nutanix_project');
+	gr_proj.addQuery('uuid',current.variables.default_project);
+	gr_proj.query();
+	gr_proj.next();
+	var app_json = JSON.parse(event.parm1);
+	
+	template.print(spacing+'Requested Item : '+current.number+'<br>');
+	template.print(spacing+'Catalog Item Name : '+current.cat_item.name+'<br>');
+	template.print(spacing+'Date opened : '+current.sys_created_on+'<br>');
+	template.print(spacing+'Item Status : '+current.state.getDisplayValue()+'<br>');
+	template.print(spacing+'Project : '+gr_proj.name+'<br>');
+	template.print(spacing+'Profile : '+current.variables.default_profile+'<br>');
+	template.print(spacing+'Application Instance :<a href="x_nuta2_nutanix_ca_nutanix_calm_application.do?sysparm_query=name%3D'+current.variables.default_app_name+'">'+current.variables.default_app_name+'</a><br>');
+	if(app_json.cloned_from != '')
+		template.print(spacing+'Cloned from :'+app_json.cloned_from+'<br>');
+	template.print(spacing+'App Description :<div style="padding-left:20%;">'+current.cat_item.description/*.replace(/<p>/g,'').replace(/<\/p>/gm,'\n')*/+'</div><br>');
+	if(app_json.services.length != 0) {
+		//template.print(spacing+'Services :');
+		template.print(spacing+'<div><table><tr><th>Service Name</th><th>Service IP</th></tr>');
+		for(var i in app_json.services)
+			template.print('<tr><td>'+app_json.services[i].name+'</td><td>'+app_json.services[i].ip+'</td></tr>');
+		template.print('</table></div><br>');
+	}
+	
+})(current, template, email, email_action, event);]]></script>
+        <sys_class_name>sys_script_email</sys_class_name>
+        <sys_created_by>Bharat</sys_created_by>
+        <sys_created_on>2019-03-19 07:13:16</sys_created_on>
+        <sys_id>35a9b91ddb103300bfa82a9a48961975</sys_id>
+        <sys_mod_count>64</sys_mod_count>
+        <sys_name>application_success_script</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_email_35a9b91ddb103300bfa82a9a48961975</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-07-25 11:07:45</sys_updated_on>
+    </sys_script_email>
+</record_update>

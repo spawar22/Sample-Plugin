@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var $j = jQuery.noConflict();
+setServicesRadio();	
+new GlideModal().get("dialog_loading").destroy();
+		
+function setServicesRadio() {	
+	var ngtServices = gel("ngt_services").value;
+	ngtServices = ngtServices.split(',');	
+	if(ngtServices.indexOf('SSR') == -1)	
+		$j('#ssr_val_false').prop('checked', true);	
+	if(ngtServices.indexOf('VSS') == -1)	
+		$j('#vss_val_false').prop('checked', true);	
+}
+
+$j('#performAct').mousedown(runAction);
+$j('#cancelAct').mousedown(cancelDialog);
+
+function cancelDialog() {
+	GlideModal.get().destroy();
+}
+
+function runAction() {
+	$j('#performAct').prop("disabled", true);
+	$j('#cancelAct').prop("disabled", true);
+	
+	var ssr_stat = $j("input[name='ngt_self_service_restore']:checked").val();
+	var vss_stat = $j("input[name='ngt_vss_snapshot']:checked").val();
+	var actSysId = "${JS:sysparm_sysId}";
+	
+	var modVarString = [{"name":"ngt_self_service_restore","value":ssr_stat},{"name":"ngt_vss_snapshot","value":vss_stat}];
+	
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'runAction');
+	gajax.addParam('sysparm_actionsysid', actSysId+'');
+	gajax.addParam('sysparm_actionVars', JSON.stringify(modVarString));
+	gajax.getXML(getResponse);
+		
+	function getResponse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		g_form.addInfoMessage(answer);
+		GlideModal.get().destroy();
+	}
+}]]></client_script>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Manage_NGT.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+
+	<j:set var="jvar_element_id" value="${JS:sysparm_sysId}"/>	
+	<g:evaluate var="jvar_not" object="true">	
+		var appUtil= new Nutanix_Calm_Utils();	
+		var not = new GlideRecordSecure(appUtil.configuration.table.NutanixCalmAction);	
+		if (not.get('${jvar_element_id}'))
+		{
+		var app_id = not.parent_uuid+'';	
+		var not = new GlideRecordSecure(appUtil.configuration.table.NutanixCalmApplication);	
+		not.addQuery('uuid',app_id);	
+		not.query();	
+		while(not.next()) {	
+		var ngt_services = not.services_enabled + '';	
+		}
+		}
+		ngt_services;	
+	</g:evaluate>
+	
+	<input type="hidden" name="ngt_services" id="ngt_services" value="${JS:ngt_services}"/>
+	
+	<body>
+		<div class="manage-ngt-form">
+			<div class="mng-ngt">
+				<label class="form-label"><strong>Self Service Restore (SSR)</strong></label>
+				<div class="form-group">
+					<span class="input-group-radio">
+						<input type="radio" id="ssr_val_true" class="radio" name="ngt_self_service_restore" value="true" checked=""/>
+						<label for="ssr_val_true" class="radio-label">Enable</label>
+					</span>
+				</div>
+				<div class="form-group">
+					<span class="input-group-radio">
+						<input type="radio" id="ssr_val_false" class="radio" name="ngt_self_service_restore" value="false"/>
+						<label for="ssr_val_false" class="radio-label">Disable</label>
+					</span>
+				</div>
+			</div>
+			<div class="mng-ngt">
+					<label class="form-label"><strong>Volume Snapshot Service (VSS)</strong></label>
+					<div class="form-group">
+						<span class="input-group-radio">
+							<input type="radio" id="vss_val_true" class="radio" name="ngt_vss_snapshot" value="true" checked=""/>
+							<label for="vss_val_true" class="radio-label">Enable</label>
+						</span>
+					</div>
+					<div class="form-group">
+						<span class="input-group-radio">
+							<input type="radio" id="vss_val_false" class="radio" name="ngt_vss_snapshot" value="false"/>
+							<label for="vss_val_false" class="radio-label">Disable</label>
+						</span>
+					</div>
+			</div>
+		</div>
+			<div class="modal-footer">
+				<div class="row">
+					<div class="col-sm-9 pull-right" style="width: max-content;">
+						<button class="btn btn-default" id="cancelAct">Cancel</button>
+						<button class="btn btn-primary" id="performAct">Confirm</button>
+					</div>
+				</div>
+			</div>
+	</body>
+	
+	<style>
+		.manage-ngt-form {
+		display:-webkit-inline-flex;
+		width:100%;
+		}
+		.mng-ngt{
+		width:50%;
+		}
+		.radio {
+		display:grid;
+		}
+	</style>
+</j:jelly>]]></html>
+        <name>Manage_NGT</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-07-16 12:35:44</sys_created_on>
+        <sys_id>dd7973eb4fa233008373224f9310c790</sys_id>
+        <sys_mod_count>85</sys_mod_count>
+        <sys_name>Manage_NGT</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_dd7973eb4fa233008373224f9310c790</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-23 10:09:54</sys_updated_on>
+    </sys_ui_page>
+</record_update>

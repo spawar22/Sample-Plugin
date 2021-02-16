@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_action">
+    <sys_ui_action action="INSERT_OR_UPDATE">
+        <action_name>save_properties</action_name>
+        <active>true</active>
+        <client>false</client>
+        <client_script_v2><![CDATA[function onClick(g_form) {
+
+}]]></client_script_v2>
+        <comments/>
+        <condition>(gs.hasRole("admin") || gs.hasRole("x_nuta2_nutanix_ca.calm_admin") ) &amp;&amp; new Nutanix_ClientServerScriptBridge().checkQueue();</condition>
+        <form_action>true</form_action>
+        <form_button>true</form_button>
+        <form_button_v2>false</form_button_v2>
+        <form_context_menu>false</form_context_menu>
+        <form_link>false</form_link>
+        <form_menu_button_v2>false</form_menu_button_v2>
+        <form_style/>
+        <hint/>
+        <isolate_script>false</isolate_script>
+        <list_action>false</list_action>
+        <list_banner_button>false</list_banner_button>
+        <list_button>false</list_button>
+        <list_choice>false</list_choice>
+        <list_context_menu>false</list_context_menu>
+        <list_link>false</list_link>
+        <list_save_with_form_button>false</list_save_with_form_button>
+        <list_style/>
+        <name>Save Properties</name>
+        <onclick/>
+        <order>100</order>
+        <script><![CDATA[try {
+
+    gs.setProperty("x_nuta2_nutanix_ca.use_external_credential_system", current.use_external_credential_system + "");
+
+    var catalogName = current.service_catalog + '';
+    current.update();
+	
+	if(current.use_external_credential_system)
+        gs.eventQueue("x_nuta2_nutanix_ca.refresh_token", "", "", "");
+
+    //Set value for show unpublished
+    var showUnpublished = current.show_published_blueprints + '';
+    var gr = new GlideRecord('sc_category');
+    gr.addQuery('sys_id', gs.getProperty('x_nuta2_nutanix_ca.nutanix_unpublishedBP_sysId'));
+    gr.query();
+    if (gr.next()) {
+        //if(showUnpublished == 'true' || showUnpublished == true){
+        //gr.sc_catalog = gs.getProperty('x_nuta2_nutanix_ca.nutanix_catalog_sysId');
+        gr.active = true;
+        /*	}else{
+        		//gr.sc_catalog = '';
+        		gr.active = false;
+        	}*/
+        gr.update();
+    }
+
+    action.setRedirectURL(current);
+
+    gs.setProperty('x_nuta2_nutanix_ca.Log Verbosity', current.log_verbosity);
+    gs.setProperty('x_nuta2_nutanix_ca.nutanix.application.properties.sys_id', current.sys_id); // sys_id: system will only perform query on current application properties sys_id in makeCalmApiCall.
+
+    //Property - Stores workflow value that need to be triggered in main workflow 'Nutanix - Blueprint Launch to CALM' for approval/rejection activities to initiate Blueprint launch.
+    gs.setProperty('x_nuta2_nutanix_ca.nutanix.workflow.user.approval', current.workflow.getDisplayValue());
+
+    // Stores assignment group sys_id
+    gs.setProperty('x_nuta2_nutanix_ca.assignment.group', current.assignment_group);
+
+    //If true, incident will create on blueprint launch failed else not.
+    gs.setProperty('x_nuta2_nutanix_ca.incident.blueprint.failed', current.create_alerts);
+
+    //Set the version of calm		
+    gs.setProperty('x_nuta2_nutanix_ca.calm_version', '');
+	
+	//Set the Calm SaaS and ServiceNow		
+    gs.setProperty('x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow', current.calm_saas_and_servicenow);
+
+    var logger = new Nutanix_Calm_Logger();
+    var utils = new Nutanix_Calm_Utils();
+
+    var authResp = utils.makeCalmApiCall("post", "/projects/list", '{"kind" : "project"}');
+    var statusCode = authResp.getStatusCode();
+
+    if (authResp.getStatusCode() == '200' || authResp.getStatusCode() == '201') {
+
+        var verResp = utils.makeCalmApiVersionCall("get", "/apps/version", '');
+        if (verResp.getStatusCode() == '200' || verResp.getStatusCode() == '201') {
+            var response = verResp.getBody();
+            current.calm_version = response.split('.')[0] + '.' + response.split('.')[1];
+            gs.setProperty('x_nuta2_nutanix_ca.calm_version', current.calm_version);
+            logger.info('Nutanix Calm Version is ' + current.calm_version);
+
+            current.datadelflag = 'yes';
+            current.update();
+            utils.showHideSyncUiAction('true');
+
+        } else {
+            current.calm_version = '';
+            current.update();
+            utils.showHideSyncUiAction('false');
+
+            gs.addErrorMessage('Nutanix Calm Version cannot be detected.Please check the logs and retry saving properties.');
+            logger.error('Calm Version cannot be detected. Error->' + verResp.getBody());
+        }
+
+        gs.setProperty('x_nuta2_nutanix_ca.check.authentication', 'true');
+
+        utils.updateCatalogName(catalogName);
+
+    } else {
+
+        var codes = {
+            "0": "Calm instance is not reachable",
+            "400": "Bad request",
+            "401": "Unauthorized / Bad Credentials",
+            "403": "Request forbidden",
+            "404": "Not found"
+
+        };
+        gs.addInfoMessage(codes[statusCode]);
+
+        gs.setProperty('x_nuta2_nutanix_ca.check.authentication', 'false');
+        utils.showHideSyncUiAction('false');
+    }
+} catch (e) {
+    logger.error('Error while connecting to Calm. Error->' + e);
+}]]></script>
+        <show_insert>true</show_insert>
+        <show_multiple_update>false</show_multiple_update>
+        <show_query>false</show_query>
+        <show_update>true</show_update>
+        <sys_class_name>sys_ui_action</sys_class_name>
+        <sys_created_by>nitin</sys_created_by>
+        <sys_created_on>2018-10-12 06:59:11</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>53cb0ce64f41a30065e48020a310c7e6</sys_id>
+        <sys_mod_count>162</sys_mod_count>
+        <sys_name>Save Properties</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_action_53cb0ce64f41a30065e48020a310c7e6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-02-04 05:27:59</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_calm_plugin_configuration</table>
+        <ui11_compatible>true</ui11_compatible>
+        <ui16_compatible>false</ui16_compatible>
+    </sys_ui_action>
+</record_update>

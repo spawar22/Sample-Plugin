@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_app_module">
+    <sys_app_module action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <application display_value="Nutanix Calm">7776fd254f452b001200e5201310c714</application>
+        <assessment/>
+        <device_type/>
+        <filter/>
+        <hint/>
+        <homepage/>
+        <image/>
+        <link_type>LIST</link_type>
+        <map_page/>
+        <mobile_title>Nutanix Calm Applications</mobile_title>
+        <mobile_view_name>Mobile</mobile_view_name>
+        <name>x_nuta2_nutanix_ca_nutanix_calm_application</name>
+        <order>315</order>
+        <override_menu_roles>false</override_menu_roles>
+        <query>state!=deleted^assigned_toDYNAMIC90d1921e5f510100a9ad2572f2b477fe^ORapplicatoin_created_by=javascript:gs.getUserName()^ORDERBYDESCsys_updated_on^ORapplicatoin_created_by=javascript:gs.getUser().getEmail()^ORDERBYDESCsys_updated_on</query>
+        <report/>
+        <roles>x_nuta2_nutanix_ca.user</roles>
+        <sys_class_name>sys_app_module</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-10-11 05:19:49</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>765c2e8637012300d27b8cf6c3990e4d</sys_id>
+        <sys_mod_count>122</sys_mod_count>
+        <sys_name>Applications</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_app_module_765c2e8637012300d27b8cf6c3990e4d</sys_update_name>
+        <sys_updated_by>girish.gyani</sys_updated_by>
+        <sys_updated_on>2019-05-13 09:16:01</sys_updated_on>
+        <timeline_page/>
+        <title>Applications</title>
+        <uncancelable>false</uncancelable>
+        <view_name/>
+        <window_name/>
+    </sys_app_module>
+</record_update>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_related sys_domain="global" table="x_nuta2_nutanix_ca_nutanix_marketplaceitems" version="2" view="">
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter table="REL:28cc1859db7e23000462fe1b68961992">^ORDERBYservice_name^ORDERBYDESCcategory_name^ORDERBYvariable<item endquery="false" field="" goto="false" newquery="false" operator="ORDERBY" or="false" value="service_name"/>
+                <item endquery="false" field="" goto="false" newquery="false" operator="ORDERBYDESC" or="false" value="category_name"/>
+                <item endquery="false" field="" goto="false" newquery="false" operator="ORDERBY" or="false" value="variable"/>
+            </filter>
+            <list_id display_value="Marketplace Items - Default view" name="x_nuta2_nutanix_ca_nutanix_marketplaceitems" related_list="NULL" sys_domain="global" view="Default view">8fbe5265373da300fdfc097973990e4d</list_id>
+            <order_by/>
+            <position>0</position>
+            <related_list>REL:28cc1859db7e23000462fe1b68961992</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-01-24 06:26:24</sys_created_on>
+            <sys_id>658a23374f03230039f0aa95d310c7f4</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-01-24 06:26:24</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Marketplace Items - Default view" name="x_nuta2_nutanix_ca_nutanix_marketplaceitems" related_list="NULL" sys_domain="global" view="Default view">8fbe5265373da300fdfc097973990e4d</list_id>
+            <order_by/>
+            <position>1</position>
+            <related_list>REL:b23d0e61378e2300fdfc097973990ed8</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-01-24 06:26:24</sys_created_on>
+            <sys_id>ad8a23374f03230039f0aa95d310c7f4</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-01-24 06:26:24</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Marketplace Items - Default view" name="x_nuta2_nutanix_ca_nutanix_marketplaceitems" related_list="NULL" sys_domain="global" view="Default view">8fbe5265373da300fdfc097973990e4d</list_id>
+            <order_by/>
+            <position>2</position>
+            <related_list>REL:b3e7dbcc37512300fdfc097973990e4c</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-01-24 06:26:24</sys_created_on>
+            <sys_id>6d8ae7374f03230039f0aa95d310c707</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-01-24 06:26:24</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Marketplace Items - Default view" name="x_nuta2_nutanix_ca_nutanix_marketplaceitems" related_list="NULL" sys_domain="global" view="Default view">8fbe5265373da300fdfc097973990e4d</list_id>
+            <order_by/>
+            <position>3</position>
+            <related_list>x_nuta2_nutanix_ca_nutanix_runtime_configuration.blueprint</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-01-24 06:26:24</sys_created_on>
+            <sys_id>618ae7374f03230039f0aa95d310c708</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-01-24 06:26:24</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list action="INSERT_OR_UPDATE">
+            <calculated_name>Marketplace Items - Default view</calculated_name>
+            <filter/>
+            <name>x_nuta2_nutanix_ca_nutanix_marketplaceitems</name>
+            <order_by/>
+            <position/>
+            <related_list/>
+            <sys_class_name>sys_ui_related_list</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-01-24 06:26:24</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>8fbe5265373da300fdfc097973990e4d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Marketplace Items - Default view</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_related_x_nuta2_nutanix_ca_nutanix_marketplaceitems_null</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-01-24 06:26:24</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_related_list>
+    </sys_ui_related>
+</record_update>

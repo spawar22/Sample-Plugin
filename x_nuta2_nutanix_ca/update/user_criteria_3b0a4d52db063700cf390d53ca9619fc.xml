@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="user_criteria">
+    <user_criteria action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <advanced>true</advanced>
+        <company/>
+        <department/>
+        <group/>
+        <location/>
+        <match_all>false</match_all>
+        <name>Nutanix_Test Deletion_Entitlement</name>
+        <role name="x_nuta2_nutanix_ca.calm_admin">7b91d2024fc1630065e48020a310c7bb</role>
+        <script><![CDATA[answer = false;]]></script>
+        <sys_class_name>user_criteria</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2019-06-17 06:02:47</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>3b0a4d52db063700cf390d53ca9619fc</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Nutanix_Test Deletion_Entitlement</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>user_criteria_3b0a4d52db063700cf390d53ca9619fc</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2019-06-17 07:33:46</sys_updated_on>
+        <user>e70ad2bddb313300cf390d53ca961992</user>
+    </user_criteria>
+</record_update>

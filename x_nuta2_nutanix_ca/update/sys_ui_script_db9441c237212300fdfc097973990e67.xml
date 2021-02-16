@@ -1,0 +1,1651 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <name>x_nuta2_nutanix_ca.Calm_Catalog_Service_</name>
+        <script><![CDATA[var $j = jQuery.noConflict();
+var loader_count = 0;
+var trigger_json = {};
+
+function triggerChange(id, value) {
+	var service_field = g_form.getValue('service_data') + '';
+	var service_json_full= (service_field != '') ? JSON.parse(service_field) : [];
+	for(var prof = 0; prof < service_json_full.length; prof++) {
+		var service_data = service_json_full[prof].service_configuration;
+	for(var i in service_data) {
+		for(var j in service_data[i]) {
+			for(var k in service_data[i][j]) {
+				if(k == id) {
+					service_data[i][j][k].value = value + '';
+				//	console.log(i + j + id + value);
+				}
+			}
+		}
+	}
+	}
+	g_form.setValue('service_data', JSON.stringify(service_json_full));
+}
+//---------diskApp module----------------
+// Created an angular application with the name 'diskApp' to be used in HTML rendering
+
+var app = angular.module('configApp', []);
+
+app.filter('capitalize', function(){
+	return function(category, title) {
+		if(title)
+			category = category.replace(title,'');
+		category = category.toLowerCase().split('_');
+		for (var i = 0; i < category.length; i++) {
+			category[i] = category[i].charAt(0).toUpperCase() + category[i].slice(1);
+		}
+		return category.join(' ').replace(/(os|vm|ssh|api|gcp|aws)/igm, function(match) {
+				return match.toUpperCase();
+			}).replace(/Vdisks/igm, 'vDisks').replace(/Management Optional/igm, 'Management (Optional)');
+		//"$1".toUpperCase());
+	};
+});
+
+// renderConfiguration = function(JSONString) {
+// // 	$scope.JSONdata = JSON.parse(JSONString);
+
+// };
+
+app.controller('configController', function($scope) {
+
+	$scope.togglePassword =  function(sysid) {
+		var input = $j('#' + sysid);
+
+		if (input.attr("type") == "password") {
+			input.attr("type", "text");
+		} else {
+			input.attr("type", "password");
+		}
+	};
+
+	$scope.selectCategory = function(category) {
+		$scope.selectedCategory = category;
+	};
+
+	$scope.checkUiPage = function(category, type, title) {
+
+		if(type && type+''=='2')
+			return false;
+		
+		var keys = Object.keys(category);
+
+		if(category[keys[0]].name)	
+			return true;	
+		
+		return false;
+
+		//return (category.includes("storage") != true) && (category.includes('port') != true);
+	};
+	
+	
+	
+	
+	
+	
+	
+	$scope.checkGuestType = function(category, title, questionText){
+		
+		if((category+'').includes('guest_customization') && questionText+''=='Install Type'){
+			
+			var guest = $scope.JSONdata[title][category];
+			
+			for(var i in guest)
+				if(guest[i].question_text+'' == 'Type' && guest[i].value+'' == 'Cloud-init')
+					return false;			
+		}
+		
+		return true;
+	};
+	
+	$scope.disableRuntimeConfig = function(innerJSON) {
+					if(innerJSON.data_type == 'EXEC_LOCAL' || innerJSON.data_type == 'HTTP_LOCAL' || innerJSON.data_type == 'EXEC_SECRET' || innerJSON.data_type == 'HTTP_SECRET') {
+						return true;
+					}
+					else {
+						return (innerJSON.isdisabled+'' == 'true');
+					}
+	};
+	
+	
+	$scope.drsCheck = function(name, service) {
+		
+// 		var tmpJson = JSON.parse(g_form.getValue('service_data'))[service][service+'_vm_configuration'];
+		
+// 		var val = true;
+		
+// 		for(var i in tmpJson)
+// 			if(tmpJson[i].name+'' == service+'_drs_mode'){
+// 				val = (tmpJson[i].value)?tmpJson[i].value:false;
+// 				break;
+// 			}
+				
+		
+// 		if((name+'' == service+'_host' || name+'' == service+'_datastore') && val+'' == 'true'){
+// 			return false;
+// 		}else if((name+'' == service+'_cluster' || name+'' == service+'_storage_pod') && val+'' == 'false'){
+// 			return false;
+// 		}
+				
+		return true;	
+	};
+	
+	$scope.createTriggerArray = function() {
+		var service_json_full = $scope.JSONdata;
+		
+		var var_json = {};
+        for(var prof = 0; prof < service_json_full.length; prof++) {
+			var service_json = service_json_full[prof].service_configuration;
+			var profile = service_json_full[prof].profile + "";
+			
+			for (var i in service_json) {
+				if(service_json[i][i+"_variables"]) {
+					var variables_json = service_json[i][i+"_variables"];
+					var dep_array = [];
+					for(var j in variables_json)
+						dep_array = dep_array.concat(variables_json[j].field_json.all_dep);
+					var_json[i] = dep_array;
+				}
+			}
+		}
+		trigger_json = var_json;
+	};
+	
+	$scope.triggerEscript = function(profile, titleKey, name) {
+		//console.log(profile + ":" + titleKey + " : " + name);
+		//console.log(JSON.stringify(trigger_json));
+		var var_name = name.replace(titleKey.replace(profile+"_","")+"_","");
+		if(trigger_json[titleKey].indexOf(var_name) != -1)
+			$scope.fetchEscriptHttp(titleKey);
+	};
+	
+	$scope.fetchEscriptHttp = function(titleKey) {
+		//return;
+		var service_json_full = $scope.JSONdata;
+		var continue_flag = false;
+		
+		if(service_json_full.length == 0)
+			return;
+		
+        for(var prof = 0; prof < service_json_full.length; prof++) {
+			
+			if(continue_flag)
+				continue;
+			
+			var var_json = {};
+			var service_json = service_json_full[prof].service_configuration;
+			var profile = service_json_full[prof].profile + "";
+			
+			for (var i in service_json) {
+				if(titleKey != "" && i == titleKey) {
+					if(service_json[i][i+"_variables"])
+						var_json[i] = service_json[i][i+"_variables"];
+					continue_flag = true;
+					break;
+				}
+				else if(titleKey == "")
+					if(service_json[i][i+"_variables"])
+						var_json[i] = service_json[i][i+"_variables"];
+			}
+		jslog(JSON.stringify(var_json));
+		
+        for (var j in var_json) {
+			var service_name = j.replace(profile+"_", "");
+            var pre_map = _createDependencyJSON(var_json[j], service_name);
+
+            /*if (!pre_map)
+                return;*/
+
+            var options = "";
+            var type = g_form.getValue('type_of_blueprint');
+            var blueprintSysId = g_form.getValue('blueprint');
+
+            //		var loadingDialog = new GlideModal('loader', true);
+
+			
+            var loadingDialog1 = new GlideModal('variables_loader', true);
+            loadingDialog1.setTitle('Fetching variable values....');
+            loadingDialog1.renderWithContent('<div class="loading-container"><div class="loading-indicator icon-loading icon-lg"></div></div>');
+			loader_count++;
+            
+            var gajax = new GlideAjax('Nutanix_ClientServerScriptBridge');
+            gajax.addParam('sysparm_name', 'getHttpValues');
+            gajax.addParam('sysparm_type', type);
+            gajax.addParam('sysparm_parentUuid', blueprintSysId + '');
+            gajax.addParam('sysparm_preMap', JSON.stringify(pre_map) + '');
+            gajax.getXML(setOptions);
+        }
+		}
+
+
+        function _createDependencyJSON(var_data, j) {
+
+            var pre_map = {};
+            var extApiFlag;
+            for (var i in var_data) {
+				var var_name = (var_data[i].name + "").replace(j+'_','');
+                pre_map[var_name + ""] = {
+                    "depends_on": var_data[i].field_json,
+                    "value": var_data[i].value + "",
+                    "uuid": var_data[i].uuid,
+                    "type": var_data[i].data_type,
+					"name": var_name + ""
+                };
+                if (var_data[i].data_type == 'EXEC_LOCAL' || var_data[i].data_type == 'HTTP_LOCAL' || var_data[i].data_type == 'EXEC_SECRET' || var_data[i].data_type == 'HTTP_SECRET') {
+                    pre_map[var_name].requiresApiCall = true;
+                    extApiFlag = true;
+                }
+            }
+            
+            //if (extApiFlag)
+                return pre_map;
+            //return false;
+        }
+
+        function setOptions(response) {
+			
+            var answer = response.responseXML.documentElement.getAttribute("answer");
+			
+			jslog(answer);
+			
+            var parsedAnswer = JSON.parse(answer);
+            var service_field = g_form.getValue('service_data') + '';
+			var service_data_full = (service_field != '') ? JSON.parse(service_field) : '';
+			
+			for(var p = 0; p < service_data_full.length; p++) {
+			var service_data = service_data_full[p].service_configuration;
+			for (var i in service_data) {
+				for (var j in service_data[i]) {
+					for (var k in service_data[i][j]) {
+						var uuid = service_data[i][j][k].uuid + "";
+						for(var m in parsedAnswer) {
+							if(uuid == parsedAnswer[m].uuid) {
+								var type = parsedAnswer[m].type + "";
+								
+								if(type == "LOCAL")
+									service_data[i][j][k].value = parsedAnswer[m].value + '';
+								if(type == 'EXEC_LOCAL' || type == 'HTTP_LOCAL' || type == 'EXEC_SECRET' || type == 'HTTP_SECRET') {
+									if (parsedAnswer[m].state == 'SUCCESS') {
+										//for (var a = 0; a < parsedAnswer.values.length; a++)
+										service_data[i][j][k].options = parsedAnswer[m].value;
+										//service_data[i][j][k].value = parsedAnswer[m].default_value + '';
+									}
+									if (parsedAnswer[m].state == 'ERROR'){
+										g_form.addErrorMessage("Failed fetching values for variable '" + service_data[i][j][k].question_text + "': " + parsedAnswer[m].error[0]);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			}
+			
+            $scope.JSONdata = service_data_full;
+            /*g_form.setValue('service_data', JSON.stringify($scope.JSONdata));*/
+			//g_form.setValue('service_data', JSON.stringify($scope.JSONdata));
+			g_form.setValue('service_data', JSON.stringify(service_data_full));
+			loader_count--;
+			jslog(loader_count);
+			if(loader_count == 0) {
+				$scope.$apply();
+				new GlideModal().get('variables_loader').destroy();
+			}
+        }
+	};
+	
+	$scope.updateData = function() {
+		g_form.setValue('service_data', JSON.stringify($scope.JSONdata));
+	};
+	
+	$scope.GwtDTPicker = function(input_id, format, showTime) {
+		new GwtDateTimePicker(input_id, format, showTime);
+	};
+
+	/*$scope.updateDisableStatus = function() {
+		for (var title in $scope.JSONdata) {
+			for (var cat in $scope.JSONdata[title]) {
+				for (var sys in $scope.JSONdata[title][cat]) {
+					if ($scope.JSONdata[title][cat][sys].value && $scope.JSONdata[title][cat][sys].value.includes('@@')) {
+						$scope.JSONdata[title][cat][sys].isdisabled = true;
+						$scope.JSONdata[title][cat][sys].runtime_config = false;
+					}
+				}
+			}
+		}
+	};*/
+
+	$scope.hideFields = function (variables) {
+		/*var variableArray = variables.split(",");
+		for (var title in $scope.JSONdata) {
+			for (var cat in $scope.JSONdata[title]) {
+				for (var sys in $scope.JSONdata[title][cat]) {
+					var question_text = $scope.JSONdata[title][cat][sys].question_text+'';
+					var converted = question_text.toLowerCase().replace(/ /g,"");
+					var newcat = cat.replace(title,'');
+					newcat = newcat.toUpperCase().split('_');
+					for (var i = 0; i < newcat.length; i++) {
+						newcat[i] = newcat[i].charAt(0).toUpperCase() + newcat[i].slice(1);
+					}
+					newcat = newcat.join(' ').replace(/ /g,"");
+					console.log(newcat+'ere'+variableArray.includes(newcat));
+
+					if (variableArray.includes(converted)||variableArray.includes(newcat)) {
+						$scope.JSONdata[title][cat][sys].ishide = true;
+					} else {
+						$scope.JSONdata[title][cat][sys].ishide = false;
+					}
+				}
+			}
+		}*/
+	};
+
+	function renderConfiguration (JSONString) {
+		/*var variableArray = '';
+		var gax = new GlideAjax('Nutanix_ClientServerScriptBridge');
+		gax.addParam('sysparm_name','getVariablesProperty');
+		gax.getXMLWait();
+		variableArray = gax.getAnswer();*/
+
+		//console.log("parsed string :: "+JSONString);
+		new GlideModal().get('loader').destroy();
+
+	
+		
+		var parsedJson = JSON.parse(JSONString);
+				
+ 		$scope.JSONdata = parsedJson;
+	//	$scope.responseJSON = parsedJson.profile;
+		$scope.nicOptions = parsedJson[0].subnet_list;
+ 		$scope.showMessage = (Object.keys(parsedJson[0].service_configuration).length==0);
+		
+		g_form.setValue('service_data', JSON.stringify(parsedJson));
+		
+		$scope.createTriggerArray();
+		$scope.fetchEscriptHttp("");
+		//$scope.updateDisableStatus();
+		//$scope.hideFields(variableArray);
+	}
+
+	var responseParse = function(response) {
+
+		var answer = response;
+	//	jslog("responseParse "+answer);
+		renderConfiguration(answer+'');
+		
+	};	
+
+	$scope.$on('updateEvent', function(event, data){
+		$scope.JSONdata = data;
+	});
+
+
+	$scope.getProfileVariableData = function(){
+
+		var val = g_form.getValue('service_data');
+
+		var type = g_form.getValue('type');
+		var bpType =g_form.getValue('type_of_blueprint') ;
+		var project = g_form.getValue('multiple_project');
+		var blueprint = g_form.getValue('blueprint');
+		var application_profile = g_form.getValue('multiple_application_profile');
+		var cat_item = g_form.getValue('cat_item');
+		var delta_profiles = g_form.getValue('delta_profiles');
+
+		var loadingDialog = new GlideModal('loader', true);
+		loadingDialog.setTitle('Fetching service data...'); 
+		loadingDialog.renderWithContent('<div class="loading-container"><div class="loading-indicator icon-loading icon-lg"></div></div>');
+		
+		var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+		ga.addParam('sysparm_name', 'getServiceVariableDetails');
+		ga.addParam('sysparm_project', project);
+		ga.addParam('sysparm_blueprint', blueprint);
+		ga.addParam('sysparm_application_profile', application_profile);
+		ga.addParam('sysparm_type', type);
+		ga.addParam('sysparm_bpType', bpType);
+		ga.addParam('sysparm_cat_item', cat_item);
+		ga.addParam('sysparm_delta_profiles', delta_profiles);
+
+		ga.getXMLWait();
+		
+		var answr = ga.getAnswer();
+		
+		if(val){
+			answr = JSON.parse(answr);
+		//	answr.service_configuration = JSON.parse(val);
+			answr = val;
+		}
+	
+		responseParse(answr);
+	};
+
+	_toTitleCase= function (str) {
+		/*str = str.toLowerCase().split(' ');
+		for (var i = 0; i < str.length; i++) {
+			str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+		}
+		return str.join(' ');*/ return str;
+	};
+});
+
+
+//---------runtimeSvg directive----------
+//Created an angular custom directive containing the runtime SVG from Nutanix
+// To be used as <runtime-svg>
+app.directive('diskUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "diskController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="disk_main-container"><table class="table"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Name</th><th class="padded-fields">Device</th><th class="padded-fields"><span class="disk_right-indent">Size (GB)</span></th><th class="padded-fields" ng-show="global_configuration">Runtime</th><th class="padded-fields">Volume Type</th><th class="padded-fields">Delete on termination</th></tr></thead><tbody><tr ng-if="JSONdata.root_disk"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="disk_initializeEditModal($index, JSONdata.root_disk, true);"><i id="rootDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">ROOT</td><td class="padded-fields">{{JSONdata.root_disk.device_name}}</td><td class="padded-fields"><span class="disk_right-indent">{{JSONdata.root_disk.size_gb}}</span></td><td class="padded-fields" ng-show="global_configuration">{{JSONdata.root_disk.runtime}}</td><td class="padded-fields">{{diskMapping[JSONdata.root_disk.volume_type]}}</td><td class="padded-fields">{{JSONdata.root_disk.delete_on_termination}}</td></tr><tr ng-if="JSONdata.data_disk_list" ng-repeat="data in JSONdata.data_disk_list"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="disk_initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">EBS</td><td class="padded-fields">{{data.device_name}}</td><td class="padded-fields"><span class="disk_right-indent">{{data.size_gb}}</span></td><td class="padded-fields" ng-show="global_configuration">{{data.runtime}}</td><td class="padded-fields">{{diskMapping[data.volume_type]}}</td><td class="padded-fields">{{data.delete_on_termination}}</td></tr></tbody></table></div><div id="{{modalid}}_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"> <label for="device">Device</label> <select ng-model="edit.device_name" class="form-control" ng-disabled="!global_configuration || edit.root_flag" required=""><option ng-class="{\'disk_disabled-option\': value.disabled}" ng-repeat="(device, value) in device_list" ng-disabled="value.disabled">{{device}}</option> </select></div><div class="col-md-6"> <label for="volume_type">Volume Type</label> <select ng-model="edit.volume_type" class="form-control" ng-disabled="true"><option value="GP2">General Purpose SSD</option><option value="IO1">Provisioned IOPS SSD</option><option value="ST1">Throughput Optimized HDD</option><option value="SC1">Cold HDD</option><option value="STANDARD">EBS Magnetic HDD</option> </select></div></div><div class="row"><div class="col-md-6"> <label for="size">Size (GB)</label><div ng-show="global_configuration" class="disk_runtime-checkbox"><input ng-model="edit.runtime" type="checkbox" ng-true-value="\'true\'" ng-false-value="\'false\'" ng-disabled="edit.disabled"/>Runtime</div> <input ng-if="edit.runtime" ng-model="edit.size_gb" class="form-control" type="number" ng-disabled="edit.disabled"/><input ng-if="!edit.runtime" ng-model="edit.size_gb" class="form-control" type="number" ng-disabled="edit.disabled"/></div><div class="col-md-6"><div class="form-group"><input ng-model="edit.delete_on_termination" type="checkbox" ng-disabled="!global_configuration"/>Delete On Termination</div></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button><button type="button" class="btn btn-primary disk_btn-modal" data-dismiss="modal" ng-click="disk_editEntry(edit);">Save</button></div></div></div></div><div id="{{modalid}}_editModal" class="modal fade" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+
+//--------diskController controller--------------
+//Created a controller for controlling the flow to data of diskApp application
+app.controller('diskController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedJSON) {
+		$scope.JSONdata = JSON.parse(passedJSON);
+		//$scope.
+		$scope.disk_checkDeviceList();
+
+		$scope.diskMapping = {
+			'GP2': 'General Purpose SSD',
+			'IO1': 'Provisioned IOPS SSD',
+			'ST1': 'Throughput Optimized HDD',
+			'SC1': 'Cold HDD',
+			'STANDARD': 'EBS Magnetic HDD',
+		};
+
+	};
+
+	$scope.disk_getVariableData = function(passedJSON) {
+		$scope.JSONdata = passedJSON;
+		$scope.disk_checkDeviceList();
+	};
+
+
+	//$scope.device_list --> contains the hardcoded dropdown list for device name in the form
+	//key --> provides the name of the device
+	//key.disabled --> provides the status of specific device whether it is added or not
+	//    disabled = true  --> added
+	//    disabled = false --> not added
+	$scope.device_list = {
+		"/dev/sda1": { "disabled" : true},
+		"/dev/sdb": {"disabled" : false},
+		"/dev/sdc": {"disabled" : false},
+		"/dev/sdd": {"disabled" : false},
+		"/dev/sde": {"disabled" : false},
+		"/dev/sdf": {"disabled" : false},
+		"/dev/sdg": {"disabled" : false},
+		"/dev/sdh": {"disabled" : false},
+		"/dev/sdj": {"disabled" : false},
+		"/dev/sdk": {"disabled" : false},
+		"/dev/sdl": {"disabled" : false}
+	};
+
+	//$scope.checkDeviceList --> set the value of $scope.device_list array key.disabled to true or false on basis of JSONdata
+	$scope.disk_checkDeviceList = function() {
+		$scope.global_configuration = true;
+		for (var i = 0;i < $scope.JSONdata.data_disk_list.length; i++) {
+			$scope.device_list[$scope.JSONdata.data_disk_list[i].device_name].disabled = true;
+		}
+	};
+
+
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.disk_initializeEditModal = function (index, editJSON, rootFlag) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.root_flag = rootFlag;
+		$scope.edit.index = index;
+		$scope.edit.device_name = editJSON.device_name;
+		$scope.edit.size_gb = editJSON.size_gb;
+		$scope.edit.volume_type = editJSON.volume_type;
+
+		$scope.edit.runtime = editJSON.runtime;
+		$scope.edit.disabled = (editJSON.disabled+''=='true')?false:true;
+
+		$scope.edit.delete_on_termination = editJSON.delete_on_termination;
+		$scope.edit.previous_device_name = editJSON.device_name;
+	};
+
+
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.disk_editEntry = function (editJSON) {
+		$scope.device_list[editJSON.previous_device_name].disabled = false;
+		$scope.device_list[editJSON.device_name].disabled = true;
+		var createdJSON = {
+			"device_name": editJSON.device_name,
+			"size_gb": editJSON.size_gb,
+			"volume_type": editJSON.volume_type,
+			"delete_on_termination": editJSON.delete_on_termination,
+			"runtime": editJSON.runtime,
+			"snapshot_id": "",
+			"iops": "",
+			"type" : ""
+		};
+
+		if (editJSON.root_flag) {
+			createdJSON.snapshot_id = $scope.JSONdata.root_disk.snapshot_id;
+			createdJSON.type = $scope.JSONdata.root_disk.type;
+			createdJSON.iops = $scope.JSONdata.root_disk.iops;
+			$scope.JSONdata.root_disk = createdJSON;
+		} else {
+			createdJSON.snapshot_id = $scope.JSONdata.data_disk_list[editJSON.index].snapshot_id;
+			createdJSON.type = $scope.JSONdata.data_disk_list[editJSON.index].type;
+			createdJSON.iops = $scope.JSONdata.data_disk_list[editJSON.index].iops;
+			$scope.JSONdata.data_disk_list[editJSON.index] = createdJSON;
+		}
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+
+app.directive('portlistUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "portlistController",
+		template : '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table"><thead><tr><th class="padded-fields" ng-show="global_configuration">Actions</th><th class="padded-fields">Name</th><th class="padded-fields">Protocol</th><th class="padded-fields">Port</th></tr></thead><tbody><tr ng-repeat="data in JSONdata"><td class="padded-fields" ng-show="global_configuration"><a href="#" data-toggle="" data-target="#_editModal" ng-click="portlist_initializeEditModal($index, data);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.endpoint_name}}</td><td class="padded-fields">{{data.protocol}}</td><td class="padded-fields">{{data.target_port}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"><label for="device">Name</label><input class="form-control" type="text" ng-model="edit.endpoint_name" /></div><div class="col-md-6"><label for="volume_type">Protocol</label><input class="form-control" type="text" ng-model="edit.protocol" /></div></div><div class="row"><div class="col-md-6"><label for="size">Port</label><input class="form-control" type="text" ng-model="edit.target_port" /></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button><button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="portlist_editEntry(edit);">Save</button></div></div></div></div></div>'
+	};
+
+});
+
+//--------portlistController controller--------------
+//Created a controller for controlling the flow to data of diskApp application
+app.controller('portlistController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.portlist_initializeEditModal = function (index, editJSON) {
+		
+		alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.endpoint_name = editJSON.endpoint_name;
+		$scope.edit.target_port = editJSON.target_port;
+		$scope.edit.protocol = editJSON.protocol;
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.portlist_editEntry = function (editJSON) {
+		var createdJSON = {
+			"protocol": editJSON.protocol,
+			"target_port": editJSON.target_port,
+			"endpoint_name": editJSON.endpoint_name,
+			"type": $scope.JSONdata[editJSON.index].type
+		};
+		$scope.JSONdata[editJSON.index] = createdJSON;
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+
+app.directive('vdisklistUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "vdisklistController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table" ng-if="provider==\'nutanix\'"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Device Type</th><th class="padded-fields">Device Bus</th><th class="padded-fields"><span class="disk_right-indent">Size (MB)</span></th><th class="padded-fields" ng-show="global_configuration">Runtime</th></tr></thead><tbody><tr ng-if="data.data_source_reference==null" ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.device_properties.device_type}}</td><td class="padded-fields">{{data.device_properties.disk_address.adapter_type}}</td><td class="padded-fields"><span class="disk_right-indent">{{data.disk_size_mib}}</span></td><td class="padded-fields" ng-show="global_configuration">{{(data.runtime.disk_size_mib)?data.runtime.disk_size_mib:false}}</td></tr></tbody></table><table class="table" ng-if="provider==\'vmware\'"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Adapter Type</th><th class="padded-fields">Device Type</th><th class="padded-fields"><span class="disk_right-indent">Size (MB)</span></th></tr></thead><tbody><tr ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.adapter_type}}</td><td class="padded-fields">{{data.disk_type}}</td><td class="padded-fields"><span class="disk_right-indent">{{data.disk_size_mb}}</span></td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm" ng-if="provider==\'nutanix\'"><div class="row"><div class="col-md-6"><label for="device">Device Type</label><input class="form-control" type="text" ng-model="edit.device_type"/></div><div class="col-md-6"><label for="volume_type">Device Bus</label><input class="form-control" type="text" ng-model="edit.device_bus"/></div></div><div class="row"><div class="col-md-6"> <label for="size">Size</label><div ng-show="global_configuration" class="disk_runtime-checkbox"><input ng-model="edit.runtime" type="checkbox" ng-disabled="edit.disabled"/>Runtime</div> <input class="form-control" type="text" ng-model="edit.size" ng-disabled="edit.disabled"/></div></div></form><form name="editForm" ng-if="provider==\'vmware\'"><div class="row"><div class="col-md-6"> <label for="device">Adapter Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"><input ng-model="edit.runtime.adapter_type" type="checkbox" ng-disabled="edit.disabled.adapter_type"/>Runtime</div> <input class="form-control" type="text" ng-model="edit.adapter_type" ng-disabled="edit.disabled.adapter_type"/></div><div class="col-md-6"> <label for="volume_type">Device Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"><input ng-model="edit.runtime.disk_type" type="checkbox" ng-disabled="edit.disabled.disk_type"/>Runtime</div> <input class="form-control" type="text" ng-model="edit.disk_type" ng-disabled="edit.disabled.disk_type"/></div></div><div class="row"><div class="col-md-6"> <label for="size">Size</label><div ng-show="global_configuration" class="disk_runtime-checkbox"><input ng-model="edit.runtime.size" type="checkbox" ng-disabled="edit.disabled.size"/>Runtime</div> <input class="form-control" type="text" ng-model="edit.size" ng-disabled="edit.disabled.size"/></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button><button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('vdisklistController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		var parsed =JSON.parse(passedjson);
+		$scope.JSONdata = parsed;
+
+		var provider='';
+
+		for(var i in parsed)
+			if(parsed[i].adapter_type){
+				provider = 'vmware';
+				break;
+			}else{
+				provider = 'nutanix';
+				break;
+			}
+
+		$scope.provider = provider;
+
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+
+		if($scope.provider == 'nutanix'){
+
+			$scope.edit.device_type = editJSON.device_properties.device_type;
+			$scope.edit.device_bus = editJSON.device_properties.disk_address.adapter_type;
+			$scope.edit.size = editJSON.disk_size_mib;
+			$scope.edit.runtime = (editJSON.runtime.disk_size_mib==true)?editJSON.runtime.disk_size_mib:false;	
+			$scope.edit.disabled = (editJSON.disabled.disk_size_mib+''=='true')?false:true;	
+
+		}else if($scope.provider == 'vmware'){
+
+			$scope.edit.adapter_type = editJSON.adapter_type;
+			$scope.edit.disk_type = editJSON.disk_type;
+			$scope.edit.size = editJSON.disk_size_mb;
+
+			$scope.edit.runtime = {};
+			$scope.edit.runtime.adapter_type = (editJSON.runtime.adapter_type==true)?editJSON.runtime.adapter_type:false;
+			$scope.edit.runtime.disk_type = (editJSON.runtime.disk_type==true)?editJSON.runtime.disk_type:false;
+			$scope.edit.runtime.size = (editJSON.runtime.disk_size_mb==true)?editJSON.runtime.disk_size_mb:false;
+
+			$scope.edit.disabled = {};
+			$scope.edit.disabled.adapter_type = (editJSON.disabled.adapter_type+''=='true')?false:true;
+			$scope.edit.disabled.disk_type = (editJSON.disabled.disk_type+''=='true')?false:true;
+			$scope.edit.disabled.size = (editJSON.disabled.disk_size_mb+''=='true')?false:true;
+		}
+
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		if($scope.provider == 'nutanix'){
+
+			$scope.JSONdata[editJSON.index].device_properties.device_type = editJSON.device_type;
+			$scope.JSONdata[editJSON.index].device_properties.disk_address.adapter_type = editJSON.device_bus;
+			$scope.JSONdata[editJSON.index].disk_size_mib = editJSON.size;
+			$scope.JSONdata[editJSON.index].runtime.disk_size_mib = editJSON.runtime;	
+
+		}else{
+
+			$scope.JSONdata[editJSON.index].adapter_type = editJSON.adapter_type;
+			$scope.JSONdata[editJSON.index].disk_type = editJSON.disk_type;
+			$scope.JSONdata[editJSON.index].disk_size_mb = editJSON.size;
+
+			$scope.JSONdata[editJSON.index].runtime.adapter_type = editJSON.runtime.adapter_type;
+			$scope.JSONdata[editJSON.index].runtime.disk_type = editJSON.runtime.disk_type;
+			$scope.JSONdata[editJSON.index].runtime.disk_size_mb = editJSON.runtime.size;
+
+		}
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+app.directive('imagesUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "imagesController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Image</th><th class="padded-fields">Device Type</th><th class="padded-fields">Device Bus</th><th class="padded-fields">Bootable</th></tr></thead><tbody><tr ng-if="data.data_source_reference" ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.data_source_reference.name}}</td><td class="padded-fields">{{data.device_properties.device_type}}</td><td class="padded-fields">{{data.device_properties.disk_address.adapter_type}}</td><td class="padded-fields">{{(data.bootable)?data.bootable:false}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"> <label for="device">Image</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input type="checkbox" disabled/>Runtime</div> <input class="form-control" type="text" style="font-style: italic;" value="Use Calm to set/edit this field" disabled/></div><div class="col-md-6"> <label for="volume_type">Device Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.device_type" type="checkbox" ng-disabled="edit.disabled.device_type" />Runtime</div> <input class="form-control" type="text" ng-model="edit.device_type" ng-disabled="edit.disabled.device_type" /></div></div><div class="row"><div class="col-md-6"> <label for="size">Device Bus</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.adapter_type" type="checkbox" ng-disabled="edit.disabled.adapter_type" />Runtime</div> <input class="form-control" type="text" ng-model="edit.adapter_type" ng-disabled="edit.disabled.adapter_type" /></div><div class="col-md-6"><div class="form-group"> <input ng-model="edit.bootable" type="checkbox" />Bootable</div></div></div></form></div><div class="modal-footer"> <button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('imagesController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.image = editJSON.data_source_reference.name;
+		$scope.edit.device_type = editJSON.device_properties.device_type;
+		$scope.edit.adapter_type = editJSON.device_properties.disk_address.adapter_type;
+		$scope.edit.bootable = (editJSON.bootable==true)?editJSON.bootable:false;
+
+		$scope.edit.runtime = {};
+		$scope.edit.runtime.image = false;//(editJSON.runtime.data_source_reference==true)?editJSON.runtime.data_source_reference:false;
+		$scope.edit.runtime.device_type = (editJSON.runtime.device_properties && editJSON.runtime.device_properties.device_type==true)?editJSON.runtime.device_properties.device_type:false;
+		$scope.edit.runtime.adapter_type = (editJSON.runtime.device_properties && editJSON.runtime.device_properties.adapter_type==true)?editJSON.runtime.device_properties.adapter_type:false;
+
+		$scope.edit.disabled = {};
+		$scope.edit.disabled.image = true;//(editJSON.runtime.data_source_reference==true)?editJSON.runtime.data_source_reference:false;
+		$scope.edit.disabled.device_type = (editJSON.disabled.device_properties && editJSON.disabled.device_properties.device_type+''=='true')?false:true;
+		$scope.edit.disabled.adapter_type = (editJSON.disabled.device_properties && editJSON.disabled.device_properties.adapter_type+''=='true')?false:true;
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		$scope.JSONdata[editJSON.index].data_source_reference.name = editJSON.image;
+		$scope.JSONdata[editJSON.index].device_properties.device_type = editJSON.device_type;
+		$scope.JSONdata[editJSON.index].device_properties.disk_address.adapter_type = editJSON.adapter_type;
+		$scope.JSONdata[editJSON.index].bootable = editJSON.bootable;
+
+		$scope.JSONdata[editJSON.index].runtime.data_source_reference = editJSON.runtime.image;
+		$scope.JSONdata[editJSON.index].runtime.device_properties.device_type = editJSON.runtime.device_type;
+		$scope.JSONdata[editJSON.index].runtime.device_properties.adapter_type = editJSON.runtime.adapter_type;
+
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+app.directive('networkAdapterUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@',
+			passedOptions: '@'
+		},
+		controller: "networkAdapterController",
+		template: '<div ng-init="parsingJSON(passedJson, passedOptions);"><div class="cluster" >Cluster Name : {{clusterName}}</div><div class="portlist_main-container"><table class="table" ng-if="provider==\'nutanix\'"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Name</th><th class="padded-fields">Value</th><th class="padded-fields">Runtime</th></tr></thead><tbody><tr ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">NIC-{{$index+1}}</td><td class="padded-fields">{{options[data.subnet_reference.uuid].name}}</td><td class="padded-fields">{{(data.runtime.subnet_reference.name)?data.runtime.subnet_reference.name:(data.runtime.subnet_reference)?data.runtime.subnet_reference:false}}</td></tr></tbody></table><table class="table" ng-if="provider==\'vmware\'"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Adapter Type</th><th class="padded-fields">Network Type</th></tr></thead><tbody><tr ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.nic_type}}</td><td class="padded-fields">{{data.net_name}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="provider==\'nutanix\'"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm" ng-if="provider==\'nutanix\'"><div class="row"><div class="col-md-6"> <label for="device">{{edit.name}}</label><div ng-show="global_configuration" class="disk_runtime-checkbox"><input ng-model="edit.runtime" type="checkbox" ng-disabled="edit.disabled"/>Runtime</div> <select class="form-control" ng-model="edit.value" ng-disabled="edit.disabled"><option ng-repeat="(key, value)  in options" value="{{key}}"> {{value.name}} | {{value.cluster_name}}</option> </select></div></div></form><form name="editForm" ng-if="provider==\'vmware\'"><div class="row"><div class="col-md-6"> <label for="device">Adapter Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"><input ng-model="edit.runtime.nic_type" type="checkbox" ng-disabled="edit.disabled.nic_type"/>Runtime</div> <input class="form-control" type="text" ng-model="edit.nic_type" ng-disabled="edit.disabled.nic_type"/></div><div class="col-md-6"> <label for="device">Network Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"><input ng-model="edit.runtime.net_name" type="checkbox" ng-disabled="edit.disabled.net_name"/>Runtime</div> <input class="form-control" type="text" ng-model="edit.net_name" ng-disabled="edit.disabled.net_name"/></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button><button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog" ng-if="provider==\'vmware\'"> ><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('networkAdapterController', function($scope) {
+
+	$scope.JSONdata = {};
+	
+	
+	$scope.parsingJSON = function(passedjson, passedOptions) {
+
+		var options = JSON.parse(passedOptions);
+		var parsed = JSON.parse(passedjson);
+		var clusterName='';var clusterUUID='';
+		
+		$scope.options = options;
+		$scope.JSONdata = parsed;
+		
+		for (var i in parsed){
+			var parsedElement = parsed[i];
+			if(parsedElement.subnet_reference && parsedElement.subnet_reference.uuid){
+				for(var j in options ){
+					if( j == parsedElement.subnet_reference.uuid){
+						clusterName = options[j].cluster_name;
+						clusterUUID = options[j].cluster_uuid;
+					}
+				}
+			}
+		}
+		
+		$scope.clusterName = clusterName;
+		$scope.clusterUUID = clusterUUID;
+		
+		
+		
+		
+		
+		
+		$scope.global_configuration = true;
+
+		var provider='';
+
+		for(var i in parsed)
+			if(parsed[i].net_name){
+				provider = 'vmware';
+				break;
+			}else{
+				provider = 'nutanix';
+				break;
+			}
+
+		$scope.provider = provider;
+
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		$scope.edit ={};
+		$scope.edit.index = index;
+
+		if($scope.provider == 'nutanix'){
+			$scope.edit.name = 'NIC-'+(index+1);
+			$scope.edit.value = (editJSON && editJSON.subnet_reference)?editJSON.subnet_reference.uuid:'';
+
+			$scope.edit.runtime = (editJSON && editJSON.runtime && editJSON.runtime.subnet_reference && editJSON.runtime.subnet_reference.name)?editJSON.runtime.subnet_reference.name:(editJSON && editJSON.runtime && editJSON.runtime.subnet_reference)?editJSON.runtime.subnet_reference:false;	
+
+			$scope.edit.disabled = (editJSON && editJSON.disabled && editJSON.disabled.subnet_reference && editJSON.disabled.subnet_reference.name && editJSON.disabled.subnet_reference.name+''=='true')?false:(editJSON && editJSON.disabled && editJSON.disabled.subnet_reference && editJSON.disabled.subnet_reference+''=='true')?false:true;	
+			
+		}else{
+			
+			//alert('You can set or edit this field in Calm GUI.');
+			return;
+			
+			$scope.edit.nic_type = editJSON.nic_type;
+			$scope.edit.net_name = editJSON.net_name;
+
+			$scope.edit.runtime = {};
+			$scope.edit.runtime.nic_type = (editJSON.runtime.nic_type)?editJSON.runtime.nic_type:false;
+			$scope.edit.runtime.net_name = (editJSON.runtime.net_name)?editJSON.runtime.net_name:false;
+
+			$scope.edit.disabled = {};
+			$scope.edit.disabled.nic_type = (editJSON.disabled.nic_type+''=='true')?false:true;
+			$scope.edit.disabled.net_name = (editJSON.disabled.net_name+''=='true')?false:true;
+		}
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		if($scope.provider == 'nutanix'){
+
+			
+			if(!$scope.JSONdata[editJSON.index])
+				$scope.JSONdata[editJSON.index] = {};
+				
+			if(!$scope.JSONdata[editJSON.index].subnet_reference){
+				$scope.JSONdata[editJSON.index].subnet_reference = {
+					"kind": "subnet",
+					"type": "",
+					"name": "",
+					"uuid": ""
+				};
+			}
+			$scope.JSONdata[editJSON.index].subnet_reference.uuid = editJSON.value;
+			
+			if(!$scope.JSONdata[editJSON.index].runtime)
+				$scope.JSONdata[editJSON.index].runtime = {};
+			
+			$scope.JSONdata[editJSON.index].runtime.subnet_reference = editJSON.runtime;	
+			
+			if(editJSON.value){
+				$scope.clusterName = $scope.options[editJSON.value].cluster_name;
+				$scope.clusterUUID = $scope.options[editJSON.value].cluster_uuid;	
+			}
+			
+		}else{
+
+			$scope.JSONdata[editJSON.index].nic_type = editJSON.nic_type;
+			$scope.JSONdata[editJSON.index].net_name = editJSON.net_name;
+
+			$scope.JSONdata[editJSON.index].runtime = {};
+
+			$scope.JSONdata[editJSON.index].runtime.nic_type = editJSON.runtime.nic_type;
+			$scope.JSONdata[editJSON.index].runtime.net_name = editJSON.runtime.net_name;
+
+		}
+
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		for (var i in service_data) {
+		    for (var j in service_data[i]) {
+		        if ((j).localeCompare("service_configuration") == 0) {
+		              for (var k in service_data[i][j]) {
+		                var categary = $scope.passedTitle;
+		                if (((k.trim()).localeCompare(categary.trim())) == 0){
+							service_data[i][j][k][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+						}		                    
+		            }
+		        }
+		    }
+		}
+//		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+app.directive('networkProfilesUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "networkProfilesController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Nic Name</th><th class="padded-fields">Security Group</th><th class="padded-fields">Virtual Network</th><th class="padded-fields">Subnet</th><th class="padded-fields">Public IP Config Name</th><th class="padded-fields">Public IP Config Allocation Method</th><th class="padded-fields">Public IP Config DNS Label</th><th class="padded-fields">Private IP Config Allocation Method</th></tr></thead><tbody><tr ng-if="data.data_source_reference==null" ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.nic_name}}</td><td class="padded-fields">{{data.nsg_name}}</td><td class="padded-fields">{{data.vnet_name}}</td><td class="padded-fields">{{data.subnet_name}}</td><td class="padded-fields">{{data.public_ip_info.ip_name}}</td><td class="padded-fields">{{data.public_ip_info.ip_allocation_method}}</td><td class="padded-fields">{{data.public_ip_info.dns_label}}</td><td class="padded-fields">{{data.private_ip_info.ip_allocation_method}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"> <label for="device">Nic Name</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.nic_name" type="checkbox" ng-disabled="edit.disabled.nic_name" />Runtime</div> <input class="form-control" type="text" ng-model="edit.nic_name" ng-disabled="edit.disabled.nic_name" /></div><div class="col-md-6"> <label for="volume_type">Security Group</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input type="checkbox" disabled/>Runtime</div> <input class="form-control" type="text" style="font-style: italic;" value="Use Calm to set/edit this field" disabled/></div></div><div class="row"><div class="col-md-6"> <label for="device">Virtual Network</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input type="checkbox" disabled/>Runtime</div> <input class="form-control" type="text" style="font-style: italic;" value="Use Calm to set/edit this field" disabled/></div><div class="col-md-6"> <label for="volume_type">Subnet</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input type="checkbox" disabled/>Runtime</div> <input class="form-control" type="text" style="font-style: italic;" value="Use Calm to set/edit this field" disabled/></div></div><div class="row"><div class="col-md-6"> <label for="device">Public IP Config Name</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.ip_name" type="checkbox" ng-disabled="edit.disabled.ip_name" />Runtime</div> <input class="form-control" type="text" ng-model="edit.ip_name" ng-disabled="edit.disabled.ip_name" /></div><div class="col-md-6"> <label for="volume_type">Public IP Config Allocation Method</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.public_ip_allocation_method" type="checkbox" ng-disabled="edit.disabled.public_ip_allocation_method" />Runtime</div> <input class="form-control" type="text" ng-model="edit.public_ip_allocation_method" ng-disabled="edit.disabled.public_ip_allocation_method" /></div></div><div class="row"><div class="col-md-6"> <label for="device">Public IP Config DNS Label</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.dns_label" type="checkbox" ng-disabled="edit.disabled.dns_label" />Runtime</div> <input class="form-control" type="text" ng-model="edit.dns_label" ng-disabled="edit.disabled.dns_label" /></div><div class="col-md-6"> <label for="volume_type">Private IP Config Allocation Method</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.private_ip_allocation_method" type="checkbox" ng-disabled="edit.disabled.private_ip_allocation_method" />Runtime</div> <input class="form-control" type="text" ng-model="edit.private_ip_allocation_method" ng-disabled="edit.disabled.private_ip_allocation_method" /></div></div></form></div><div class="modal-footer"> <button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('networkProfilesController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.nic_name = editJSON.nic_name;
+		$scope.edit.nsg_name = editJSON.nsg_name;
+		$scope.edit.vnet_name = editJSON.vnet_name;
+		$scope.edit.subnet_name = editJSON.subnet_name;
+		$scope.edit.ip_name = editJSON.public_ip_info.ip_name;
+		$scope.edit.public_ip_allocation_method = editJSON.public_ip_info.ip_allocation_method;
+		$scope.edit.dns_label = editJSON.public_ip_info.dns_label;
+		$scope.edit.private_ip_allocation_method = editJSON.private_ip_info.ip_allocation_method;
+
+		$scope.edit.runtime = {};
+		$scope.edit.runtime.nic_name = (editJSON.runtime.nic_name)?editJSON.runtime.nic_name:false;
+		$scope.edit.runtime.nsg_name = false;//(editJSON.runtime.nsg_name)?editJSON.runtime.nsg_name:false;
+		$scope.edit.runtime.vnet_name = false;//(editJSON.runtime.vnet_name)?editJSON.runtime.vnet_name:false;
+		$scope.edit.runtime.subnet_name = false;//(editJSON.runtime.subnet_name)?editJSON.runtime.subnet_name:false;
+		$scope.edit.runtime.ip_name = (editJSON.runtime.public_ip_info && editJSON.runtime.public_ip_info.ip_name)?editJSON.runtime.public_ip_info.ip_name:false;
+		$scope.edit.runtime.public_ip_allocation_method = (editJSON.runtime.public_ip_info && editJSON.runtime.public_ip_info.ip_allocation_method)?editJSON.runtime.public_ip_info.ip_allocation_method:false;
+		$scope.edit.runtime.dns_label = (editJSON.runtime.public_ip_info && editJSON.runtime.public_ip_info.dns_label)?editJSON.runtime.public_ip_info.dns_label:false;
+		$scope.edit.runtime.private_ip_allocation_method = (editJSON.runtime.private_ip_info && editJSON.runtime.private_ip_info.ip_allocation_method)?editJSON.runtime.private_ip_info.ip_allocation_method:false;
+
+		$scope.edit.disabled = {};
+		$scope.edit.disabled.nic_name = (editJSON.disabled.nic_name+''=='true')?false:true;
+		$scope.edit.disabled.nsg_name = true;//(editJSON.disabled.nsg_name+''=='true')?false:true;
+		$scope.edit.disabled.vnet_name = true;//(editJSON.disabled.vnet_name+''=='true')?false:true;
+		$scope.edit.disabled.subnet_name = true;//(editJSON.disabled.subnet_name+''=='true')?false:true;
+		$scope.edit.disabled.ip_name = (editJSON.disabled.public_ip_info && editJSON.disabled.public_ip_info.ip_name+''=='true')?false:true;
+		$scope.edit.disabled.public_ip_allocation_method = (editJSON.disabled.public_ip_info && editJSON.disabled.public_ip_info.ip_allocation_method+''=='true')?false:true;
+		$scope.edit.disabled.dns_label = (editJSON.disabled.public_ip_info && editJSON.disabled.public_ip_info.dns_label+''=='true')?false:true;
+		$scope.edit.disabled.private_ip_allocation_method = (editJSON.disabled.private_ip_info && editJSON.disabled.private_ip_info.ip_allocation_method+''=='true')?false:true;
+
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		$scope.JSONdata[editJSON.index].nic_name = editJSON.nic_name;
+		$scope.JSONdata[editJSON.index].nsg_name = editJSON.nsg_name;
+		$scope.JSONdata[editJSON.index].vnet_name = editJSON.vnet_name;
+		$scope.JSONdata[editJSON.index].subnet_name = editJSON.subnet_name;
+		$scope.JSONdata[editJSON.index].public_ip_info.ip_name = editJSON.ip_name;
+		$scope.JSONdata[editJSON.index].public_ip_info.ip_allocation_method = editJSON.public_ip_allocation_method;
+		$scope.JSONdata[editJSON.index].public_ip_info.dns_label = editJSON.dns_label;
+		$scope.JSONdata[editJSON.index].private_ip_info.ip_allocation_method = editJSON.private_ip_allocation_method;
+
+
+		$scope.JSONdata[editJSON.index].runtime.nic_name = editJSON.runtime.nic_name;
+		$scope.JSONdata[editJSON.index].runtime.nsg_name = editJSON.runtime.nsg_name;
+		$scope.JSONdata[editJSON.index].runtime.vnet_name = editJSON.runtime.vnet_name;
+		$scope.JSONdata[editJSON.index].runtime.subnet_name = editJSON.runtime.subnet_name;
+
+		$scope.JSONdata[editJSON.index].runtime.public_ip_info = {};
+		$scope.JSONdata[editJSON.index].runtime.private_ip_info  = {};
+
+		$scope.JSONdata[editJSON.index].runtime.public_ip_info.ip_name = editJSON.runtime.ip_name;
+		$scope.JSONdata[editJSON.index].runtime.public_ip_info.ip_allocation_method = editJSON.runtime.public_ip_allocation_method;
+		$scope.JSONdata[editJSON.index].runtime.public_ip_info.dns_label = editJSON.runtime.dns_label;
+		$scope.JSONdata[editJSON.index].runtime.private_ip_info.ip_allocation_method = editJSON.runtime.private_ip_allocation_method;
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+app.directive('simpleDiskUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "simpleDiskController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Name</th><th class="padded-fields">Use existing disk</th><th class="padded-fields">Disk</th><th class="padded-fields">Storage Type</th><th class="padded-fields">Source Image</th><th class="padded-fields">Size in GB</th><th class="padded-fields">Delete when instance is deleted</th></tr></thead><tbody><tr ng-if="data.data_source_reference==null" ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{(data.boot)?\'BOOT DISK\':\'ADDITIONAL DISK\'}}</td><td class="padded-fields">{{(data.source)?true:false}}</td><td class="padded-fields">{{data.source}}</td><td class="padded-fields">{{data.initializeParams.diskType}}</td><td class="padded-fields">{{data.initializeParams.sourceImage}}</td><td class="padded-fields">{{data.initializeParams.diskSizeGb}}</td><td class="padded-fields">{{data.autoDelete}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">{{(edit.boot)?\'BOOT DISK\':\'ADDITIONAL DISK\'}}</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"><div class="form-group"> <input ng-model="edit.useExisting" type="checkbox" />Use existing disk</div></div><div class="col-md-6"> <label for="volume_type">Disk</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.source" type="checkbox" ng-disabled="edit.disabled.source" />Runtime</div> <input class="form-control" type="text" ng-model="edit.source" ng-disabled="edit.disabled.source" /></div></div><div class="row"><div class="col-md-6"> <label for="device">Storage Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.diskType" type="checkbox" ng-disabled="edit.disabled.diskType" />Runtime</div> <input class="form-control" type="text" ng-model="edit.diskType" ng-disabled="edit.disabled.diskType" /></div><div class="col-md-6"> <label for="volume_type">Source Image</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.sourceImage" type="checkbox" ng-disabled="edit.disabled.sourceImage" />Runtime</div> <input class="form-control" type="text" ng-model="edit.sourceImage" ng-disabled="edit.disabled.sourceImage" /></div></div><div class="row"><div class="col-md-6"> <label for="device">Size in GB</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.diskSizeGb" type="checkbox" ng-disabled="edit.disabled.diskSizeGb" />Runtime</div> <input class="form-control" type="text" ng-model="edit.diskSizeGb" ng-disabled="edit.disabled.diskSizeGb" /></div><div class="col-md-6"><div class="form-group"> <input ng-model="edit.autoDelete" type="checkbox" ng-disabled="edit.disabled.autoDelete" />Delete when instance is deleted</div><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.autoDelete" type="checkbox" ng-disabled="edit.disabled.autoDelete" />Runtime</div></div></div></form></div><div class="modal-footer"> <button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('simpleDiskController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.boot = editJSON.boot;
+		$scope.edit.diskType = editJSON.initializeParams.diskType;
+		$scope.edit.sourceImage = editJSON.initializeParams.sourceImage;
+		$scope.edit.diskSizeGb = editJSON.initializeParams.diskSizeGb;
+		$scope.edit.autoDelete = editJSON.autoDelete;
+
+		$scope.edit.useExisting = (editJSON.source)?true:false;
+		$scope.edit.source = editJSON.source;
+
+		$scope.edit.runtime = {};
+		$scope.edit.runtime.diskType = (editJSON.runtime.initializeParams && editJSON.runtime.initializeParams.diskType)?editJSON.runtime.initializeParams.diskType:false;
+		$scope.edit.runtime.sourceImage = (editJSON.runtime.initializeParams && editJSON.runtime.initializeParams.sourceImage)?editJSON.runtime.initializeParams.sourceImage:false;
+		$scope.edit.runtime.diskSizeGb = (editJSON.runtime.initializeParams && editJSON.runtime.initializeParams.diskSizeGb)?editJSON.runtime.initializeParams.diskSizeGb:false;
+		$scope.edit.runtime.autoDelete = (editJSON.runtime.autoDelete)?editJSON.runtime.autoDelete:false;		
+		$scope.edit.runtime.source = (editJSON.runtime.source)?editJSON.runtime.source:false;		
+
+
+		$scope.edit.disabled = {};
+		$scope.edit.disabled.diskType = (editJSON.disabled.initializeParams && editJSON.disabled.initializeParams.diskType+''=='true')?false:true;
+		$scope.edit.disabled.sourceImage = (editJSON.disabled.initializeParams && editJSON.disabled.initializeParams.sourceImage+''=='true')?false:true;
+		$scope.edit.disabled.diskSizeGb = (editJSON.disabled.initializeParams && editJSON.disabled.initializeParams.diskSizeGb+''=='true')?false:true;
+		$scope.edit.disabled.autoDelete = (editJSON.disabled.autoDelete+''=='true')?false:true;
+		$scope.edit.disabled.source = (editJSON.disabled.source+''=='true')?false:true;	
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		$scope.JSONdata[editJSON.index].initializeParams.diskType = editJSON.diskType;
+		$scope.JSONdata[editJSON.index].initializeParams.sourceImage = editJSON.sourceImage;
+		$scope.JSONdata[editJSON.index].initializeParams.diskSizeGb = editJSON.diskSizeGb;
+		$scope.JSONdata[editJSON.index].autoDelete = editJSON.autoDelete;
+
+		$scope.JSONdata[editJSON.index].source = editJSON.source;
+
+		$scope.JSONdata[editJSON.index].runtime.initializeParams = {};
+
+		$scope.JSONdata[editJSON.index].runtime.initializeParams.diskType = editJSON.runtime.diskType;
+		$scope.JSONdata[editJSON.index].runtime.initializeParams.sourceImage = editJSON.runtime.sourceImage;
+		$scope.JSONdata[editJSON.index].runtime.initializeParams.diskSizeGb = editJSON.runtime.diskSizeGb;
+		$scope.JSONdata[editJSON.index].runtime.autoDelete = editJSON.runtime.autoDelete;
+		$scope.JSONdata[editJSON.index].runtime.source = editJSON.runtime.source;
+
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+
+app.directive('blankDisksUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "blankDisksController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Disk Type</th><th class="padded-fields">Disk Name</th><th class="padded-fields">Size in GB</th><th class="padded-fields">Delete when instance is deleted</th></tr></thead><tbody><tr ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.disk_type}}</td><td class="padded-fields">{{data.name}}</td><td class="padded-fields">{{data.sizeGb}}</td><td class="padded-fields">{{data.autoDelete}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"> <label for="device">Disk Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.disk_type" type="checkbox" ng-disabled="edit.disabled.disk_type" />Runtime</div> <input class="form-control" type="text" ng-model="edit.disk_type" ng-disabled="edit.disabled.disk_type" /></div><div class="col-md-6"> <label for="volume_type">Disk Name</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.name" type="checkbox" ng-disabled="edit.disabled.name" />Runtime</div> <input class="form-control" type="text" ng-model="edit.name" ng-disabled="edit.disabled.name" /></div></div><div class="row"><div class="col-md-6"> <label for="device">Size in GB</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.sizeGb" type="checkbox" ng-disabled="edit.disabled.sizeGb" />Runtime</div> <input class="form-control" type="text" ng-model="edit.sizeGb" ng-disabled="edit.disabled.sizeGb" /></div><div class="col-md-6"><div class="form-group"> <input ng-model="edit.autoDelete" type="checkbox" ng-disabled="!global_configuration" ng-disabled="edit.disabled.autoDelete" />Delete when instance is deleted</div><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.autoDelete" type="checkbox" ng-disabled="edit.disabled.autoDelete" />Runtime</div></div></div></form></div><div class="modal-footer"> <button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('blankDisksController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.disk_type = editJSON.disk_type;
+		$scope.edit.name = editJSON.name;
+		$scope.edit.sizeGb = editJSON.sizeGb;
+		$scope.edit.autoDelete = editJSON.autoDelete;
+
+		$scope.edit.runtime = {};
+		$scope.edit.runtime.disk_type = (editJSON.runtime.disk_type)?editJSON.runtime.disk_type:false;
+		$scope.edit.runtime.name = (editJSON.runtime.name)?editJSON.runtime.name:false;
+		$scope.edit.runtime.sizeGb = (editJSON.runtime.sizeGb)?editJSON.runtime.sizeGb:false;
+		$scope.edit.runtime.autoDelete = (editJSON.runtime.autoDelete)?editJSON.runtime.autoDelete:false;		
+
+		$scope.edit.disabled = {};
+		$scope.edit.disabled.disk_type = (editJSON.disabled.disk_type+''=='true')?false:true;	
+		$scope.edit.disabled.name = (editJSON.disabled.name+''=='true')?false:true;	
+		$scope.edit.disabled.sizeGb = (editJSON.disabled.sizeGb+''=='true')?false:true;	
+		$scope.edit.disabled.autoDelete = (editJSON.disabled.autoDelete+''=='true')?false:true;	
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		$scope.JSONdata[editJSON.index].disk_type = editJSON.disk_type;
+		$scope.JSONdata[editJSON.index].name = editJSON.name;
+		$scope.JSONdata[editJSON.index].sizeGb = editJSON.sizeGb;
+		$scope.JSONdata[editJSON.index].autoDelete = editJSON.autoDelete;
+
+		$scope.JSONdata[editJSON.index].runtime = {};
+
+		$scope.JSONdata[editJSON.index].runtime.disk_type = editJSON.runtime.disk_type;
+		$scope.JSONdata[editJSON.index].runtime.name = editJSON.runtime.name;
+		$scope.JSONdata[editJSON.index].runtime.sizeGb = editJSON.runtime.sizeGb;
+		$scope.JSONdata[editJSON.index].runtime.autoDelete = editJSON.runtime.autoDelete;
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+app.directive('networkingUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "networkingController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Network</th><th class="padded-fields">Subnetwork</th><th class="padded-fields">Access Configuration Name</th><th class="padded-fields">Access Configuration Type</th></tr></thead><tbody><tr ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.network}}</td><td class="padded-fields">{{data.subnetwork}}</td><td class="padded-fields">{{data.accessConfigs[0].name}}</td><td class="padded-fields">{{data.accessConfigs[0].config_type}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"> <label for="device">Network</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.network" type="checkbox" ng-disabled="edit.disabled.network" />Runtime</div> <input class="form-control" type="text" ng-model="edit.network" ng-disabled="edit.disabled.network" /></div><div class="col-md-6"> <label for="volume_type">Subnetwork</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.subnetwork" type="checkbox" ng-disabled="edit.disabled.subnetwork" />Runtime</div> <input class="form-control" type="text" ng-model="edit.subnetwork" ng-disabled="edit.disabled.subnetwork" /></div></div><div class="row"><div class="col-md-6"> <label for="device">Access Configuration Name</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.name" type="checkbox" ng-disabled="edit.disabled.name" />Runtime</div> <input class="form-control" type="text" ng-model="edit.name" ng-disabled="edit.disabled.name" /></div><div class="col-md-6"> <label for="device">Access Configuration Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.config_type" type="checkbox" ng-disabled="edit.disabled.config_type" />Runtime</div> <input class="form-control" type="text" ng-model="edit.config_type" ng-disabled="edit.disabled.config_type" /></div></div></form></div><div class="modal-footer"> <button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('networkingController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.network = editJSON.network;
+		$scope.edit.subnetwork = editJSON.subnetwork;
+		$scope.edit.name = editJSON.accessConfigs[0].name;
+		$scope.edit.config_type = editJSON.accessConfigs[0].config_type;
+
+		$scope.edit.runtime = {};
+		$scope.edit.runtime.network = (editJSON.runtime.network)?editJSON.runtime.network:false;
+		$scope.edit.runtime.subnetwork = (editJSON.runtime.subnetwork)?editJSON.runtime.subnetwork:false;
+		$scope.edit.runtime.name = (editJSON.runtime.accessConfigs[0].name)?editJSON.runtime.accessConfigs[0].name:false;
+		$scope.edit.runtime.config_type = (editJSON.runtime.accessConfigs[0].config_type)?editJSON.runtime.accessConfigs[0].config_type:false;		
+
+		$scope.edit.disabled = {};
+		$scope.edit.disabled.network = (editJSON.disabled.network+''=='true')?false:true;	
+		$scope.edit.disabled.subnetwork = (editJSON.disabled.subnetwork+''=='true')?false:true;	
+		$scope.edit.disabled.name = (editJSON.disabled.accessConfigs[0].name+''=='true')?false:true;	
+		$scope.edit.disabled.config_type = (editJSON.disabled.accessConfigs[0].config_type+''=='true')?false:true;	
+
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		$scope.JSONdata[editJSON.index].network = editJSON.network;
+		$scope.JSONdata[editJSON.index].subnetwork = editJSON.subnetwork;
+		$scope.JSONdata[editJSON.index].accessConfigs[0].name = editJSON.name;
+		$scope.JSONdata[editJSON.index].accessConfigs[0].config_type = editJSON.config_type;
+
+		$scope.JSONdata[editJSON.index].runtime = {};
+
+		$scope.JSONdata[editJSON.index].runtime.network = editJSON.runtime.network;
+		$scope.JSONdata[editJSON.index].runtime.subnetwork = editJSON.runtime.subnetwork;
+
+		$scope.JSONdata[editJSON.index].runtime.accessConfigs = [];
+		$scope.JSONdata[editJSON.index].runtime.accessConfigs[0] = {};
+
+		$scope.JSONdata[editJSON.index].runtime.accessConfigs[0].name = editJSON.runtime.name;
+		$scope.JSONdata[editJSON.index].runtime.accessConfigs[0].config_type = editJSON.runtime.config_type;
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+
+app.directive('storageProfileDataDisksUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "storageProfileDataDisksController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Disk Name</th><th class="padded-fields">Storage Type</th><th class="padded-fields">Disk Caching Type</th><th class="padded-fields">Size (GB)</th><th class="padded-fields">Disk LUN</th></tr></thead><tbody><tr ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{data.name}}</td><td class="padded-fields">{{data.storage_type}}</td><td class="padded-fields">{{data.caching_type}}</td><td class="padded-fields">{{data.size_in_gb}}</td><td class="padded-fields">{{data.lun}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Edit Row</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"> <label for="device">Disk Name</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.name" type="checkbox" ng-disabled="edit.disabled.name" />Runtime</div> <input class="form-control" type="text" ng-model="edit.name" ng-disabled="edit.disabled.name" /></div><div class="col-md-6"> <label for="volume_type">Storage Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.storage_type" type="checkbox" ng-disabled="edit.disabled.storage_type" />Runtime</div> <input class="form-control" type="text" ng-model="edit.storage_type" ng-disabled="edit.disabled.storage_type" /></div></div><div class="row"><div class="col-md-6"> <label for="device">Disk Caching Type</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.caching_type" type="checkbox" ng-disabled="edit.disabled.caching_type" />Runtime</div> <input class="form-control" type="text" ng-model="edit.caching_type" ng-disabled="edit.disabled.caching_type" /></div><div class="col-md-6"> <label for="device">Size (GB)</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.size_in_gb" type="checkbox" ng-disabled="edit.disabled.size_in_gb" />Runtime</div> <input class="form-control" type="text" ng-model="edit.size_in_gb" ng-disabled="edit.disabled.size_in_gb" /></div></div><div class="row"><div class="col-md-6"> <label for="device">Disk LUN</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.lun" type="checkbox" ng-disabled="edit.disabled.lun" />Runtime</div> <input class="form-control" type="text" ng-model="edit.lun" ng-disabled="edit.disabled.lun" /></div></div></form></div><div class="modal-footer"> <button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('storageProfileDataDisksController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.name = editJSON.name;
+		$scope.edit.storage_type = editJSON.storage_type;
+		$scope.edit.caching_type = editJSON.caching_type;
+		$scope.edit.size_in_gb = editJSON.size_in_gb;
+		$scope.edit.lun = editJSON.lun;
+
+		$scope.edit.runtime = {};
+		$scope.edit.runtime.name = (editJSON.runtime.name)?editJSON.runtime.name:false;
+		$scope.edit.runtime.storage_type = (editJSON.runtime.storage_type)?editJSON.runtime.storage_type:false;
+		$scope.edit.runtime.caching_type = (editJSON.runtime.caching_type)?editJSON.runtime.caching_type:false;
+		$scope.edit.runtime.size_in_gb = (editJSON.runtime.size_in_gb)?editJSON.runtime.size_in_gb:false;
+		$scope.edit.runtime.lun = (editJSON.runtime.lun)?editJSON.runtime.lun:false;
+
+		$scope.edit.disabled = {};
+		$scope.edit.disabled.name = (editJSON.disabled.name+''=='true')?false:true;	
+		$scope.edit.disabled.storage_type = (editJSON.disabled.storage_type+''=='true')?false:true;	
+		$scope.edit.disabled.caching_type = (editJSON.disabled.caching_type+''=='true')?false:true;	
+		$scope.edit.disabled.size_in_gb = (editJSON.disabled.size_in_gb+''=='true')?false:true;	
+		$scope.edit.disabled.lun = (editJSON.disabled.lun+''=='true')?false:true;	
+
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		$scope.JSONdata[editJSON.index].name = editJSON.name;
+		$scope.JSONdata[editJSON.index].storage_type = editJSON.storage_type;
+		$scope.JSONdata[editJSON.index].caching_type = editJSON.caching_type;
+		$scope.JSONdata[editJSON.index].size_in_gb = editJSON.size_in_gb;
+		$scope.JSONdata[editJSON.index].lun = editJSON.lun;
+
+
+		$scope.JSONdata[editJSON.index].runtime = {};
+
+		$scope.JSONdata[editJSON.index].runtime.name = editJSON.runtime.name;
+		$scope.JSONdata[editJSON.index].runtime.storage_type = editJSON.runtime.storage_type;
+		$scope.JSONdata[editJSON.index].runtime.caching_type = editJSON.runtime.caching_type;
+		$scope.JSONdata[editJSON.index].runtime.size_in_gb = editJSON.runtime.size_in_gb;
+		$scope.JSONdata[editJSON.index].runtime.lun = editJSON.runtime.lun;
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+
+
+app.directive('osProfileUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "osProfileController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"><table class="table"><thead><tr class="padded-row"><th class="padded-fields">Actions</th><th class="padded-fields">Secrets</th><th class="padded-fields">Vault ID</th><th class="padded-fields">Certificate Count</th></tr></thead><tbody><tr ng-if="JSONdata.length!=0" ng-repeat="data in JSONdata"><td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{$index+1}}</td><td class="padded-fields">{{data.source_vault_id}}</td><td class="padded-fields">{{data.vault_certificates.length}}</td></tr></tbody></table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a><h4 class="modal-title">Secrets</h4></div><div class="modal-body"><form name="editForm"><div class="row"><div class="col-md-6"> <label for="device">Vault ID</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.source_vault_id" type="checkbox" ng-disabled="edit.disabled.source_vault_id" />Runtime</div> <input class="form-control" type="text" ng-model="edit.source_vault_id" ng-disabled="edit.disabled.source_vault_id" /></div></div><div class="row" ng-repeat="(i, data) in edit.vault_certificates"><div class="col-md-12"> <label for="device">Certificate Config URL</label><div ng-show="global_configuration" class="disk_runtime-checkbox"> <input ng-model="edit.runtime.vault_certificates[i].certificate_url" type="checkbox" ng-disabled="edit.disabled.vault_certificates[i].certificate_url" />Runtime</div> <input class="form-control" type="text" ng-model="data.certificate_url" ng-disabled="edit.disabled.vault_certificates[i].certificate_url" /></div></div></form></div><div class="modal-footer"> <button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('osProfileController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.source_vault_id = editJSON.source_vault_id;
+		$scope.edit.vault_certificates = editJSON.vault_certificates;
+
+		$scope.edit.runtime = {};
+		$scope.edit.runtime.source_vault_id = (editJSON.runtime.source_vault_id)?editJSON.runtime.source_vault_id:false;
+
+		$scope.edit.disabled = {};
+		$scope.edit.disabled.source_vault_id = (editJSON.disabled.source_vault_id+''=='true')?false:true;	
+
+		for(var i in editJSON.vault_certificates){
+
+			if(!$scope.edit.runtime.vault_certificates)
+				$scope.edit.runtime.vault_certificates = {};
+
+			if(!$scope.edit.runtime.vault_certificates[i])
+				$scope.edit.runtime.vault_certificates[i]={};
+
+
+			$scope.edit.runtime.vault_certificates[i].certificate_url = (editJSON.runtime.vault_certificates && editJSON.runtime.vault_certificates[i] && editJSON.runtime.vault_certificates[i].certificate_url)?editJSON.runtime.vault_certificates[i].certificate_url:false;	
+
+			if(!$scope.edit.disabled.vault_certificates)
+				$scope.edit.disabled.vault_certificates = {};
+
+			if(!$scope.edit.disabled.vault_certificates[i])
+				$scope.edit.disabled.vault_certificates[i]={};
+
+
+			$scope.edit.disabled.vault_certificates[i].certificate_url = (editJSON.disabled.vault_certificates && editJSON.disabled.vault_certificates[i] && editJSON.disabled.vault_certificates[i].certificate_url+''=='true')?false:true;	
+		}
+
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		$scope.JSONdata[editJSON.index].source_vault_id = editJSON.source_vault_id;
+		$scope.JSONdata[editJSON.index].vault_certificates = editJSON.vault_certificates;
+
+		$scope.JSONdata[editJSON.index].runtime = editJSON.runtime;
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+
+
+
+app.directive('guestCustomizationDhcpUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "guestCustomizationDhcpController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div class="portlist_main-container"> <table class="table"> <thead> <tr class="padded-row"> <th class="padded-fields">Actions</th> <th class="padded-fields">SNo.</th> <th class="padded-fields">Use DHCP</th> <th class="padded-fields">Runtime</th> </tr></thead> <tbody> <tr ng-if="JSONdata.length!=0" ng-repeat="data in JSONdata"> <td class="padded-fields"><a href="#" data-toggle="modal" data-target="#_editModal" ng-click="initializeEditModal($index, data, false);"><i id="ebsDataIcon" class="icon-edit"></i></a></td><td class="padded-fields">{{$index+1}}</td><td class="padded-fields">{{data.is_dhcp}}</td><td class="padded-fields">{{(data.runtime.is_dhcp)?data.runtime.is_dhcp:false}}</td></tr></tbody> </table></div><div id="_editModal" class="modal fade" role="dialog" ng-if="false"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <form name="editForm"> <div class="row"> <div class="col-md-6"> <div class="form-group"> <input ng-model="edit.is_dhcp" type="checkbox" ng-disabled="edit.disabled"/>Use DHCP&nbsp;&nbsp;&nbsp;&nbsp; <div class="disk_runtime-checkbox"> <input ng-model="edit.runtime" type="checkbox" ng-disabled="edit.disabled"/>Runtime</div></div></div></div></form> </div><div class="modal-footer"> <button type="button" class="btn btn-default portlist_btn-modal" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary portlist_btn-modal" data-dismiss="modal" ng-click="editEntry(edit);">Save</button></div></div></div></div><div id="_editModal" class="modal fade" role="dialog"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <a data-dismiss="modal" class="close" href="#"><i class="icon-cross"></i></a> <h4 class="modal-title">Edit Row</h4> </div><div class="modal-body"> <p style="text-align: center;font-size: medium;">You can set or edit this field in Calm GUI.</p></div><div class="modal-footer"><button type="button" class="btn btn-default disk_btn-modal" data-dismiss="modal">Close</button></div></div></div></div></div>'
+	};
+});
+
+app.controller('guestCustomizationDhcpController', function($scope) {
+
+	$scope.JSONdata = {};
+
+	$scope.parsingJSON = function(passedjson) {
+		$scope.JSONdata = JSON.parse(passedjson);
+		$scope.global_configuration = true;
+	};
+
+	//$scope.initializedEditModal --> initialize all the variables with values from editJSON to render it into editModal
+	//PARAMS : index    --> provide the index value to selected entry from the table
+	//         editJSON --> contains the JSON of selected entry
+	//         rootFlag --> states whether entry is root entry or ebs entry
+	$scope.initializeEditModal = function (index, editJSON) {
+		
+		//alert('You can set or edit this field in Calm GUI.');
+		return;
+		
+		$scope.edit ={};
+		$scope.edit.index = index;
+		$scope.edit.is_dhcp = editJSON.is_dhcp;
+
+		$scope.edit.runtime = (editJSON.runtime.is_dhcp)?editJSON.runtime.is_dhcp:false;
+		$scope.edit.disabled = (editJSON.disabled.is_dhcp+''=='true')?false:true;	
+
+	};
+
+	//$scope.editEntry --> edit the specific entry from the main JSON
+	$scope.editEntry = function (editJSON) {
+
+		$scope.JSONdata[editJSON.index].is_dhcp = editJSON.is_dhcp;
+
+		$scope.JSONdata[editJSON.index].runtime.is_dhcp = editJSON.runtime;
+
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId] = $scope.JSONdata;
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+});
+
+
+
+
+
+
+
+
+
+
+app.directive('multiSelectUiPage', function() {
+	return {
+		restrict: 'A',
+		scope: {
+			passedTitle: '@',
+			passedCategory: '@',
+			passedSysId: '@',
+			passedJson: '@'
+		},
+		controller: "multiSelectController",
+		template: '<div ng-init="parsingJSON(passedJson);"><div style="display: -webkit-inline-box; margin: 3px;" ><div ng-repeat="(option, selection) in options" ng-if="selection==true"><span style="margin: 3px; padding: 5px; border: 1px solid rgba(0, 126, 255, 0.24); line-height: 13px; font-size: 12px; display: inline-block; border-radius: 2px; background-color: rgba(0, 126, 255, 0.08); color: #007eff;">{{option}}<a href="#" ng-click="unselectOption(option)"><i class="icon-cross" style="padding-left: 7px;font-size: 11px;margin-top: -4px;"></i></a></span></div></div><select class="form-control" ng-disabled="JSONData.isdisabled+\'\'==\'true\'" ng-change="selectOption()" ng-model="valueAt"><option ng-repeat="(option, selection) in options" ng-if="selection==false" value="{{option}}" >{{option}}</option> </select></div>'
+	};
+});
+
+app.controller('multiSelectController', function($scope) {
+	
+	$scope.finalArr = [];
+	
+	$scope.parsingJSON = function(passedJson){
+		var parsedJson = JSON.parse(passedJson);
+		
+		var options = parsedJson.options;
+		var value = (parsedJson.value+'').split(',');
+		var tmp = {};
+		
+		for(var i=0; i<options.length; i++){
+			
+			if(!options[i])
+				continue;
+			
+			tmp[options[i]] = false;
+		}
+		
+		for(var i=0; i<value.length; i++){
+			
+			if(!value[i])
+				continue;
+			
+			$scope.finalArr.push(value[i]);
+			tmp[value[i]] = true;	
+		}
+	
+	//	console.log(JSON.stringify(tmp));
+		
+		$scope.options = tmp;
+	};
+	
+	$scope.selectOption = function(){
+		
+		if(!$scope.valueAt)
+			return;
+		
+		$scope.options[$scope.valueAt] = true;
+		$scope.finalArr.push($scope.valueAt);
+		
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId].value = $scope.finalArr.toString();
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};
+	
+	$scope.unselectOption = function(val){
+		
+		$scope.options[val] = false;
+		
+		var arr = $scope.finalArr;
+		var index = arr.indexOf(val);
+		if (index > -1) {
+			arr.splice(index, 1);
+		}
+		$scope.finalArr = arr;
+		
+		var service_data = JSON.parse(g_form.getValue('service_data'));
+		service_data[$scope.passedTitle][$scope.passedCategory][$scope.passedSysId].value = $scope.finalArr.toString();
+		$scope.$emit('updateEvent', service_data);
+		g_form.setValue('service_data', JSON.stringify(service_data));
+	};	
+	
+});
+]]></script>
+        <script_name>Calm_Catalog_Service_Config_Script</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-04 20:08:14</sys_created_on>
+        <sys_id>db9441c237212300fdfc097973990e67</sys_id>
+        <sys_mod_count>729</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.Calm_Catalog_Service_</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_script_db9441c237212300fdfc097973990e67</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-10-22 06:32:39</sys_updated_on>
+        <ui_type>0</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

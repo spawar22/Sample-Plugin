@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update node_type="sys_portal_page" unload_date="2021-02-16 07:26:50">
+    <sys_portal_page action="INSERT_OR_UPDATE">
+        <layout display_value="layout_2_across">f6defafa0a0a0b12000d5016bd12ff06</layout>
+        <order>3050</order>
+        <read_roles>x_nuta2_nutanix_ca.user</read_roles>
+        <roles>x_nuta2_nutanix_ca.calm_admin</roles>
+        <selectable>false</selectable>
+        <sys_class_name>sys_portal_page</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-12-07 08:14:11</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>ece6b46cdb5e23000462fe1b6896197b</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>catalog_nutanix_calm_catalog</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_portal_page_ece6b46cdb5e23000462fe1b6896197b</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-07 10:06:02</sys_updated_on>
+        <title>catalog_nutanix_calm_catalog</title>
+        <user/>
+        <view>catalog_nutanix_calm_catalog</view>
+        <related_items_node>
+            <sys_portal action="INSERT_OR_UPDATE">
+                <dropzone>dropzone1</dropzone>
+                <offset>1</offset>
+                <page display_value="catalog_nutanix_calm_catalog">ece6b46cdb5e23000462fe1b6896197b</page>
+                <summary/>
+                <sys_created_by>girishgyani</sys_created_by>
+                <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                <sys_id>62e6bc6cdb5e23000462fe1b689619d2</sys_id>
+                <sys_mod_count>0</sys_mod_count>
+                <sys_updated_by>girishgyani</sys_updated_by>
+                <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                <related_items_node>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>render_title</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>62e6bc6cdb5e23000462fe1b689619d3</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>false</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>62e6bc6cdb5e23000462fe1b689619d4</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>Published Blueprints</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>catalog</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>66e6bc6cdb5e23000462fe1b689619d3</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>240abede37112300fdfc097973990e24</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>macro</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>6ae6bc6cdb5e23000462fe1b689619d2</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>sc_catalog_homepage_category_item</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title_link_class</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>6ae6bc6cdb5e23000462fe1b689619d3</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>category_title_link</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>renderer</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>6ee6bc6cdb5e23000462fe1b689619d2</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>com.glideapp.servicecatalog.RenderCategory</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title_link</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>6ee6bc6cdb5e23000462fe1b689619d3</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>com.glideapp.servicecatalog_category_view.do?v=1&amp;amp;sysparm_parent=88bfbad237512300fdfc097973990e06&amp;amp;sysparm_catalog=240abede37112300fdfc097973990e24&amp;amp;sysparm_catalog_view=catalog_nutanix_calm_catalog</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>sys_id</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>e2e6bc6cdb5e23000462fe1b689619d2</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>88bfbad237512300fdfc097973990e06</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>type</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>e6e6bc6cdb5e23000462fe1b689619d4</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>category</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>catalog_view</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>eae6bc6cdb5e23000462fe1b689619d4</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>catalog_nutanix_calm_catalog</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>current_page</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">62e6bc6cdb5e23000462fe1b689619d2</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>fee6bc6cdb5e23000462fe1b689619d4</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>ece6b46cdb5e23000462fe1b6896197b</value>
+                    </sys_portal_preferences>
+                </related_items_node>
+            </sys_portal>
+            <sys_portal action="INSERT_OR_UPDATE">
+                <dropzone>dropzone1</dropzone>
+                <offset>0</offset>
+                <page display_value="catalog_nutanix_calm_catalog">ece6b46cdb5e23000462fe1b6896197b</page>
+                <summary/>
+                <sys_created_by>girishgyani</sys_created_by>
+                <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                <sys_id>eae6b86cdb5e23000462fe1b689619ad</sys_id>
+                <sys_mod_count>0</sys_mod_count>
+                <sys_updated_by>girishgyani</sys_updated_by>
+                <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                <related_items_node>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>type</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>26e6bc6cdb5e23000462fe1b689619d1</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>category</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>catalog_view</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>2ae6bc6cdb5e23000462fe1b689619d1</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>catalog_nutanix_calm_catalog</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>current_page</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>2ee6bc6cdb5e23000462fe1b689619d1</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>ece6b46cdb5e23000462fe1b6896197b</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>sys_id</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>6ee6b86cdb5e23000462fe1b689619ad</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>7a30431637512300fdfc097973990ec8</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>catalog</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>a2e6bc6cdb5e23000462fe1b689619d0</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>240abede37112300fdfc097973990e24</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>macro</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>a6e6bc6cdb5e23000462fe1b689619cf</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>sc_catalog_homepage_category_item</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title_link_class</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>a6e6bc6cdb5e23000462fe1b689619d0</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>category_title_link</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>renderer</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>aae6bc6cdb5e23000462fe1b689619cf</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>com.glideapp.servicecatalog.RenderCategory</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title_link</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>aae6bc6cdb5e23000462fe1b689619d0</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>com.glideapp.servicecatalog_category_view.do?v=1&amp;amp;sysparm_parent=7a30431637512300fdfc097973990ec8&amp;amp;sysparm_catalog=240abede37112300fdfc097973990e24&amp;amp;sysparm_catalog_view=catalog_nutanix_calm_catalog</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>render_title</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>aee6bc6cdb5e23000462fe1b689619cf</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>false</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title</name>
+                        <portal_section display_value="Created 2018-12-07 00:14:19">eae6b86cdb5e23000462fe1b689619ad</portal_section>
+                        <sys_created_by>girishgyani</sys_created_by>
+                        <sys_created_on>2018-12-07 08:14:19</sys_created_on>
+                        <sys_id>aee6bc6cdb5e23000462fe1b689619d0</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>girishgyani</sys_updated_by>
+                        <sys_updated_on>2018-12-07 08:14:19</sys_updated_on>
+                        <value>Un-Published Blueprints</value>
+                    </sys_portal_preferences>
+                </related_items_node>
+            </sys_portal>
+        </related_items_node>
+    </sys_portal_page>
+</record_update>

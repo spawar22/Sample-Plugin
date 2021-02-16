@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description/>
+        <ignore_cache>true</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin,x_nuta2_nutanix_ca.user</read_roles>
+        <suffix>Calm_SaaS_and_ServiceNow</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-02-02 13:44:46</sys_created_on>
+        <sys_id>0f270c922fca6410152959ab2799b6b5</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.Calm_SaaS_and_ServiceNow</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_0f270c922fca6410152959ab2799b6b5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-02-16 07:22:48</sys_updated_on>
+        <type>boolean</type>
+        <value>false</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin,x_nuta2_nutanix_ca.user</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=0f270c922fca6410152959ab2799b6b5"/>
+</record_update>

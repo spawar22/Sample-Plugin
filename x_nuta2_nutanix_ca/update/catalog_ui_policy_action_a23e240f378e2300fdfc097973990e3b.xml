@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="catalog_ui_policy_action">
+    <catalog_ui_policy_action action="INSERT_OR_UPDATE">
+        <catalog_item/>
+        <catalog_variable>IO:e297a007378e2300fdfc097973990e1b</catalog_variable>
+        <cleared>false</cleared>
+        <disabled>ignore</disabled>
+        <field/>
+        <mandatory>ignore</mandatory>
+        <order>100</order>
+        <sys_class_name>catalog_ui_policy_action</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-12-02 15:45:50</sys_created_on>
+        <sys_id>a23e240f378e2300fdfc097973990e3b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>credential_name</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>catalog_ui_policy_action_a23e240f378e2300fdfc097973990e3b</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-12-02 15:45:50</sys_updated_on>
+        <table/>
+        <ui_policy display_value="Hide fields on field mapping checked">557d6ccb378e2300fdfc097973990e3e</ui_policy>
+        <variable>credential_name</variable>
+        <variable_set display_value="Environment Credentials Set">5d512007378e2300fdfc097973990e65</variable_set>
+        <visible>true</visible>
+    </catalog_ui_policy_action>
+</record_update>

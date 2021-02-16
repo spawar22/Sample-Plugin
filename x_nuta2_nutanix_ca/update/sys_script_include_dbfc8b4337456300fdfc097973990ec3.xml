@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>false</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_DAOScript</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_DAOScript</name>
+        <script><![CDATA[var Nutanix_DAOScript = Class.create();
+Nutanix_DAOScript.prototype = {
+	initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+	},
+	
+	insertIntoProjectStaging : function(parsed){
+		this.logger.debug("Inside Nutanix_DAOScript.insertIntoProjectStaging");
+		try{
+			var numOfEntities = parsed.entities.length;
+			this.logger.info("Retrieved Number of Project entities "+numOfEntities);
+			var insertData = new GlideRecord(this.appUtil.configuration.table.stagingProject+"");
+			for(var i=0; i < numOfEntities; i++){
+				var entity = parsed.entities[i];
+				var status = entity.status;
+				var resource = entity.status.resources;
+				var metadata = entity.metadata;
+				insertData.initialize();
+				//To insert status data
+				for(var key in status){
+					var field = status[key];
+					if( key!='resources')
+						insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+				}
+				//To insert resources data
+				for(var key in resource){
+					var field = resource[key];
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+				}
+				//To insert metadata
+				for(var key in metadata){
+					var field = metadata[key];
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+				}
+				insertData.insert();
+				this.logger.debug("Successful record insertion in Project Staging Table ");
+			}
+			//insertData.api_version = responseBody.api_version;
+			//database.field_two=4;
+		}catch(e){
+			this.logger.debug("ERROR>> Exception caught inside Nutanix_DAOScript.insertIntoProjectStaging:- Exception caught: Record insertion failed in Project Staging Table:- "+e);
+			this.logger.error("Exception caught: Record insertion failed in Project Staging Table  "+e);
+		}
+		
+	},
+	
+	insertIntoBluprintStaging: function(parsed){
+		this.logger.debug("Inside Nutanix_DAOScript.insertIntoBluprintStaging");
+		try{
+			var numOfEntities = parsed.entities.length;
+			this.logger.info("Retrieved Number of Blueprint entities "+numOfEntities);
+			for(var i=0; i < numOfEntities; i++){
+				var insertData = new GlideRecord(this.appUtil.configuration.table.stagingBlueprints+"");
+				var entity = parsed.entities[i];
+				var status = entity.status;
+				var uuid = status.uuid;
+				//var messages = status.messages;
+				var metadata = entity.metadata;
+				//var owner_reference = metadata.owner_reference;
+				//var project_reference = metadata.project_reference;
+				insertData.initialize();
+				//To fetch status data
+				for(var key in status){
+					var field = status[key];
+					//if( key!='messages')
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+				}
+				//To fetch messages
+				/*for(var key in messages){
+					var field = messages[key];
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+				}*/
+				//To fetch metadata
+				for(var key in metadata){
+					var field = metadata[key];
+					//if( key!='owner_reference' || key!='project_reference' )
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+				}
+				//To make api call to blueprint uuid and fetch resources from uuid
+				var body = {
+					"kind": "blueprint"
+				};
+				var response=this.appUtil.makeCalmApiCall("get", this.appUtil.configuration.api.getBlueprintDetail+''+uuid, this.appUtil.stringify(body));
+					if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+						this.logger.info("Successful Api call of Blueprint UUID : "+uuid);
+						//gs.addInfoMessage(response);
+						var parsed1 = this.appUtil.parse(response.getBody());
+						if(parsed1){
+							var field=parsed1.status.is_cloned;
+							insertData['is_cloned'] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+							var resources = parsed1.spec.resources;
+							for(var key in resources){
+								var field = resources[key];
+								insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+							}
+							//return response.getBody();
+						}
+					}else{
+						this.logger.debug("Error while retrieving Blueprints GET " + this.appUtil.configuration.api.getBlueprintDetail+uuid + " :"+response.getBody());
+						this.logger.error("Error while retrieving Blueprints GET " + this.appUtil.configuration.api.getBlueprintDetail+uuid);
+						return response.getStatusCode();
+					}
+					insertData.insert();
+					this.logger.debug("Successful record insertion in Blueprint Staging Table ");
+				}
+			}catch(e){
+				this.logger.debug("Exception caught inside Nutanix_DAOScript : insertIntoBluprintStaging");
+				this.logger.error("Exception caught: Record insertion failed in Blueprint Staging Table  "+e);
+			}
+		},
+		
+		type: 'Nutanix_DAOScript'
+	};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-14 11:21:44</sys_created_on>
+        <sys_id>dbfc8b4337456300fdfc097973990ec3</sys_id>
+        <sys_mod_count>25</sys_mod_count>
+        <sys_name>Nutanix_DAOScript</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_dbfc8b4337456300fdfc097973990ec3</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-11-01 08:02:02</sys_updated_on>
+    </sys_script_include>
+</record_update>

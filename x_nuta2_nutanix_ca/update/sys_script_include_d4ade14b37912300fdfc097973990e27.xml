@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>false</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_Categories</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_Categories</name>
+        <script><![CDATA[var Nutanix_Categories = Class.create();
+Nutanix_Categories.prototype = {
+	initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+	},
+	importCategoryData: function() {
+		try{
+			
+			this.logger.debug("Inside Nutanix_Categories.importCategoryData");
+			var method = "post";
+			var payload = this.appUtil.configuration.api.getCategories+"";
+			var parameter = {
+				"kind" : "category"
+			};
+			
+			var response = this.appUtil.makeCalmApiCall( method , payload , this.appUtil.stringify(parameter));
+			
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				var parsedJSON = this.appUtil.parse(response.getBody());
+				if(parsedJSON){
+					var entities = parsedJSON.entities;
+					this.logger.info("Number of imported Categories:"+entities.length);
+					for(var i=0; i < entities.length; i++){
+						var entity = entities[i];
+						var insertData = new GlideRecord(this.appUtil.configuration.table.category+"");
+						insertData.addQuery('title', entity.value+'');
+						insertData.addQuery('sc_catalog', gs.getProperty('x_nuta2_nutanix_ca.nutanix_catalog_sysId') );
+						insertData.query();
+						
+						if(insertData.next()){
+							insertData.title = entity.value+'';
+							insertData.description = entity.description+'';
+							insertData.update();
+						}else{
+							insertData.initialize();
+							insertData.title = entity.value+'';
+							insertData.description = entity.description+'';
+							insertData.sc_catalog = gs.getProperty('x_nuta2_nutanix_ca.nutanix_catalog_sysId');
+							insertData.insert();
+						}
+					}
+				} else {
+					this.logger.debug("Error in converting /categories/AppFamily/list String to JSON");
+				}
+				
+			}
+			else{
+				this.logger.error("Connection to /categories/AppFamily/list not established : "+response.haveError()+" Status code:"+response.getStatusCode());
+			}
+		}
+		catch(e){
+			this.logger.debug("Exception caught inside Nutanix_Categories.importCategoryData");
+			this.logger.error("Exception caught during retrieval of Categories. Error: " + e);
+		}
+	},
+	
+	type: 'Nutanix_Categories'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>nikita.kumari</sys_created_by>
+        <sys_created_on>2018-10-26 14:05:40</sys_created_on>
+        <sys_id>d4ade14b37912300fdfc097973990e27</sys_id>
+        <sys_mod_count>16</sys_mod_count>
+        <sys_name>Nutanix_Categories</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_d4ade14b37912300fdfc097973990e27</sys_update_name>
+        <sys_updated_by>girishgyani</sys_updated_by>
+        <sys_updated_on>2018-11-14 13:13:20</sys_updated_on>
+    </sys_script_include>
+</record_update>

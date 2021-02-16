@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var actSysId = "${JS:sysparm_sysId}";
+var act_vars = "${JS:sysparm_actVarsArr}";
+
+new GlideModal().get("dialog_loading").destroy();
+
+var parsedAppBp = JSON.parse(act_vars);
+addLoadEvent( function() {firstCheck();});
+
+var $j = jQuery.noConflict();
+
+$j("input").click(function(){ $j(".errorData").html('');});
+
+$j('#cancelAct').mousedown(cancelDialog);
+$j('#Update').mousedown(checkValueinJson); //Will update the code.
+$j('#cancelAct').mousedown(cancelDialog);
+$j('#backToUpdate').mousedown(backToUpdate);
+$j('#Confirm_Submission').mousedown(submitBlueprint);
+
+function backToUpdate() {
+	$j("#Confirm_Submission").hide();
+	$j("#backToUpdate").hide();
+	$j("#update_form").show();
+	$j("#Update").show();
+	$j("#diff_page").html('');
+	$j("#diff_page").hide();
+}
+
+function cancelDialog() {
+	GlideModal.get().destroy();
+}
+
+function firstCheck() {
+	var parsedAppBp = JSON.parse(act_vars);
+	var substrateList = parsedAppBp.status.resources.substrate_definition_list;
+	
+	if(parsedAppBp.status.resources.mutable_fields.substrate_definition_list.is_member_mutable)
+		setFieldValues(substrateList);
+	else
+		alert("Substrate immutable!");
+}
+
+function setFieldValues(substrate_array) {
+	for(var sub = 0; sub < substrate_array.length; sub++) {
+		var create_spec = substrate_array[sub].create_spec;
+		$j("#instance_name").val(create_spec.name);
+		for(var i in create_spec.resources.mutable_fields) {
+			$j("#"+i).prop("disabled", false);
+			if(typeof create_spec.resources[i] != 'object') {
+				if(i == 'memory_size_mib')
+					$j("#"+i).val(create_spec.resources[i]/1024);
+				else
+					$j("#"+i).val(create_spec.resources[i]);
+			}
+		}
+	}
+}
+
+function checkValueinJson()      //if(a.length != (parseInt(a) + "").length)
+{
+	
+	var regex = /^\d+$/g;
+	var num_sockets = $j("#num_sockets").val() + "";
+	var cores = $j("#num_vcpus_per_socket").val() + "";
+	var memory = $j("#memory_size_mib").val() + "";
+	
+	if(num_sockets.length != (parseInt(num_sockets) + "").length) {
+		var error_div = '<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">Enter Numeric Value for VCPUs</div>';
+		$j(".errorData").html(error_div);
+		return;
+	}
+	
+	if(cores.length != (parseInt(cores) + "").length) {
+		var error_div1 = '<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">Enter Numeric Value for Cores Per VCPUs</div>';
+		$j(".errorData").html(error_div1);
+		return;
+	}
+	
+	if(memory.length != (parseInt(memory) + "").length) {
+		var error_div2 = '<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">Enter Numeric Value for Memory </div>';
+		$j(".errorData").html(error_div2);
+		return;
+	}
+	setValuesinJson();
+}
+
+function setValuesinJson() {
+	var resources = parsedAppBp.spec.resources.substrate_definition_list[0].create_spec.resources;
+	resources.num_sockets = parseInt($j("#num_sockets").val());
+	resources.num_vcpus_per_socket = parseInt($j("#num_vcpus_per_socket").val());
+	resources.memory_size_mib = $j("#memory_size_mib").val() * 1024;
+	parsedAppBp.spec.resources.substrate_definition_list[0].create_spec.resources = resources;
+	delete parsedAppBp.status;
+	verifyValues(parsedAppBp);
+}
+
+function verifyValues(updatedBp) {
+	
+	$j("#Confirm_Submission").prop("disabled", true);
+	$j("#backToUpdate").prop("disabled", true);
+	$j("#cancelAct").prop("disabled", true);
+	$j("#Update").prop("disabled", true);
+	
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'appBlueprintValidateCall');
+	gajax.addParam('sysparm_actionsysid', actSysId+'');
+	gajax.addParam('sysparm_modBp', JSON.stringify(updatedBp));
+	gajax.getXML(validateResponse);
+}
+
+function validateResponse(response) {
+	var answer = response.responseXML.documentElement.getAttribute("answer");
+	var parsedValidatedBp = JSON.parse(answer);
+	
+	$j("#Confirm_Submission").prop("disabled", false);
+	$j("#backToUpdate").prop("disabled", false);
+	$j("#cancelAct").prop("disabled", false);
+	$j("#Update").prop("disabled", false);
+	
+	if(parsedValidatedBp.status.state != 'ACTIVE') {
+		var message_list = parsedValidatedBp.status.resources.substrate_definition_list[0].message_list;
+		var error_msg = '';
+		var error_div = '';
+		for(var i = 0; i < message_list.length; i++)
+			error_msg += message_list[i].message + ' : '+ message_list[i].reason + '<br>';
+		if(error_msg != '')
+			error_div = '<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">'+error_msg+'</div>';
+		$j(".errorData").html(error_div);
+	}
+	else
+		render_diff_table();
+}
+
+function render_diff_table() {
+	var orig_bp = JSON.parse(act_vars).spec.resources.substrate_definition_list[0].create_spec.resources;
+	var modified_bp = parsedAppBp.spec.resources.substrate_definition_list[0].create_spec.resources;
+	var mutable_fields = JSON.parse(act_vars).status.resources.substrate_definition_list[0].create_spec.resources.mutable_fields;
+	var value_json = {
+		'num_sockets' : 'vCPUs',
+		'num_vcpus_per_socket' : 'Cores per vCPU',
+		'memory_size_mib' : 'Memory(GiB)'
+	};
+	var changed_flag = 0;
+	var table_header = '<tr><th>General Configuration[Modified]</th><th>Original</th><th>Updated</th></tr>';
+	var table_data = '';
+	for(var i in mutable_fields) {
+		if(i in value_json) {
+			if(typeof orig_bp[i] != 'object' && orig_bp[i] != modified_bp[i]) {
+				changed_flag = 1;
+				var original_val = orig_bp[i];
+				var mod_val = modified_bp[i];
+				if(i == 'memory_size_mib') {
+					original_val = original_val/1024;
+					mod_val = mod_val/1024;
+				}
+				table_data += '<tr><td>'+value_json[i]+'</td><td>'+original_val+'</td><td>'+mod_val+'</td></tr>';
+			}
+		}
+	}
+	$j("#update_form").hide();
+	$j("#diff_page").show();
+	$j("#Confirm_Submission").show();
+	$j("#Update").hide();
+	$j("#backToUpdate").show();
+	
+	if(changed_flag == 1) {
+		var diff_table = '<table id="diff_table">' + table_header + table_data + '</table>';
+		$j("#diff_page").html(diff_table);
+	}
+	if(changed_flag == 0)
+		$j("#diff_page").html('<strong>No updates on the blueprint</strong>');
+}
+
+function submitBlueprint() {
+	
+	$j("#Confirm_Submission").prop("disabled", true);
+	$j("#backToUpdate").prop("disabled", true);
+	$j("#cancelAct").prop("disabled", true);
+	$j("#Update").prop("disabled", true);
+	
+	$j("#final_status").show();
+	$j("#final_status").html('<strong>Updating application configuration...</strong>');
+	
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'updateAppBlueprint');
+	gajax.addParam('sysparm_actionsysid', actSysId+'');
+	gajax.addParam('sysparm_modBp', JSON.stringify(parsedAppBp));
+	gajax.getXML(updateBpResponse);
+}
+
+function updateBpResponse(response) {
+	
+	$j("#final_status").html('<strong>Applying changes...</strong>');
+	
+	var answer = response.responseXML.documentElement.getAttribute("answer");
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'runAction');
+	gajax.addParam('sysparm_actionsysid', actSysId);
+	gajax.addParam('sysparm_actionVars', "");
+	gajax.getXML(getResponse);
+
+	function getResponse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		g_form.addInfoMessage(answer);
+		GlideModal.get().destroy();
+	}
+}
+]]></client_script>
+        <description>Calm Update action</description>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Update_ui_page.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+
+	<body>
+		<div class="errorData"></div>
+		<div>
+			<div id="update_form">
+				<div class="form-group">
+					<div class="form-group">
+						<label>VM Name</label>
+						<input type="text" class="form-control" name="instance_name" id="instance_name" value="" disabled=""/>
+					</div>
+					<div class="form-group">
+						<label>vCPUs</label>
+						<input type="text" class="form-control" name="num_sockets" id="num_sockets" placeholder="vCPUs" value="" disabled=""/>
+					</div>
+					<div class="form-group">
+						<label>Cores per vCPU</label>
+						<input type="text" class="form-control" name="num_vcpus_per_socket" id="num_vcpus_per_socket" placeholder="Num cores" value="" disabled=""/>
+					</div>
+					<div class="form-group">
+						<label>Memory (GiB)</label>
+						<input type="text" class="form-control" name="memory_size_mib" id="memory_size_mib" placeholder="Memory" value="" disabled=""/>
+					</div>
+				</div>
+			</div>
+			<div id="diff_page" style="none">
+			</div>
+			<div id="final_status" style="display:none;"></div>
+			<div class="modal-footer">
+				<div class="row">
+					<div class="col-sm-9 pull-right" style="width: max-content;">
+						<button class="btn btn-default" id="backToUpdate" style="display:none;">Back</button>
+						<button class="btn btn-default" id="cancelAct">Cancel</button>
+						<button class="btn btn-primary" id="Update">Update</button>
+						<button class="btn btn-primary" id="Confirm_Submission" style="display:none;">Confirm</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<style>
+		#diff_table {
+		font-family: SourceSansPro, "Helvetica Neue", Arial;
+		border-collapse: collapse;
+		width: 100%;
+		}
+		#diff_table td,#diff_table th{
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+		}
+		
+	</style>
+</j:jelly>]]></html>
+        <name>Update_ui_page</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-08-09 09:13:21</sys_created_on>
+        <sys_id>86c1b29f4f0333008373224f9310c70a</sys_id>
+        <sys_mod_count>147</sys_mod_count>
+        <sys_name>Update_ui_page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_86c1b29f4f0333008373224f9310c70a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-02-26 13:45:59</sys_updated_on>
+    </sys_ui_page>
+</record_update>

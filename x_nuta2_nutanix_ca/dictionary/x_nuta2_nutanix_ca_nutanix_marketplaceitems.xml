@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="update_synch=true" extends="sc_cat_item" label="Marketplace Items" max_length="40" name="x_nuta2_nutanix_ca_nutanix_marketplaceitems" type="collection">
+        <element label="App Family" max_length="250" name="appfamily" type="string"/>
+        <element label="App State" max_length="250" name="app_state" type="string"/>
+        <element label="Author" max_length="250" name="author" type="string"/>
+        <element label="Blueprint Name" max_length="40" name="blueprint_name" type="string"/>
+        <element label="Cloned BP JSON" max_length="10000" name="cloned_bp_json" type="string"/>
+        <element label="Cloned Bp Name" max_length="100" name="cloned_bp_name" type="string"/>
+        <element label="Cloned bp uuid" max_length="250" name="cloned_bp_uuid" type="string"/>
+        <element label="Creation Time" max_length="250" name="creation_time" type="string"/>
+        <element label="Deprecation Reason" max_length="300" name="deprecation_reason" type="string"/>
+        <element attributes="no_truncate=false" label="Description" max_length="8000" name="description_markdown" type="string"/>
+        <element label="Last Update Time" max_length="100" name="last_update_time" type="string"/>
+        <element label="Owner Name" max_length="250" name="owner_name" type="string"/>
+        <element label="Owner UUID" max_length="250" name="owner_uuid" type="string"/>
+        <element label="Spec Version" max_length="100" name="spec_version" type="string"/>
+        <element attributes="edge_encryption_enabled=true" choice="3" default="active" label="State" max_length="100" name="state" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
+                <element inactive_on_update="false" label="Inactive" sequence="2" value="inactive"/>
+            </choice>
+        </element>
+        <element label="Support Status" max_length="30" name="support_status" type="string"/>
+        <element label="Template Type" max_length="40" name="template_type" type="string"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+        <element label="Version" max_length="100" name="version" type="string"/>
+    </element>
+</database>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section caption="" section_id="1c026ced37352300d27b8cf6c3990e1f" sys_domain="global" table="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>x_nuta2_nutanix_ca_Nutanix_logo_on_config.xml</element>
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>518d9c022fa0a010da242f2ef699b6ec</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter display_value="Nutanix Calm App Runlogs">3c52103737356700fdfc097973990ed0</sys_ui_formatter>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type>formatter</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.begin_split</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>958d9c022fa0a010da242f2ef699b6ec</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type>.begin_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>name</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>198d9c022fa0a010da242f2ef699b6ec</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>app_name</element>
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>998d9c022fa0a010da242f2ef699b6ec</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>app_uuid</element>
+            <position>4</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>1d8d9c022fa0a010da242f2ef699b6ec</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>type</element>
+            <position>5</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>9d8d9c022fa0a010da242f2ef699b6ec</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>kind</element>
+            <position>6</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>118d9c022fa0a010da242f2ef699b6ed</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>uuid</element>
+            <position>7</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>918d9c022fa0a010da242f2ef699b6ed</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>8</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>158d9c022fa0a010da242f2ef699b6ed</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>last_update_time</element>
+            <position>9</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>958d9c022fa0a010da242f2ef699b6ed</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>creation_time</element>
+            <position>10</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>198d9c022fa0a010da242f2ef699b6ed</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>is_critical</element>
+            <position>11</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>998d9c022fa0a010da242f2ef699b6ed</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>is_runlog_archived</element>
+            <position>12</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>1d8d9c022fa0a010da242f2ef699b6ed</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>state</element>
+            <position>13</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>9d8d9c022fa0a010da242f2ef699b6ed</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.end_split</element>
+            <position>14</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>118d9c022fa0a010da242f2ef699b6ee</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type>.end_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>state_reason</element>
+            <position>15</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>918d9c022fa0a010da242f2ef699b6ee</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>description</element>
+            <position>16</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2020-11-19 07:08:59</sys_created_on>
+            <sys_id>158d9c022fa0a010da242f2ef699b6ee</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_nuta2_nutanix_ca_nutanix_calm_app_runlogs" sys_domain="global" view="Default view">1c026ced37352300d27b8cf6c3990e1f</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2020-11-19 07:08:59</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption/>
+            <header>false</header>
+            <name>x_nuta2_nutanix_ca_nutanix_calm_app_runlogs</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-22 11:26:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1c026ced37352300d27b8cf6c3990e1f</sys_id>
+            <sys_mod_count>1</sys_mod_count>
+            <sys_name>x_nuta2_nutanix_ca_nutanix_calm_app_runlogs</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_section_1c026ced37352300d27b8cf6c3990e1f</sys_update_name>
+            <sys_updated_by>bharat.vajj</sys_updated_by>
+            <sys_updated_on>2018-12-20 05:34:59</sys_updated_on>
+            <sys_user/>
+            <title>false</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

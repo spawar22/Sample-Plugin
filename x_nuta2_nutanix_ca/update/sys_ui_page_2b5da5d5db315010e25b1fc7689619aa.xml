@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var disk_json = gel("disk_list").value + "";
+var act_sys_id = gel("act_sys_id").value + "";
+var new_disk_json = {};
+var substrate_uuid = "";
+
+var $j = jQuery.noConflict();
+
+$j('#create-image').mousedown(runAction);
+$j('#close-modal').mousedown(cancelDialog);
+$j("#all_disks").click(function() {
+	if($j("#all_disks").is(":checked")) {
+		$j(".disk-select-checkbox").prop('checked', false);
+		$j("#disk_details").html("");
+		$j(".disk-select-checkbox").trigger("click");
+	}
+	else {
+		$j(".disk-select-checkbox").prop('checked', false);
+		$j("#disk_details").html("");
+	}
+});
+
+intermediate_function(disk_json);
+
+function cancelDialog() {
+	GlideModal.get().destroy();
+}
+
+function validate_inputs() {
+	
+	var flag = true;
+	
+	if($j.isEmptyObject(new_disk_json)) {
+		$j("#error_body").append('<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">Select a disc to create an image</div>');
+		flag = false;
+	}
+		
+	
+	var empty_fields = $j('.disk-image-name').filter(function () {
+        return this.value === '';
+    });
+	
+	if(empty_fields.length != 0) {
+		$j("#error_body").append('<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">Please fill in the image name</div>');
+		flag = false;
+	}
+	
+	return flag;
+}
+
+function runAction() {
+	
+	$j("#error_body").html("");
+	
+	if(!validate_inputs())
+		return false;
+	
+	$j('#create-image').prop("disabled", true);
+	$j('#close-modal').prop("disabled", true);
+	
+	var image_details_json = {"substrate_uuid": substrate_uuid ,"image_details_list":[]};
+	
+	for(var i in new_disk_json) {
+		var disk_details = {"source_disk_uuid":i, "image_name":$j("#"+i+"_image_name").val()};
+		if($j("#"+i+"_image_desc").val())
+			disk_details["description"] = $j("#"+i+"_image_desc").val() + "";
+		image_details_json.image_details_list.push(disk_details);
+	}
+	
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'runAction');
+	gajax.addParam('sysparm_actionsysid', act_sys_id+'');
+	gajax.addParam('sysparm_actionVars', JSON.stringify(image_details_json));
+	gajax.getXML(getResponse);
+				
+	function getResponse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		g_form.addInfoMessage(answer);
+		GlideModal.get().destroy();
+	}
+}
+
+function intermediate_function(disk_json) {
+	
+	if(disk_json) {
+		var disk_list = JSON.parse(disk_json);
+		if(disk_list.length == 1)
+			populate_disk_list(disk_list[0]);
+		else {
+			var vm_options = "";
+			for(var i = 0; i < disk_list.length; i++)
+				vm_options += '<option value="'+i+'">'+disk_list[i].vm_name+'</option>';
+			
+			var disk_selection = '<select class="form-control select2-basic" style="height:auto;" id="select_disk">'+vm_options+'</select>';
+			
+			$j("#disk_selector").append(disk_selection);
+			$j("#select_disk").change(function() {
+				populate_disk_list(disk_list[this.value]);
+			});
+			$j('.select2-basic').select2({allowClear: true});
+			populate_disk_list(disk_list[0]);
+		}
+	}
+	else {
+		g_form.addErrorMessage("No supported VMs found.");
+		cancelDialog();
+	}
+}
+
+function populate_disk_list(disk_json) {
+	
+	var def_sel = {};
+	$j(".table-list-selectable-rows").html("");
+	$j("#all_disks").prop('checked', false);
+	$j("#disk_details").html("");
+	new_disk_json = {};
+	
+	var disk_list = disk_json.disk_list;
+	substrate_uuid = disk_json.substrate_uuid + "";
+	var boot_device = disk_json.boot_device;
+	
+	for(var i = 0; i < disk_list.length; i++) {
+		
+		var boot_media = (boot_device.adapter_type) ?  boot_device.adapter_type : '';
+		var boot_index = (boot_device.device_index + "") ?  boot_device.device_index + "" : '';
+		var boot_address_index = boot_media + '.' + boot_index;
+		
+		var disk_media = disk_list[i].device_properties && disk_list[i].device_properties.disk_address && disk_list[i].device_properties.disk_address.adapter_type ?  disk_list[i].device_properties.disk_address.adapter_type : '-';
+		var disk_index = disk_list[i].device_properties && disk_list[i].device_properties.disk_address && disk_list[i].device_properties.disk_address.device_index + "" ?  disk_list[i].device_properties.disk_address.device_index + "" : '-';
+		var disk_space = disk_list[i].disk_size_mib ? disk_list[i].disk_size_mib/1024 : '-';
+		var disk_uuid = disk_list[i].uuid + "";
+		var disk_address_index = disk_media + '.' + disk_index;
+		
+		var disk_type = (disk_address_index == boot_address_index) ? "Bootable Media" : "-";
+		
+		var check_box_data = '<td class="table-selectable-col"><input class="disk-select-checkbox" id="'+disk_uuid+'" type="checkbox" value="'+disk_address_index+'"></td>';
+		
+		var table_data = '<tr>'+check_box_data+'<td class="" style="text-align: left; white-space: normal;">'+disk_address_index+'</td><td class="" style="text-align: left; white-space: normal;">'+disk_type+'</td><td class="" style="text-align: left; white-space: normal;">'+disk_space+' GiB</td></tr>';
+		
+		$j(".table-list-selectable-rows").append(table_data);
+		
+		$j(".table-list-selectable-rows").click(function() {
+			
+			var check_number = $j('.disk-select-checkbox').filter(function () {
+				return this.checked == true;
+			});
+			
+			if(disk_list.length == check_number.length)
+				$j("#all_disks").prop('checked', true);
+			else
+				$j("#all_disks").prop('checked', false);
+		});
+		
+		if(i == 0) {
+			def_sel.disk_uuid = disk_uuid;
+			add_disk_details(disk_address_index, disk_uuid);
+			$j("#"+disk_uuid).prop('checked', true);
+		}
+		
+		if(disk_address_index == boot_address_index)  {
+			remove_disk_details(def_sel.disk_uuid);
+			$j("#"+def_sel.disk_uuid).prop('checked', false);
+			add_disk_details(disk_address_index, disk_uuid);
+			$j("#"+disk_uuid).prop('checked', true);
+		}
+		
+		$j("#"+disk_uuid).click(function() { callbackclick(this); });
+	}
+}
+
+function callbackclick(htmlobj) {
+	if($j(htmlobj).is(":checked"))
+		add_disk_details(htmlobj.value, htmlobj.id);
+	else
+		remove_disk_details(htmlobj.id);
+}
+
+function add_disk_details(disk_address_index, disk_uuid) {
+	
+	var details_div = '<div class="disk-form" id="'+disk_uuid+'_div"><a class="toggle-collapse-disk" data-toggle="collapse" href="#'+disk_uuid+'_div_collapse" role="button"><span class="glyphicon glyphicon-menu-right"></span></a><label class="form-input"><strong>Disk '+disk_address_index+' Image</strong></label><div id="'+disk_uuid+'_div_collapse" class="collapse"><div class="form-group"><label>Image Name</label><input type="text" class="form-control disk-image-name" spellcheck="false" name="image_name" id="'+disk_uuid+'_image_name" placeholder="Image Name" value="" /></div><div class="form-group"><label>Description</label><input type="text" class="form-control" spellcheck="false" name="image_description" id="'+disk_uuid+'_image_desc" placeholder="Image Description" value=""/></div></div>';
+	
+	$j("#disk_details").append(details_div);
+	
+	new_disk_json[disk_uuid]="";
+}
+
+function remove_disk_details(disk_uuid) {
+	$j("#"+disk_uuid+"_div").remove();
+	delete new_disk_json[disk_uuid];
+}]]></client_script>
+        <description>Nutanix Image Create Action UI Page</description>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Nutanix_Image_Create_Page.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	<j:set var="jvar_element_id" value="${JS:sysparm_sysId}"/>
+	<g:evaluate var="jvar_not" object="true">
+		var act_util=new Nutanix_Action_Utils();
+		var disk_list = act_util.getDiskList('${jvar_element_id}');
+		disk_list;
+	</g:evaluate>
+	
+	<input type="hidden" name="act_sys_id" id="act_sys_id" value="${JS:sysparm_sysId}"/>
+	<input type="hidden" name="disk_list" id="disk_list" value="${disk_list}"/>
+	<div id="error_body" style="width:100%"></div> 
+	<div id="disk_selector" style="width:100%"></div> 
+	<div id="main_disk_page">
+	<div class="">
+		<div class="info-message" style="padding: 5px 16px; background-color: #e8f0fa; color: #5f96e3; position: relative; margin: 5px 0px;">Each disk would be created to a separate image.</div>
+		<div>
+			<div class="form-group">
+				<span class="input-group-checkbox">
+					<input id="all_disks" class="checkbox" type="checkbox" value="false"/>
+					<label for="all_disks" class="checkbox-label"><strong>All Disks</strong></label>
+				</span>
+			</div>
+		</div>
+		<table class="table-list table-selectable" width="100%">
+			<thead>
+				<tr>
+					<th class="table-col-noHeader" style="width: 10px;"></th>
+					<th class="table-column-sortable" style="text-align: left;">Disks</th>
+					<th class="table-column-sortable" style="text-align: left;">Type</th>
+					<th class="table-column-sortable" style="text-align: left;">Size</th>
+				</tr>
+			</thead>
+			<tbody class="table-list-selectable-rows">
+			</tbody>
+		</table>
+	</div>
+	<label class="disk_number">Image Details</label>
+	<div id="disk_details"></div>
+	<div class="modal-footer"><button type="button" id="close-modal" class="btn btn-default">Cancel</button><button type="button" id="create-image" class="btn btn-primary">Save</button></div>
+	</div>
+	<style>
+		.table-list {
+		font-family: SourceSansPro, "Helvetica Neue", Arial;
+		border-collapse: collapse;
+		width: 100%;
+		}
+		.table-list td,.table-list th{
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+		}
+		.disk-form {
+		padding: 1%;
+		background-color: lightgrey;
+		margin-bottom: 10px;
+		}
+		
+		.toggle-collapse-disk {
+		padding-right: 5px;
+		}
+	</style>
+
+</j:jelly>]]></html>
+        <name>Nutanix_Image_Create_Page</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-07-03 12:10:18</sys_created_on>
+        <sys_id>2b5da5d5db315010e25b1fc7689619aa</sys_id>
+        <sys_mod_count>140</sys_mod_count>
+        <sys_name>Nutanix_Image_Create_Page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_2b5da5d5db315010e25b1fc7689619aa</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-09-23 13:23:21</sys_updated_on>
+    </sys_ui_page>
+</record_update>

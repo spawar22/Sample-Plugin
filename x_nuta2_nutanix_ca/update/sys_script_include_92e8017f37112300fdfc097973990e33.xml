@@ -1,0 +1,2205 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_FetchConfigureSettingDropdown</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_FetchConfigureSettingDropdown</name>
+        <script><![CDATA[var Nutanix_FetchConfigureSettingDropdown = Class.create();
+Nutanix_FetchConfigureSettingDropdown.prototype = {
+    initialize: function() {
+        this.appUtil = new Nutanix_Calm_Utils();
+        this.logger = new Nutanix_Calm_Logger();
+
+        this.disabledFields = gs.getProperty('x_nuta2_nutanix_ca.disabled.fields') + '';
+    },
+	
+	variableArrayParser: function(type, parent_uuid, var_array) {
+		
+		if(type == 'catalog') {
+			var gr = new GlideRecord("x_nuta2_nutanix_ca_nutanix_runtime_configuration");
+			gr.addQuery("item_name", parent_uuid);
+			gr.query();
+			if(gr.next()) {
+				parent_uuid = gr.blueprint.uuid + "";
+				type = "blueprints";
+			}
+		}
+		
+		var parsed_var_array = JSON.parse(var_array);
+		var pre_map = {};
+		var extApiFlag = false;
+		for(var i = 0; i < parsed_var_array.length; i++) {
+			var var_data = parsed_var_array[i];	
+			var depends_on = this.appUtil.getMacroDependencies(JSON.stringify(var_data));
+			pre_map[var_data.name] = {"depends_on":depends_on, "value": var_data.value + "", "uuid": var_data.uuid, "type": var_data.type, "name": var_data.name, "sys_id": (var_data.sys_id) ? var_data.sys_id : ""};
+			if(var_data.type == 'EXEC_LOCAL' || var_data.type == 'HTTP_LOCAL' || var_data.type == 'EXEC_SECRET' || var_data.type == 'HTTP_SECRET') {
+				pre_map[var_data.name].requiresApiCall = true;
+				extApiFlag = true;
+			}
+		}
+		
+		var result =  this.getHttpValues(type, parent_uuid, JSON.stringify(pre_map));
+		
+		return result;
+	},
+	
+	fetchLaunchVars: function(catSysId, profile) {
+		
+		var varJSON = {"profile":{}, "service":{}};
+		var grProfile = new GlideRecord(this.appUtil.configuration.table.variablesProperties+'');
+		grProfile.addQuery('application_profile.name', profile + "");
+		grProfile.addQuery('catalog_item', catSysId + "");
+		grProfile.addQuery('isprofilevariable', true);
+		grProfile.orderBy('variable.name');
+		grProfile.query();
+		while(grProfile.next())
+			varJSON.profile[grProfile.variable.sys_id + ""] =  grProfile.field_json + "";
+		var grService = new GlideRecord(this.appUtil.configuration.table.variablesProperties+'');
+		grService.addQuery('catalog_item', catSysId);
+		grService.addQuery('isservicevariable', true);
+		grService.orderBy('variable.name');
+		grService.query();
+		while(grService.next()) {
+			varJSON.service[grService.service_name.question_text + ""] = {};
+		}
+		
+		grService.query();
+		while(grService.next()) {
+			varJSON.service[grService.service_name.question_text + ""][grService.variable.sys_id + ""] = grService.field_json + "";
+		}
+			
+			//[grService.sys_id] = {"field_json": grService.field_json + ""};
+			//varJSON["service"][grService.service_name] = {"sys_id": grService.sys_id, "field_json": grService.field_json};
+		return JSON.stringify(varJSON);
+	},
+
+    fieldValidation: function(catSysId, fieldValueMap) {
+        try {
+            this.logger.debug("Inside Nutanix_ClientServerScriptBridge.fieldValidation.");
+            var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties + '');
+            gr.addEncodedQuery('catalog_item=' + catSysId + '^isprofilevariable=true^ORisservicevariable=true^ORfield_regexISNOTEMPTY');
+            gr.query();
+
+            var fieldValReg = {};
+            while (gr.next()) {
+
+                var listRegex = {};
+                if (gr.type + '' == 21) {
+                    var filter = (gr.variable.reference_qual + '').substr(9, (gr.variable.reference_qual + '').length);
+                    var genTable = new GlideRecord('x_nuta2_nutanix_ca_generic_table_for_dropdown');
+                    genTable.addQuery('variable', filter);
+                    genTable.query();
+                    while (genTable.next()) {
+                        listRegex[genTable.sys_id + ''] = genTable.value + '';
+                    }
+
+
+                }
+                fieldValReg[gr.variable.name + ''] = {
+                    "status": false,
+                    "regex": gr.field_regex + '',
+                    "type": gr.type + '',
+                    "data_type": gr.data_type + '',
+                    "listRegex": listRegex
+                };
+            }
+            return JSON.stringify(fieldValReg);
+
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_ClientServerScriptBridge.fieldValidation. Error:- " + e);
+        }
+
+    },
+
+
+    hideAccessLocalGroupOption: function() //hide the option
+    {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.hideAccessLocalGroupOption.");
+
+            var lg = new GlideRecord('x_nuta2_nutanix_ca_calm_plugin_configuration');
+            lg.addQuery();
+            lg.query();
+            while (lg.next()) {
+                return lg.use_local_groups;
+
+            }
+        } catch (e) {
+            this.logger.error("Error caught in Nutanix_FetchConfigureSettingDropdown.hideAccessLocalGroupOption:" + e);
+        }
+    },
+
+    supportStatusMPI: function(bpSysID) {
+        try {
+//             gs.info(bpSysID);
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.supportStatusMPI.");
+            var ss = new GlideRecord('x_nuta2_nutanix_ca_nutanix_marketplaceitems');
+            if (ss.get(bpSysID)) {
+                return ss.support_status;
+            }
+        } catch (e) {
+            this.logger.error("Error caught in Nutanix_FetchConfigureSettingDropdown.supportStatusMPI: " + e);
+        }
+    },
+
+    advanceVariableDynamicOptions : function(catSysId,fieldValueMap){
+		try{
+			
+			this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.advanceVariableDynamicOptions.");
+			/*var launch_set_json = {};
+			var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties+'');
+			gr.addEncodedQuery('catalog_item='+catSysId+'^isprofilevariable=true^ORisservicevariable=true');//^data_typeINEXEC_SECRET,HTTP_SECRET,EXEC_LOCAL,HTTP_LOCAL');
+			
+			gr.query();
+			
+		
+			var catalog =  new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+			catalog.addQuery('item_name',catSysId);
+			catalog.query();
+			
+			var profile_json = {};
+			var service_json = {};
+			while(gr.next()) {
+				var type = gr.data_type + "";
+				var requires_api_call = false;
+				
+				if(type == 'EXEC_LOCAL' || type == 'HTTP_LOCAL' || type == 'EXEC_SECRET' || type == 'HTTP_SECRET')
+					requires_api_call = true;
+				
+				if(gr.isprofilevariable + "" == "true") {
+					profile_json[gr.variable.question_text + ""] = {
+						"sys_id" : gr.sys_id+'',
+						"value" : gr.default_value + "",
+						"depends_on" : JSON.parse(gr.field_json + ""),
+						"uuid": gr.uuid + "",
+						"type": type,
+						"requiresApiCall": requires_api_call,
+						"name": gr.variable.name+'',
+						"question_text": gr.variable.question_text+''
+					};
+					
+				}
+				if(gr.isservicevariable + "" == "true") {
+					service_json[gr.variable.question_text+''] = {
+						"sys_id" : gr.sys_id+'',
+						"value" : gr.default_value + "",
+						"depends_on" : JSON.parse(gr.field_json + ""),
+						"uuid": gr.uuid + "",
+						"type": type,
+						"requiresApiCall": requires_api_call,
+						"name": gr.variable.name+'',
+						"question_text": gr.variable.question_text+''
+					};
+				}
+			}
+			launch_set_json = {"profile_json": profile_json, "service_json": service_json};
+			gs.info("Launch Page:"+JSON.stringify(launch_set_json));
+			
+			launch_set_json.profile_json = JSON.parse(this.getHttpValues('blueprints', catalog.blueprint.uuid + "" , JSON.stringify(launch_set_json.profile_json)));
+			launch_set_json.service_json = JSON.parse(this.getHttpValues('blueprints', catalog.blueprint.uuid + "" , JSON.stringify(launch_set_json.service_json)));
+			
+			gs.info("Result:"+JSON.stringify(launch_set_json));
+			return;*/
+			var advanceFields = [];
+			advanceFields[0] = {};
+			advanceFields[1] = JSON.parse(this.fieldValidation(catSysId));
+			return JSON.stringify(advanceFields);
+			
+		}catch(e) {
+			this.logger.error("Error caught in Nutanix_FetchConfigureSettingDropdown.advanceVariableDynamicOptions:"+e);
+		}
+	},
+	
+	_substituteMacro: function(value, all_values) {
+		
+		var macro_split = value.split("@@{");
+		for(var i = 0; i < macro_split.length; i++) {
+			if(macro_split[i].includes("}@@")) {
+				var internal_split = macro_split[i].split("}@@");
+				if(!all_values[internal_split[0]])
+					return '';
+				internal_split[0] = all_values[internal_split[0]].value;
+				macro_split[i] = internal_split.join('');
+			}
+		}
+		return macro_split.join('');
+	},
+	
+	_createOverrideVarBody: function(all_values, variable_json) {
+		
+		var type = variable_json.type + "";
+		var override_array = [];
+		
+		if(type == "EXEC_LOCAL" || type == "EXEC_SECRET") {
+			/*if(variable_json.depends_on.script.dependencies.length == 0)
+				return override_array;*/
+			override_array.push({"key":"script", "value": this._substituteMacro(variable_json.depends_on.script.value, all_values)});
+		}
+		
+		if(type == "HTTP_LOCAL" || type == "HTTP_SECRET") {
+			var supported_fields = {"content_type":"", "url":"", "request_body":""};//, "response_paths": ""};
+			for(var i in supported_fields) {
+				/*if(variable_json.depends_on[i].dependencies.length == 0)
+					continue;*/
+				var val = (variable_json.depends_on[i].value) ? variable_json.depends_on[i].value + "" : "";
+				override_array.push({"key":i, "value": this._substituteMacro(val, all_values)});
+			}
+		}
+		
+		return JSON.stringify(override_array);
+	},
+
+    getHttpValues: function(type, parent_uuid, pre_map) {
+//  		gs.info("!Pre map:"+JSON.stringify(pre_map));
+		try{
+			this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getHttpValues.");
+			
+			var post_value_map = {};
+			pre_map = JSON.parse(pre_map);
+			var top_pre_map = {};
+			for(var i in pre_map) {
+				top_pre_map[i] = this.appUtil.createPreMap(pre_map[i].depends_on, pre_map[i].type);
+			}
+			
+			var top_post_map = this.appUtil.createDependencyMap(top_pre_map);
+			
+			var dependency_array = top_post_map.Dep_array;
+			var error_array = top_post_map.error_map;
+			
+			if(type == 'unpublished' || type == 'published') {
+				var table_name = (type == 'unpublished') ? this.appUtil.configuration.table.Blueprint + '' : 'x_nuta2_nutanix_ca_nutanix_marketplaceitems';
+				var grBlueprint = new GlideRecord(table_name);
+				if (grBlueprint.get(parent_uuid))
+				{	
+				parent_uuid = grBlueprint.uuid + '';
+				type = 'blueprints';
+				}
+			}
+// 			gs.info("!"+JSON.stringify(dependency_array));
+			for(var pos = 0; pos < dependency_array.length; pos++) {
+				var var_json = pre_map[dependency_array[pos]];
+				if(!var_json) {
+					this.logger.error('Dependent variable "'+dependency_array[pos]+'" not found.');
+					continue;
+				}
+				
+				if(!var_json.requiresApiCall) {
+					var_json.value = this._substituteMacro(var_json.value, pre_map);
+					post_value_map[dependency_array[pos]] = var_json;
+					continue;
+				}
+				
+				var var_uuid = var_json.uuid;
+				var options = {"state":"","values":[]};
+				
+				var request_body = JSON.stringify({"requestId":"", "overridden_field":this._createOverrideVarBody(pre_map, var_json)});
+				
+				var sendValuesBody = this.appUtil.makeCalmApiCall('POST','/'+type+'/'+parent_uuid+'/variables/'+var_uuid+'/values', request_body + "");
+				var parsedSendValueBody = JSON.parse(sendValuesBody.getBody());
+// 				gs.info(sendValuesBody.getBody());
+				var valPollBody = {"requestId": parsedSendValueBody.request_id,"trlId": parsedSendValueBody.trl_id};
+				
+				var getValuesBody = this.appUtil.makeCalmApiCall('POST','/'+type+'/'+parent_uuid+'/variables/'+var_uuid+'/values', JSON.stringify(valPollBody));
+				var parsedValueBody = JSON.parse(getValuesBody.getBody());
+				var execState = parsedValueBody.state + "";
+				
+				while(execState == 'RUNNING' || execState == 'running') {
+					getValuesBody = this.appUtil.makeCalmApiCall('POST','/'+type+'/'+parent_uuid+'/variables/'+var_uuid+'/values', JSON.stringify(valPollBody));
+					parsedValueBody = JSON.parse(getValuesBody.getBody());
+					execState = parsedValueBody.state + "";
+				}
+				
+				//var parsedValueBody = JSON.parse(getValuesBody.getBody());
+				if(parsedValueBody.state == 'SUCCESS') {
+					var_json.state = parsedValueBody.state;
+					var_json.default_value = var_json.value + "";
+					var_json.value = [];
+					for(var i in parsedValueBody.values)
+						var_json.value[i] = parsedValueBody.values[i];
+				}
+				else {
+					var_json.state = parsedValueBody.state;
+					var_json.error = [];
+					for(var j in parsedValueBody.message_list)
+						var_json.error[j] = parsedValueBody.message_list[j].message;
+				}
+				
+				post_value_map[dependency_array[pos]] = var_json;
+			}
+//  			gs.info("!Pre map:"+JSON.stringify(pre_map));
+//  			gs.info("!Post map:"+JSON.stringify(post_value_map));
+			return JSON.stringify(post_value_map);
+
+		}catch(e) {
+			this.logger.error("Error caught in Nutanix_FetchConfigureSettingDropdown.getHttpValues:"+e);
+		}
+	},
+
+
+
+    getSubnet: function(catalog) {
+        try {
+            var clusterJson = {};
+            var catalogSysid;
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getSubnet");
+            var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+            gr.addQuery('item_name', catalog);
+            gr.query();
+            if (gr.next()) {
+                var grProject = new GlideRecord(this.appUtil.configuration.table.Project + '');
+                grProject.addQuery('sys_id', gr.project + '');
+                grProject.query();
+                if (grProject.next()) {
+                    var subnetList = grProject.subnet.split(',');
+                    for (var x in subnetList) {
+                        var grSubnet = new GlideRecord(this.appUtil.configuration.table.subnet + '');
+                        grSubnet.addQuery('sys_id', subnetList[x]);
+                        grSubnet.query();
+                        if (grSubnet.next()) {
+                            if (!clusterJson[grSubnet.cluster_name + '']) {
+                                clusterJson[grSubnet.cluster_name + ''] = {};
+                                clusterJson[grSubnet.cluster_name + '']['uuid'] = grSubnet.cluster_uuid + '';
+                                clusterJson[grSubnet.cluster_name + '']['subnet'] = {};
+                            }
+
+                            clusterJson[grSubnet.cluster_name + '']['subnet'][grSubnet.uuid + ''] = grSubnet.name + '';
+                        }
+
+                    }
+
+
+                }
+
+            }
+            /*setting session*/
+            var grCat = new GlideRecord('x_nuta2_nutanix_ca_nutanix_catalog_items');
+            grCat.addQuery('sys_id', catalog);
+            grCat.query();
+            if (grCat.next()) {
+                var gr = new GlideRecord('item_option_new');
+                gr.addQuery('cat_item.name', grCat.name + '');
+                gr.query();
+                var catalog_clusterJSON = {};
+                while (gr.next()) {
+                    if ((gr.name + '').endsWith('cluster_name') && gr.question_text == 'Cluster Name') {
+                        catalog_clusterJSON[gr.sys_id + ''] = {};
+                        catalog_clusterJSON[gr.sys_id + '']['name'] = gr.name + '';
+                        catalog_clusterJSON[gr.sys_id + '']['label'] = gr.question_text + '';
+                        catalog_clusterJSON[gr.sys_id + '']['value'] = gr.default_value + '';
+                    }
+                }
+
+                for (var k in catalog_clusterJSON) {
+                    var serviceName = (catalog_clusterJSON[k].name + '').slice(0, (catalog_clusterJSON[k].name).length - 12);
+                    catalog_clusterJSON[k]['nics'] = {};
+                    var gr = new GlideRecord('item_option_new');
+                    gr.addQuery('cat_item.name', grCat.name + '');
+                    gr.query();
+                    while (gr.next()) {
+                        if ((gr.name + '').indexOf(serviceName) != -1 && (gr.name + '').indexOf('_nic_') != -1) {
+                            catalog_clusterJSON[k]['nics'][gr.sys_id + ''] = gr.name + '';
+                        }
+                    }
+                }
+            }
+
+            /**/
+
+
+            var catNicJson = {
+                "catalog_data": catalog_clusterJSON,
+                "cluster_info": clusterJson
+            };
+            return (JSON.stringify(catNicJson));
+
+        } catch (e) {
+            this.logger.error("Inside Nutanix_FetchConfigureSettingDropdown.getSubnet." + e);
+        }
+    },
+
+    getNutanixSubnetList: function(projects) {
+        try {
+			this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getNutanixSubnetList.");
+			var subnetListJSON = {};
+			var project_array = projects.split(',');
+			var project_subnet = [];
+			for(var i=0; i< project_array.length; i++){
+			   var projectSubnet = new GlideRecord(this.appUtil.configuration.table.Project);
+			   if(projectSubnet.get(project_array[i]+'')){
+				   if(projectSubnet.subnet != ''){
+					   var subnetList = projectSubnet.subnet.split(',');
+					   for(var k in subnetList){
+							if((project_subnet.indexOf(subnetList[k])) == -1)
+								   project_subnet.push(subnetList[k]); 
+					   }
+					}
+			   }
+			}
+			
+			for(var j in project_subnet){
+			    var subnetListGR = new GlideRecord(this.appUtil.configuration.table.subnet);
+				subnetListGR.addQuery('sys_id', subnetList[j]+'');
+				subnetListGR.query();
+					if(subnetListGR.next()){
+					  subnetListJSON[subnetListGR.uuid+''] = { "name" : subnetListGR.name+'',
+																	 "cluster_name" : subnetListGR.cluster_name+'',
+																	 "cluster_uuid" : subnetListGR.cluster_uuid+''
+															 };
+					}
+			}
+				
+			return subnetListJSON;
+		} catch (e) {
+			this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getNutanixSubnetList. Error:- "+e);
+		}
+    },
+
+    getServiceVariableDetails: function(projects, blueprint, profiles, type, bpType) {
+
+        try {
+			var subnet_info = this.getNutanixSubnetList(project);
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getServiceVariableDetails.");
+			var project_array = projects.split(',');
+			var profile_array = profiles.split(',');
+			var project = project_array[0];
+			var profile = profile_array[0];
+			
+            var variables = new GlideRecord(this.appUtil.configuration.table.applicationProfiles + '');
+            if (variables.get(profile)) {
+                this.logger.info("Fetching variables associated with profile " + variables.name);
+            }
+            var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties + '');
+            gr.addQuery('application_profile', profile);
+            gr.addQuery('catalog_item', blueprint);
+            gr.addQuery('isprofilevariable', false);
+            gr.orderBy('variable.order');
+            gr.query();
+
+            var answer = {};
+
+            var i = 0;
+
+            while (gr.next()) {
+
+                if (!answer[gr.service_name.name + ''])
+                    answer[gr.service_name.name + ''] = {};
+
+                var categoryName = gr.category_name.name + '';
+
+                if (gr.category_name.name + '' == gr.variable.name + '') {
+
+                    if (!answer[gr.service_name.name + ''][gr.category_name.name + ''])
+                        answer[gr.service_name.name + ''][gr.category_name.name + ''] = {};
+
+                    if (bpType == "published" && type == "new") {
+
+                        var ans = (this.getVariablePatchedValue(type + '', gr.default_value + '', gr.sys_id, gr.variable.name + '', gr.category_name.name + '', gr.category_name.question_text + ''));
+                        this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getServiceVariableDetails.Patched Value for " + gr.variable.name + " :: " + ans);
+                        answer[gr.service_name.name + ''][gr.category_name.name + '']['new_' + gr.sys_id + ''] = (ans) ? JSON.parse(ans) : [];
+                        answer[gr.service_name.name + ''][gr.category_name.name + '']['new_' + gr.sys_id + ''].notCmplx = false;
+
+
+                    } else {
+                        answer[gr.service_name.name + ''][gr.category_name.name + ''][gr.sys_id + ''] = (gr.default_value + '') ? JSON.parse(gr.default_value + '') : {};
+                        answer[gr.service_name.name + ''][gr.category_name.name + ''][gr.sys_id + ''].notCmplx = false;
+                    }
+
+                } else {
+
+                    /*if (gr.is_hidden == true)
+                        continue;*/
+
+
+                    if (!answer[gr.service_name.name + ''][gr.category_name.name + ''])
+                        answer[gr.service_name.name + ''][gr.category_name.name + ''] = {};
+                    var catname = (gr.category_name.name + '').substring(((gr.service_name.name + '').length) + 1);
+                    var varname = (gr.variable.name + '').substring(((gr.service_name.name + '').length) + 1);
+                    var default_value = "";
+                    var runtime_config = gr.runtime_config + '';
+                    var isdisabled = gr.isdisabled + '';
+                    var ans, parsedAns;
+                    if (catname == "ssh_keys" && bpType == "published" && type == "new") {
+                        var hasKey;
+                        var gr_ssh = new GlideRecord(this.appUtil.configuration.table.variablesProperties + '');
+                        gr_ssh.addQuery('application_profile', profile);
+                        gr_ssh.addQuery('catalog_item', blueprint);
+                        gr_ssh.addQuery('isprofilevariable', false);
+                        gr_ssh.addQuery('variable.name', 'CONTAINS', 'key_0');
+                        gr_ssh.orderBy('variable.order');
+                        gr_ssh.query();
+                        if (gr_ssh.next()) {
+                            hasKey = "true";
+                        }
+                        if (hasKey != "true") {
+                            ans = this.getVariablePatchedValue(type + '', gr.default_value + '', gr.sys_id, gr.variable.name + '', gr.category_name.name + '', gr.category_name.question_text + '', "true");
+                            parsedAns = (ans) ? JSON.parse(ans) : {};
+                            answer[gr.service_name.name + ''][gr.category_name.name + ''] = parsedAns;
+                        }
+
+                    }
+                    if ((!gr.default_value) && bpType == "published" && type == "new") {
+                        ans = this.getVariablePatchedValue(type + '', gr.default_value + '', gr.sys_id, gr.variable.name + '', gr.category_name.name + '', gr.category_name.question_text + '');
+                        parsedAns = (ans) ? JSON.parse(ans) : "";
+                        this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getServiceVariableDetails.Patched Value for " + gr.variable.name + " :: " + ans);
+                        if (parsedAns) {
+                            default_value = parsedAns.value + '';
+                            var isSupported = (default_value + '' == 'Cloud-init' || default_value + '' == 'Sysprep' || (varname + '').startsWith('key_') || (this.disabledFields.includes(varname) && varname + '' != 'name' && varname + '' != 'type')) ? false : true;
+                            //runtime_config = (parsedAns.runtime+'') ? parsedAns.runtime+'' : gr.runtime_config+'';
+                            runtime_config = ((default_value + '').indexOf('@@') != -1 || isSupported + '' == 'false') ? false : (parsedAns.runtime + '') ? parsedAns.runtime + '' : gr.runtime_config + '';
+                            isdisabled = ((default_value + '').indexOf('@@') != -1 || isSupported + '' == 'false') ? true : (runtime_config + '' == 'true') ? false : true; // ((default_value+'').indexOf('@@') != -1 || (this.disabledFields.includes(varname) && varname+''!='name' && varname+''!='type')) ? true : (runtime_config+'' == 'true') ? false : true;
+                            // 							
+                        }
+                    }
+
+                    /*Advanced Variable*/
+                    var opt = [];
+                    if (gr.variable.type + '' == 5 && gr.isservicevariable == true) {
+                        var optionRec = new GlideRecord("question_choice");
+                        optionRec.addQuery('question', gr.variable + '');
+                        optionRec.query();
+                        while (optionRec.next()) {
+
+                            opt.push(optionRec.value + '');
+
+                        }
+
+
+                    } else if (gr.variable.type + '' == 21 && gr.isservicevariable == true) {
+                        var varRefRec = gr.variable.getRefRecord().reference_qual + '';
+                        varRefRec = varRefRec.substr(9, varRefRec.length);
+                        var optionRec = new GlideRecord(this.appUtil.configuration.table.dropDownTable + '');
+                        optionRec.addQuery('variable', varRefRec);
+                        optionRec.query();
+                        while (optionRec.next()) {
+
+                            opt.push(optionRec.value + '');
+                        }
+
+
+                    }
+
+                    answer[gr.service_name.name + ''][gr.category_name.name + ''][gr.sys_id + ''] = {
+                        'name': gr.variable.name + '',
+                        'question_text': gr.variable.question_text + '',
+                        'value': (gr.default_value + '') ? gr.default_value + '' : default_value,
+                        'runtime_config': (gr.default_value + '') ? gr.runtime_config + '' : runtime_config,
+                        'type': gr.variable.type + '',
+                        'isprofilevariable': gr.isprofilevariable + '',
+                        'uuid': gr.uuid + '',
+                        'isdisabled': (gr.default_value + '') ? gr.isdisabled + '' : isdisabled,
+
+                        'isSupported': gr.issupported + '',
+                        'isservicevariable': gr.isservicevariable + '',
+
+                        'notCmplx': true,
+
+                        'val_type': gr.value_type + '',
+                        'description': gr.variable.help_text + '',
+                        'mandatory': gr.variable.mandatory + '',
+                        'regex': gr.field_regex + '',
+                        'options': opt,
+                        'data_type': gr.data_type + '',
+                        'serviceField': (gr.isprofilevariable + '' == 'false' && gr.isservicevariable + '' == 'false') ? true : false,
+						"field_json" : (gr.isservicevariable+''=='true') ? this.appUtil.getMacroDependencies(gr.field_json + "") : {},
+						"field" : (gr.isservicevariable+''=='true') ? gr.field_json + "" : "{}",
+						"isHidden": gr.is_hidden + ""
+                    };
+                }
+                i++;
+            }
+
+            this.logger.debug("Final answer" + i + " :: " + JSON.stringify(answer));
+            var returnJSON = {};
+            returnJSON['service_configuration'] = answer;
+            returnJSON['subnet_list'] = subnet_info;
+			this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getServiceVariableDetails. return : "+JSON.stringify(returnJSON));
+            return JSON.stringify(returnJSON);
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getServiceVariableDetails. Error:- " + e);
+        }
+
+    },
+
+    getVariablePatchedValue: function(type, value, grSysid, varname, categoryName, categoryNameText, sshFlag) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getVariablePatchedValue for variable :: " + varname + ",Category Name :: " + categoryNameText + ",SSh flag :: " + sshFlag);
+            if (type == "new" && (!value || (varname == categoryName) || categoryNameText == "SSH Keys")) {
+                var ans = {
+                    "value": "",
+                    "runtime": false
+                };
+                var session = gs.getSession();
+                var bpResponse = JSON.parse(session.getClientData('Cloned_bp_response'));
+                var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties + '');
+                gr.addQuery("sys_id", grSysid);
+                gr.query();
+                if (gr.next()) {
+                    var profileUUID = "";
+                    for (var i in bpResponse) {
+                        var serviceJSON = bpResponse[i];
+                        if (serviceJSON.name.toLowerCase() + '' == gr.service_name.name + '') {
+
+                            for (var k in serviceJSON.profile) {
+                                var profile = serviceJSON.profile[k];
+                                if (profile.name == gr.application_profile.name + '') {
+                                    profileUUID = profile.uuid + '';
+                                    break;
+                                }
+                            }
+
+                            if (serviceJSON.substrate[profileUUID]) {
+                                this.logger.debug("Patching :: Found profile :: " + gr.application_profile.name + '');
+                                var substrateJSON = serviceJSON.substrate[profileUUID];
+                                var categoryJSON = "";
+                                var insideCategoryJSON = "";
+                                switch (gr.category_name.question_text + '') {
+
+                                    case "Connection":
+                                        categoryJSON = "readiness_probe";
+                                        break;
+
+                                    case "VM Configuration": //categoryJSON = "create_spec";
+                                        //break;
+
+                                    case "Storage": //categoryJSON = "create_spec";
+                                        //break;
+                                    case "Network Adapters":
+
+                                    case "Network Profiles":
+
+                                    case "OS Profile":
+
+                                    case "OS Profile Script":
+
+                                    case "Management Optional":
+
+                                    case "Storage Profile":
+
+                                    case "Disks":
+
+                                    case "Networking":
+
+                                    case "Categories":
+
+                                    case "API ACCESS":
+
+                                    case "Blank Disks":
+
+                                    case "Images":
+
+                                    case "SSH Keys":
+
+                                    case "Storage Profile Data Disks":
+
+                                    case "Guest Customization":
+
+                                    case "VDisks":
+                                        categoryJSON = "create_spec";
+                                        break;
+
+                                }
+                                var runtime = "";
+                                var field;
+                                var fieldName;
+                                var editables = substrateJSON.editables[categoryJSON];
+                                for (var l in substrateJSON) {
+
+                                    if (l + '' == categoryJSON) {
+
+                                        //this.logger.debug("Patching :: Category :: "+categoryJSON);
+
+                                        if (categoryJSON == "create_spec") {
+                                            fieldName = varname.substring(serviceJSON.name.length + 1);
+                                            // 												if((categoryName) && categoryName == "categories"){
+                                            // 													var ansCat = {};var q=1;
+                                            // 													var edit = (editables.categories) ? editables.categories : "false";
+                                            // 													var disable = (edit == "true") ?  "false" : "true";
+                                            // 													for( var b in substrateJSON[l].categories ){
+
+                                            // 														ansCat['category_'+q] =	{
+                                            // 																				  "name":  serviceJSON.name+'_'+b,
+                                            // 																				  "question_text": b+'',
+                                            // 																				  "value": substrateJSON[l].categories[b],
+                                            // 																				  "runtime_config": edit,
+                                            // 																				  "type": "6",
+                                            // 																				  "isprofilevariable": "false",
+                                            // 																				  "uuid": "",
+                                            // 																				  "isdisabled": disable,
+                                            // 																				  "notCmplx": true
+                                            // 																				};
+                                            // 													}
+
+                                            // 													return JSON.stringify(ansCat);
+                                            // 												}
+                                            if (categoryNameText == "VM Configuration") {
+                                                for (var b in substrateJSON[l]) {
+                                                    if (b == fieldName) {
+                                                        ans.value = (substrateJSON[l][b]) ? substrateJSON[l][b] : '';
+                                                        if (fieldName != "template" && fieldName != "datastore" && fieldName != "host") ans.runtime = (editables[b]) ? (editables[b]) : false;
+                                                        return JSON.stringify(ans);
+                                                    }
+                                                }
+                                            }
+
+                                            for (var s in substrateJSON[l].resources) {
+                                                var varServiceName = serviceJSON.name.toLowerCase() + '_' + s + '';
+                                                if (categoryNameText == "SSH Keys" && sshFlag == "true" && s == "sshKeys") {
+
+                                                    var ansSSH = {};
+                                                    var q = 0;
+                                                    var edit = "false";
+                                                    var disable = "true";
+                                                    for (var b in substrateJSON[l].resources.sshKeys) {
+                                                        for (var w in editables.resources.sshKeys) {
+                                                            if (b == w)
+                                                                edit = editables.resources.sshKeys[w] + '';
+                                                        }
+                                                        ansSSH['new_ssh_key_' + q] = {
+                                                            "name": serviceJSON.name + '_key_' + b,
+                                                            "question_text": 'key ' + b + '',
+                                                            "value": substrateJSON[l].resources.sshKeys[b],
+                                                            "runtime_config": edit,
+                                                            "type": "6",
+                                                            "isprofilevariable": "false",
+                                                            "uuid": "",
+                                                            "isdisabled": (edit == "true") ? "false" : "true",
+                                                            "isSupported": "true",
+                                                            "isservicevariable": "false",
+                                                            "notCmplx": true
+                                                        };
+                                                        q++;
+
+                                                    }
+
+                                                    return JSON.stringify(ansSSH);
+                                                } else if (categoryNameText == "Management Optional" && s == "guestCustomization") {
+                                                    if (fieldName == "startup_script") {
+                                                        ans.value = (substrateJSON[l].resources[s].startupScript) ? substrateJSON[l].resources[s].startupScript : '';
+                                                        ans.runtime = (editables.resources.guestCustomization && editables.resources.guestCustomization.startupScript) ? editables.resources.guestCustomization.startupScript : false;
+                                                        return JSON.stringify(ans);
+                                                    } else if (fieldName == "security_groups") {
+                                                        var groups = (substrateJSON[l].resources.tags.items && substrateJSON[l].resources.tags.items[0]) ? substrateJSON[l].resources.tags.items[0] : '';
+                                                        for (var p = 1; p < substrateJSON[l].resources.tags.items.length; p++)
+                                                            groups = groups + ',' + substrateJSON[l].resources.tags.items[i];
+                                                        ans.value = groups;
+                                                        ans.runtime = (editables.resources.tags && editables.resources.tags.items) ? editables.resources.tags.items : false;
+                                                        return JSON.stringify(ans);
+                                                    }
+
+                                                } else if (categoryNameText == "API ACCESS" && s == "serviceAccounts") {
+                                                    ans.value = (substrateJSON[l].resources[s][0].email) ? substrateJSON[l].resources[s][0].email : "";
+                                                    ans.runtime = (editables.resources.serviceAccounts[0] && editables.resources.serviceAccounts[0].email) ? editables.resources.serviceAccounts[0].email : false;
+                                                    return JSON.stringify(ans);
+                                                } else if (categoryNameText == "Disks" && s == "disks") {
+                                                    for (var j in substrateJSON[l].resources[s]) {
+                                                        substrateJSON[l].resources[s][j].runtime = {};
+                                                        substrateJSON[l].resources[s][j].disabled = {};
+                                                        for (var x in editables.resources.disks)
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s][j].runtime = (editables.resources.disks[x]) ? (editables.resources.disks[x]) : {};
+                                                                substrateJSON[l].resources[s][j].disabled = substrateJSON[l].resources[s][j].runtime;
+                                                            }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s]);
+                                                } else if (categoryNameText == "Networking" && s == "networkInterfaces") {
+                                                    for (var j in substrateJSON[l].resources[s]) {
+                                                        substrateJSON[l].resources[s][j].runtime = {};
+                                                        substrateJSON[l].resources[s][j].disabled = {};
+                                                        for (var x in editables.resources.networkInterfaces)
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s][j].runtime = (editables.resources.networkInterfaces[x]) ? (editables.resources.networkInterfaces[x]) : {};
+                                                                substrateJSON[l].resources[s][j].disabled = substrateJSON[l].resources[s][j].runtime;
+                                                            }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s]);
+                                                } else if (categoryNameText == "Blank Disks" && s == "blankDisks") {
+                                                    for (var j in substrateJSON[l].resources[s]) {
+                                                        substrateJSON[l].resources[s][j].runtime = {};
+                                                        substrateJSON[l].resources[s][j].disabled = {};
+                                                        for (var x in editables.resources.blankDisks)
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s][j].runtime = (editables.resources.blankDisks[x]) ? editables.resources.blankDisks[x] : {};
+                                                                substrateJSON[l].resources[s][j].disabled = substrateJSON[l].resources[s][j].runtime;
+                                                            }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s]);
+                                                } else if (categoryNameText == "Images" && s == "disk_list") {
+                                                    var bootIndex = (substrateJSON[l].resources.boot_config && substrateJSON[l].resources.boot_config.boot_device && substrateJSON[l].resources.boot_config.boot_device.disk_address && substrateJSON[l].resources.boot_config.boot_device.disk_address.device_index + '') ? substrateJSON[l].resources.boot_config.boot_device.disk_address.device_index : -1;
+                                                    for (var j in substrateJSON[l].resources[s]) {
+                                                        substrateJSON[l].resources[s][j].runtime = {};
+                                                        substrateJSON[l].resources[s][j].disabled = {};
+                                                        substrateJSON[l].resources[s][j].bootable = (bootIndex == j) ? true : false;
+                                                        for (var x in editables.resources.disk_list)
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s][j].runtime = (editables.resources.disk_list[x]) ? editables.resources.disk_list[x] : {};
+                                                                substrateJSON[l].resources[s][j].disabled = substrateJSON[l].resources[s][j].runtime;
+                                                            }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s]);
+                                                } else if (categoryNameText == "Storage Profile Data Disks" && s == "storage_profile") {
+                                                    for (var j in substrateJSON[l].resources[s].data_disk_list) {
+                                                        substrateJSON[l].resources[s].data_disk_list[j].runtime = {};
+                                                        substrateJSON[l].resources[s].data_disk_list[j].disabled = {};
+                                                        for (var x in editables.resources.storage_profile.data_disk_list)
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s].data_disk_list[j].runtime = (editables.resources.storage_profile && editables.resources.storage_profile.data_disk_list[x]) ? editables.resources.storage_profile.data_disk_list[x] : {};
+                                                                substrateJSON[l].resources[s].data_disk_list[j].disabled = substrateJSON[l].resources[s].data_disk_list[j].runtime;
+                                                            }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s].data_disk_list);
+                                                } else if (categoryNameText == "OS Profile" && s == "os_profile") {
+                                                    for (var j in substrateJSON[l].resources[s].secrets) {
+                                                        substrateJSON[l].resources[s].secrets[j].runtime = {};
+                                                        substrateJSON[l].resources[s].secrets[j].disabled = {};
+                                                        for (var x in editables.resources.os_profile.secrets)
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s].secrets[j].runtime = (editables.resources.os_profile && editables.resources.os_profile.secrets[x]) ? editables.resources.os_profile.secrets[x] : {};
+                                                                substrateJSON[l].resources[s].secrets[j].disabled = substrateJSON[l].resources[s].secrets[j].runtime;
+
+                                                            }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s].secrets);
+                                                } else if (categoryNameText == "OS Profile Script" && s == "os_profile") {
+
+                                                    ans.value = (substrateJSON[l].resources[s].linux_config && substrateJSON[l].resources[s].linux_config.custom_data + '') ? substrateJSON[l].resources[s].linux_config.custom_data + '' : "";
+                                                    ans.runtime = (editables.resources.os_profile && editables.resources.os_profile.linux_config && editables.resources.os_profile.linux_config.custom_data) ? editables.resources.os_profile.linux_config.custom_data : false;
+                                                    return JSON.stringify(ans);
+
+                                                } else if (categoryNameText == "Guest Customization" && s == "guest_customization") {
+                                                    varname = varname.substring(serviceJSON.name.length + 1);
+                                                    for (var j in substrateJSON[l].resources[s].linux_data) {
+                                                        if (varname == "dns_search_path" && j == varname) {
+                                                            ans.value = (substrateJSON[l].resources[s].linux_data.dns_search_path[0] + '') ? substrateJSON[l].resources[s].guest_customization.linux_data.dns_search_path[0] + '' : "";
+                                                            ans.runtime = (editables.resources.guest_customization && editables.resources.guest_customization.linux_data && editables.resources.guest_customization.linux_data.dns_search_path[0]) ? editables.resources.guest_customization.linux_data.dns_search_path[0] : false;
+                                                            return JSON.stringify(ans);
+                                                        } else if (j == varname) {
+                                                            ans.value = substrateJSON[l].resources[s].linux_data[j] + '';
+                                                            for (var x in editables.resources.guest_customization.linux_data) {
+                                                                if (x == varname) {
+                                                                    ans.runtime = editables.resources.guest_customization.linux_data[x] + '';
+                                                                    return JSON.stringify(ans);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    if (fieldName == "script") {
+
+                                                        ans.value = (substrateJSON[l].resources[s].cloud_init && substrateJSON[l].resources[s].cloud_init.user_data) ? substrateJSON[l].resources[s].cloud_init.user_data : ((substrateJSON[l].resources[s].sysprep && substrateJSON[l].resources[s].sysprep.unattend_xml) ? substrateJSON[l].resources[s].sysprep.unattend_xml : (substrateJSON[l].resources[s].cloud_init) ? substrateJSON[l].resources[s].cloud_init : '');
+                                                        ans.runtime = (editables.resources.guest_customization && editables.resources.guest_customization.cloud_init) ? (editables.resources.guest_customization.cloud_init) : false;
+                                                        return (JSON.stringify(ans));
+                                                    } else if (fieldName == "install_type") {
+                                                        ans.value = (substrateJSON[l].resources[s].sysprep && substrateJSON[l].resources[s].sysprep.install_type) ? substrateJSON[l].resources[s].sysprep.install_type : "";
+                                                        ans.runtime = false;
+                                                        return (JSON.stringify(ans));
+                                                    } else if (fieldName == "type") {
+                                                        ans.value = (substrateJSON[l].resources[s].sysprep) ? 'Sysprep' : 'Cloud-init';
+                                                        ans.runtime = false;
+                                                        return (JSON.stringify(ans));
+                                                    }
+                                                } else if (varname == (serviceJSON.name.toLowerCase() + '_' + 'storage') && s == "block_device_map") {
+
+                                                    substrateJSON[l].resources[s].root_disk.runtime = "";
+                                                    substrateJSON[l].resources[s].root_disk.disabled = "";
+                                                    substrateJSON[l].resources[s].root_disk.runtime = (editables.resources.block_device_map.root_disk.size_gb) ? editables.resources.block_device_map.root_disk.size_gb + '' : 'false';
+                                                    substrateJSON[l].resources[s].root_disk.disabled = substrateJSON[l].resources[s].root_disk.runtime;
+                                                    for (var j in substrateJSON[l].resources[s].data_disk_list) {
+
+                                                        substrateJSON[l].resources[s].data_disk_list[j].runtime = 'false';
+                                                        substrateJSON[l].resources[s].data_disk_list[j].disabled = 'false';
+                                                        if (editables && editables.resources && editables.resources.block_device_map && editables.resources.block_device_map.data_disk_list[j] && editables.resources.block_device_map.data_disk_list[j].size_gb) {
+                                                            var runtime_data = editables.resources.block_device_map.data_disk_list[j].size_gb;
+                                                            substrateJSON[l].resources[s].data_disk_list[j].runtime = (runtime_data) ? runtime_data + '' : 'false';
+                                                            substrateJSON[l].resources[s].data_disk_list[j].disabled = substrateJSON[l].resources[s].data_disk_list[j].runtime;
+                                                        }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s]);
+                                                } else if (varname == (serviceJSON.name.toLowerCase() + '_vdisks') && s == "disk_list") {
+                                                    for (var j in substrateJSON[l].resources[s]) {
+                                                        substrateJSON[l].resources[s][j].runtime = {};
+                                                        substrateJSON[l].resources[s][j].disabled = {};
+                                                        for (var x in editables.resources.disk_list) {
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s][j].runtime = editables.resources.disk_list[j];
+                                                                substrateJSON[l].resources[s][j].disabled = substrateJSON[l].resources[s][j].runtime;
+                                                            }
+                                                        }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s]);
+                                                } else if (varname == (serviceJSON.name.toLowerCase() + '_network_adapters') && s == "nic_list") {
+                                                    for (var j in substrateJSON[l].resources[s]) {
+                                                        substrateJSON[l].resources[s][j].runtime = {};
+                                                        substrateJSON[l].resources[s][j].disabled = {};
+                                                        for (var x in editables.resources.nic_list)
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s][j].runtime = (editables.resources.nic_list[j]) ? (editables.resources.nic_list[j]) : {};
+                                                                substrateJSON[l].resources[s][j].disabled = substrateJSON[l].resources[s][j].runtime;
+                                                            }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s]);
+                                                } else if (categoryNameText == "Storage Profile" && s == "storage_profile") {
+                                                    for (var j in substrateJSON[l].resources[s].image_details) {
+                                                        varServiceName = serviceJSON.name.toLowerCase() + '_' + j;
+                                                        if (varname == varServiceName) {
+                                                            ans.value = (substrateJSON[l].resources[s].image_details[j]) ? (substrateJSON[l].resources[s].image_details[j] + '') : "";
+                                                            ans.runtime = (editables.resources.storage_profile.image_details && editables.resources.storage_profile.image_details[j]) ? (editables.resources.storage_profile.image_details[j]) : false;
+                                                            if ((varname.indexOf("use_custom_image") != -1) && !ans.value) ans.value = "false";
+                                                            return JSON.stringify(ans);
+                                                        }
+
+                                                    }
+                                                    for (var j in substrateJSON[l].resources[s].os_disk_details) {
+                                                        varServiceName = serviceJSON.name.toLowerCase() + '_' + substrateJSON[l].resources[s].image_details[j];
+                                                        if (varname == varServiceName) {
+                                                            ans.value = (substrateJSON[l].resources[s].os_disk_details[j]) ? (substrateJSON[l].resources[s].os_disk_details[j]) : "";
+                                                            ans.runtime = (editables.resources.storage_profile.os_disk_details[j]) ? (editables.resources.storage_profile.os_disk_details[j]) : false;
+                                                            return JSON.stringify(ans);
+                                                        }
+                                                    }
+                                                    if (varname.indexOf("use_managed_disks") != -1) {
+                                                        ans.value = (substrateJSON[l].resources[s].is_managed) ? (substrateJSON[l].resources[s].is_managed) : "";
+                                                        ans.runtime = (editables.resources.storage_profile.is_managed) ? (editables.resources.storage_profile.is_managed) : false;
+                                                        return JSON.stringify(ans);
+                                                    }
+                                                } else if (categoryNameText == "Network Profiles" && s == "nw_profile") {
+                                                    for (var j in substrateJSON[l].resources[s].nic_list) {
+                                                        substrateJSON[l].resources[s].nic_list[j].runtime = {};
+                                                        substrateJSON[l].resources[s].nic_list[j].disabled = {};
+                                                        for (var x in editables.resources.nw_profile.nic_list)
+                                                            if (x == j) {
+                                                                substrateJSON[l].resources[s].nic_list[j].runtime = (editables.resources.nw_profile.nic_list[j]) ? editables.resources.nw_profile.nic_list[j] : {};
+                                                                substrateJSON[l].resources[s].nic_list[j].disabled = substrateJSON[l].resources[s].nic_list[j].runtime;
+                                                            }
+                                                    }
+                                                    return JSON.stringify(substrateJSON[l].resources[s].nic_list);
+                                                } else if (varname + '' == varServiceName + '') {
+                                                    field = substrateJSON[l].resources[s];
+                                                    if (!(field.constructor == Object || field.constructor == Array)) {
+                                                        ans.value = substrateJSON[l].resources[s] + '';
+                                                        ans.runtime = this.checkEditable(editables, varname, categoryJSON, serviceJSON.name.toLowerCase() + '_') + '';
+                                                        return JSON.stringify(ans);
+                                                    } else if (s == "security_group_list") {
+                                                        var sec = field[0].security_group_id + '';
+                                                        for (var m = 1; m < field.length; m++) {
+                                                            sec += "," + field[m].security_group_id + '';
+                                                        }
+                                                        ans.value = sec + '';
+                                                        ans.runtime = this.checkEditable(editables, varname, categoryJSON, serviceJSON.name.toLowerCase() + '_') + '';
+                                                        return JSON.stringify(ans);
+                                                    }
+                                                } else if (categoryNameText == "VM Configuration" && s == "hw_profile" && varname.indexOf("hardware_profile") != -1) {
+                                                    ans.value = (substrateJSON[l].resources[s].vm_size) ? substrateJSON[l].resources[s].vm_size : '';
+                                                    ans.runtime = (editables.resources.hw_profile.vm_size) ? (editables.resources.hw_profile.vm_size) : false;
+                                                    return JSON.stringify(ans);
+                                                } else if (categoryNameText == "SSH Keys" && fieldName == "block_project_wide_ssh_key" && s == "metadata" && sshFlag != "true") {
+                                                    var blockValue = false;
+                                                    for (var data in substrateJSON[l].resources[s]) {
+                                                        if (substrateJSON[l].resources[s][data].key + '' == 'block-project-ssh-keys') {
+                                                            blockValue = substrateJSON[l].resources[s][data].value + '';
+                                                            ans.runtime = (editables.resources.metadata.items[data]) ? (editables.resources.metadata.items[data]) : false;
+                                                        }
+                                                    }
+                                                    ans.value = blockValue;
+                                                    return JSON.stringify(ans);
+                                                }
+                                            }
+                                        } else if (categoryJSON == "readiness_probe") {
+                                            for (var s in substrateJSON[l]) {
+                                                var varServiceName = serviceJSON.name.toLowerCase() + '_' + s;
+                                                if (varname + '' == varServiceName + '') {
+                                                    ans.value = substrateJSON[l][s] + '';
+                                                    if (varname.indexOf("disable_readiness_probe") != -1)
+                                                        ans.value = (substrateJSON[l][s] == 'true') ? false : true;
+                                                    ans.runtime = this.checkEditable(editables, varname, categoryJSON, serviceJSON.name.toLowerCase() + '_') + '';
+                                                    return JSON.stringify(ans);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getVariablePatchedValue. Error:- " + e);
+        }
+    },
+    //Ptaching of MPI
+    //Ptaching of MPI
+    mpiPatching: function(projects, blueprint) {
+
+        var logger = new Nutanix_Calm_Logger();
+        var utils = new Nutanix_Calm_Utils();
+        var reqUtils = new Nutanix_RequestUtil();
+        var blueprintTemplate = "";
+        var catVariableBody = {};
+        var bpVariablesJSON = {};
+        var parseResp = {};
+
+        try {
+            logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.mpiPatching.");
+
+            var project = projects.split(',');
+            project = project[0];
+
+            var bp = new GlideRecord('x_nuta2_nutanix_ca_nutanix_marketplaceitems');
+            bp.addQuery('sys_id', blueprint);
+            bp.query();
+
+            var mpi_uuid = (bp.next()) ? bp.uuid : "";
+
+            var response = utils.makeCalmApiCall('GET', '/calm_marketplace_items/' + mpi_uuid);
+
+            if (response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+
+                response = JSON.parse(response.getBody());
+
+                var environment_uuid = ' ';
+                var project_uuid = '';
+
+                var projectRecord = new GlideRecord('x_nuta2_nutanix_ca_nutanix_project');
+                projectRecord.addQuery('sys_id', project);
+                projectRecord.query();
+
+                if (projectRecord.next()) {
+                    project_uuid = projectRecord.uuid + '';
+                    environment_uuid = projectRecord.environment_uuid + '';
+                }
+
+                var name = bp.name + '';
+                var app_bp_name = ((name + GlideSecureRandomUtil.getSecureRandomString(8) + mpi_uuid).replaceAll('-', ' ').trim().replaceAll(' ', '_')).substring(0, 64);
+                var tmpbody = {
+                    "status": response.status.resources.app_blueprint_template.status,
+                    "spec": response.spec.resources.app_blueprint_template.spec
+                };
+
+                var body = {
+                    "api_version": "3.0", //response.api_version,
+                    "metadata": {
+                        "kind": "blueprint",
+                        "project_reference": {
+                            "kind": "project",
+                            "uuid": project_uuid + ''
+                        },
+                        "categories": response.metadata.categories //changes
+                    },
+                    "spec": {
+                        "description": response.spec.resources.app_blueprint_template.spec.description, //response.spec.description,
+                        "app_blueprint_name": app_bp_name + '',
+                        "source_marketplace_version": response.spec.resources.version, //"1.0.0", //changes
+                        "source_marketplace_name": name + '',
+                        "resources": response.spec.resources.app_blueprint_template.spec.resources
+
+                        //reqUtils.makeResourceBody(tmpbody, tmpbody.status.resources, current)
+                        //response.spec.resources.app_blueprint_template.spec.resources
+                    }
+                };
+                if (environment_uuid + '')
+                    body.spec.environment_uuid = environment_uuid + '';
+                //gs.error("MPI payload send: "+JSON.stringify(body));
+                //	return "MPI Launch Body "+JSON.stringify(body);
+
+                var response = utils.makeCalmApiCall('POST', '/blueprints/marketplace_launch', JSON.stringify(body));
+                // 			return "post marketplace launch  call "+response.getStatusCode();
+                if (response.getStatusCode() == '200' || response.getStatusCode() == '201') {
+
+                    var session = gs.getSession();
+                    session.putClientData('non_filtered_cloned_bp_response', response.getBody());
+
+                    parseResp = JSON.parse(response.getBody());
+                    blueprintTemplate = (parseResp.status.resources) ? parseResp.status.resources : "";
+                    var clonedBpUuid = parseResp.metadata.uuid;
+
+                    //gs.error("Patching : "+response.getBody());
+
+                } else {
+                    logger.error("API call to '/blueprints/marketplace_launch' failed with name : " + app_bp_name + ":-" + response.getBody());
+                    //gs.error("Errorr :: "+(JSON.parseresponse.getBody()).message_list[0].message);
+                    return JSON.stringify({
+                        "errMess": JSON.parse(response.getBody()).message_list[0].message,
+                        "status": false
+                    });
+                }
+
+                var bpVariables = new Nutanix_CreateCatalogVariables();
+                if (bp.template_type == "Single Vm") {
+
+                    var service_body = [{
+                        "uuid": "singleVm-default-service-uuid",
+                        "name": "single_vm_configuration"
+                    }];
+
+                    catVariableBody = {
+                        "substrate_definition_list": (blueprintTemplate.substrate_definition_list) ? blueprintTemplate.substrate_definition_list : "",
+                        "app_profile_list": (blueprintTemplate.app_profile_list) ? blueprintTemplate.app_profile_list : "",
+                        "service_definition_list": service_body,
+                        "package_definition_list": (blueprintTemplate.package_definition_list) ? blueprintTemplate.package_definition_list : ""
+                    };
+                    bpVariablesJSON = bpVariables._filterJSONDatatoService(catVariableBody);
+                } else if (blueprintTemplate.package_definition_list && blueprintTemplate.substrate_definition_list && blueprintTemplate.app_profile_list && blueprintTemplate.service_definition_list) {
+                    catVariableBody = {
+                        "substrate_definition_list": (blueprintTemplate.substrate_definition_list) ? blueprintTemplate.substrate_definition_list : "",
+                        "app_profile_list": (blueprintTemplate.app_profile_list) ? blueprintTemplate.app_profile_list : "",
+                        "service_definition_list": (blueprintTemplate.service_definition_list) ? blueprintTemplate.service_definition_list : "",
+                        "package_definition_list": (blueprintTemplate.package_definition_list) ? blueprintTemplate.package_definition_list : ""
+                    };
+
+                    bpVariablesJSON = bpVariables._filterJSONDatatoService(catVariableBody);
+                }
+
+                bpVariablesJSON.uuid = parseResp.metadata.uuid + '';
+                bpVariablesJSON.name = parseResp.metadata.name + '';
+
+                var session = gs.getSession();
+                session.putClientData('Cloned_bp_response', JSON.stringify(bpVariablesJSON));
+                var clientData = session.getClientData('Cloned_bp_response');
+                logger.debug("MPI cloned Blueprint response ::" + clientData);
+                return JSON.stringify({
+                    "errMess": "Successfull",
+                    "status": true
+                }); //JSON.parse(clientData).uuid+'';
+            } else {
+                logger.error("API call to '/calm_marketplace_items/uuid' failed: " + response.getBody());
+                var result = {
+                    "errMess": (response.getBody()).message_list[0].message,
+                    "status": false
+                };
+                return JSON.stringify(result);
+            }
+        } catch (e) {
+            logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.mpiPatching. Error:- " + e);
+            return "false";
+        }
+    },
+
+    fetchBlueprints: function(projectUUID, blueprintType) {
+
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.fetchBlueprints.");
+
+            var gr = new GlideRecord(this.appUtil.configuration.table.catalogProjectRelation + '');
+            gr.addQuery('projects.uuid', projectUUID);
+
+            if (blueprintType == 'unpublished')
+                gr.addQuery('catalog_item.category', gs.getProperty('x_nuta2_nutanix_ca.nutanix_unpublishedBP_sysId'));
+            else
+                gr.addQuery('catalog_item.category', gs.getProperty('x_nuta2_nutanix_ca.nutanix_category_sysId'));
+
+            gr.orderBy('catalog_item.name');
+            gr.query();
+
+            var ans = {};
+            var i = 0;
+
+            while (gr.next()) {
+                if ((blueprintType == 'unpublished' && gr.catalog_item.state + '' == 'ACTIVE') || (blueprintType != 'unpublished' && gr.catalog_item.state + '' == 'active')) {
+                    ans[i] = {
+                        'sys_id': gr.catalog_item + '',
+                        'name': gr.catalog_item.name + '' + " " + gr.version + ''
+                    };
+                    i++;
+                }
+            }
+
+            this.logger.debug("Fetched " + i + " blueprints.");
+
+            return JSON.stringify(ans);
+
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.fetchBlueprints. Error:- " + e);
+        }
+
+    },
+
+    fetchApplicationProfiles: function(blueprintSysId) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.fetchApplicationProfiles.");
+
+            var blueprint = new GlideRecord(this.appUtil.configuration.table.Blueprint + '');
+            if (blueprint.get(blueprintSysId)) {
+                this.logger.info("Fetching profiles associated with blueprint " + blueprint.name);
+            }
+            var gr = new GlideRecord(this.appUtil.configuration.table.catalogProfileRelation + '');
+            gr.addQuery('catalog_item', blueprintSysId);
+            gr.addQuery('state', 'active');
+            //gr.addEncodedQuery('providersNOT LIKEaws^providersNOT LIKEazure^providersNOT LIKEgcp');
+            gr.orderBy('application_profile.name');
+            gr.query();
+
+            var ans = {};
+            var i = 0;
+            while (gr.next()) {
+                ans[i] = {
+                    'sys_id': gr.application_profile + '',
+                    'name': gr.application_profile.name + ''
+                };
+                i++;
+            }
+
+            this.logger.debug("Fetched " + i + " profiles.");
+
+            return JSON.stringify(ans);
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.fetchApplicationProfiles. Error:- " + e);
+        }
+    },
+
+    fetchProviderIcons: function(catSysId) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.fetchProviderIcons.");
+
+            var grBp = new GlideRecord('x_nuta2_nutanix_ca_nutanix_catalog_items');
+            if (grBp.get(catSysId)) {
+                var bpSysId = grBp.blueprint_name;
+            }
+            if (bpSysId != '') {
+                var gr = new GlideRecord(this.appUtil.configuration.table.catalogProfileRelation + '');
+                gr.addQuery('catalog_item', bpSysId);
+                gr.addQuery('state', 'active');
+                gr.orderBy('application_profile.name');
+                gr.query();
+
+                var entities = [];
+                var i = 0;
+                while (gr.next()) {
+                    entities[i] = {
+                        'profile': gr.application_profile.name + '',
+                        'providers': gr.providers + ''
+                    };
+                    i++;
+                }
+
+                this.logger.debug("Fetched " + i + " profiles.");
+
+                return JSON.stringify(entities);
+            } else {
+                var grReq = new GlideRecord('sc_req_item');
+                grReq.addQuery('sys_id', catSysId);
+                grReq.query();
+                if (grReq.next()) {
+                    var grBp = new GlideRecord('x_nuta2_nutanix_ca_nutanix_catalog_items');
+                    if (grBp.get(grReq.cat_item)) {
+                        var bpSysId = grBp.blueprint_name;
+                    }
+                    if (bpSysId != '') {
+                        var gr = new GlideRecord(this.appUtil.configuration.table.catalogProfileRelation + '');
+                        gr.addQuery('catalog_item', bpSysId);
+                        gr.orderBy('application_profile.name');
+                        gr.query();
+
+                        var entities = [];
+                        var i = 0;
+                        while (gr.next()) {
+                            entities[i] = {
+                                'profile': gr.application_profile.name + '',
+                                'providers': gr.providers + ''
+                            };
+                            i++;
+                        }
+
+                        this.logger.debug("Fetched " + i + " profiles.");
+
+                        return JSON.stringify(entities);
+                    }
+                }
+            }
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.fetchProviderIcons. Error:- " + e);
+        }
+    },
+
+    getProfileVariableDetails: function(project, blueprint, profile) {
+
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getProfileVariableDetails.");
+
+            var variables = new GlideRecord(this.appUtil.configuration.table.applicationProfiles + '');
+            if (variables.get(profile)) {
+                this.logger.info("Fetching variables associated with profile " + variables.name);
+            }
+
+            var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties + '');
+            gr.addQuery('application_profile', profile);
+            gr.addQuery('catalog_item', blueprint);
+            gr.addQuery('isprofilevariable', true);
+            gr.orderBy('variable.name');
+            gr.query();
+
+            var answer = {};
+            var i = 0;
+            while (gr.next()) {
+
+                /*if (gr.is_hidden == true)
+                    continue;*/
+
+                var opt = [];
+                if (gr.variable.type + '' == 5) {
+                    var optionRec = new GlideRecord("question_choice");
+                    optionRec.addQuery('question', gr.variable + '');
+                    optionRec.query();
+                    while (optionRec.next()) {
+
+                        opt.push(optionRec.value + '');
+
+                    }
+
+                } else if (gr.variable.type + '' == 21) {
+                    var varRefRec = gr.variable.getRefRecord().reference_qual + ''
+                    varRefRec = varRefRec.substr(9, varRefRec.length);
+                    var optionRec = new GlideRecord(this.appUtil.configuration.table.dropDownTable + '');
+                    optionRec.addQuery('variable', varRefRec);
+                    optionRec.query();
+                    while (optionRec.next()) {
+                        opt.push(optionRec.value + '');
+                    }
+
+                }
+                // 				else if(gr.variable.type+'' == 10 || gr.variable.type+'' == 9){
+                // 					var dtVal = gr.default_value+'';
+                // 					if( gr.variable.type+'' == 9 ){
+                // 						var gdt = new GlideDate() ;
+                // 						gdt.setValue(dtVal);
+                // 						gr.default_value = gdt.getByFormat("yyyy-MM-dd");
+                // 					}
+
+                // 					else{
+                // 						var gdt = new GlideDateTime() ;
+                // 						gdt.setValue(dtVal);
+                // 						gr.default_value = gdt.getDate().getByFormat("yyyy-MM-dd")+' '+gdt.getTime().getByFormat("HH:mm:ss");
+                // 					}
+
+                // 				}
+
+                answer[gr.sys_id + ''] = {
+                    'name': gr.variable.name + '',
+                    'question_text': gr.variable.question_text + '',
+                    'value': gr.default_value + '',
+                    'runtime_config': gr.runtime_config + '',
+                    'type': gr.variable.type + '',
+                    'isprofilevariable': gr.isprofilevariable + '',
+                    'uuid': gr.uuid + '',
+                    'isdisabled': gr.isdisabled + '',
+                    "val_type": gr.value_type + '',
+                    "description": gr.variable.help_text + '',
+                    "mandatory": gr.variable.mandatory + '',
+                    "regex": gr.field_regex + '',
+                    "options": opt,
+                    "data_type": gr.data_type + '',
+                    "field_json" : this.appUtil.getMacroDependencies(gr.field_json + ""),
+					"field" : gr.field_json + "",
+					"isHidden" : gr.is_hidden + ""
+                };
+                i++;
+            }
+
+            this.logger.debug("Fetched " + i + " variables.");
+
+            return JSON.stringify(answer);
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getProfileVariableDetails. Error:- " + e);
+        }
+
+    },
+
+
+
+    checkEditable: function(editables, varname, categoryJSON, serviceJSON) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.checkEditable.");
+            if (categoryJSON == "create_spec") {
+
+                for (var i in editables.resources) {
+                    var varServiceName = serviceJSON + i;
+                    if (varname == varServiceName) {
+                        return editables.resources[i] + '';
+                    }
+                }
+
+            } else if (categoryJSON == "readiness_probe") {
+                for (var i in editables) {
+                    var varServiceName = serviceJSON + i;
+                    if (varname == varServiceName) {
+                        return editables[i] + '';
+                    }
+                }
+            }
+
+        } catch (e) {
+            this.logger.error("Inside Nutanix_FetchConfigureSettingDropdown.checkEditable. " + e);
+        }
+
+    },
+
+    getCrendentialsDetails: function(project, blueprint, profile) {
+
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getCrendentialsDetails.");
+
+            var gr = new GlideRecord(this.appUtil.configuration.table.Credentials + '');
+            gr.addQuery('catalog_item', blueprint);
+            gr.orderBy('name');
+            gr.query();
+
+            var answer = {};
+            var i = 0;
+            while (gr.next()) {
+                answer[gr.name + ''] = {};
+
+                answer[gr.name + ''].credential_name = {
+                    "name": 'credential_name',
+                    "question_text": 'Credential Name',
+                    "value": gr.name + ''
+                };
+
+                answer[gr.name + ''].username = {
+                    "name": 'username',
+                    "question_text": 'Username',
+                    "value": gr.username + '',
+                    "runtime_config": gr.username_editable + ''
+                };
+
+                answer[gr.name + ''].secret_type = {
+                    "name": 'secret_type',
+                    "question_text": 'Secret Type',
+                    "value": gr.type + ''
+                };
+
+                if (gr.type + '' == 'KEY') {
+                    answer[gr.name + ''].ssh_private_key = {
+                        "name": 'ssh_private_key',
+                        "question_text": 'SSH Private Key',
+                        "value": gr.ssh_private_key + '',
+                        "runtime_config": gr.secret_editable + ''
+                    };
+
+                    answer[gr.name + ''].passphrase = {
+                        "name": 'passphrase',
+                        "question_text": 'Passphrase',
+                        "value": gr.passphrase + '',
+                        "runtime_config": gr.passphrase_editable + ''
+                    };
+                } else {
+                    answer[gr.name + ''].password = {
+                        "name": 'password',
+                        "question_text": 'Password',
+                        "value": gr.password + '',
+                        "runtime_config": gr.secret_editable + ''
+                    };
+                }
+
+                answer[gr.name + ''].uuid = gr.uuid + '';
+                answer[gr.name + ''].description = gr.description + '';
+                answer[gr.name + ''].is_default = gr.is_default + '';
+                answer[gr.name + ''].is_secret_modified = gr.is_secret_modified + '';
+                answer[gr.name + ''].name = gr.name + '';
+                answer[gr.name + ''].state = gr.state + '';
+
+                answer[gr.name + ''].username_isdisabled = gr.username_isdisabled + '';
+                answer[gr.name + ''].secret_isdisabled = gr.secret_isdisabled + '';
+                answer[gr.name + ''].ssh_private_key_isdisabled = gr.ssh_private_key_isdisabled + '';
+                answer[gr.name + ''].passphrase_isdisabled = gr.passphrase_isdisabled + '';
+
+                answer[gr.name + ''].credential_reference = {
+                    "value": gr.credential_reference + '',
+                    "label": gr.credential_reference.name + ''
+                };
+
+                answer[gr.name + ''].runtime = gr.runtime + '';
+
+                i++;
+            }
+
+            this.logger.debug("Fetched " + i + " credentials.");
+
+            return JSON.stringify(answer);
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getCrendentialsDetails. Error:- " + e);
+        }
+
+    },
+
+    /*fetchEnvironmentCredentials: function( credSysId ){
+    											try{
+    												this.logger.debug("Inside x_nuta2_nutanix_ca_nutanix_runtime_configuration.fetchEnvironmentCredentials.");
+
+    												var gr = new GlideRecord(this.appUtil.configuration.table.Credentials+'');
+    												gr.get(credSysId);
+
+    												var answer = {};
+    													var i = 0;
+
+    													if(gr){
+    														answer[gr.name+''] = {};
+
+    															answer[gr.name+''].credential_name = {
+    																"name": 'credential_name',
+    																"question_text": 'Credential Name',
+    																"value": gr.name+''
+    															};
+
+    															answer[gr.name+''].username = {
+    																"name": 'username',
+    																"question_text": 'Username',
+    																"value": gr.username+'',
+    																"runtime_config": gr.username_editable+''
+    															};
+
+    															answer[gr.name+''].secret_type = {
+    																"name": 'secret_type',
+    																"question_text": 'Secret Type',
+    																"value": gr.type+''
+    															};
+
+    															if(gr.type+'' == 'KEY'){
+    																answer[gr.name+''].ssh_private_key = {
+    																	"name": 'ssh_private_key',
+    																	"question_text": 'SSH Private Key',
+    																	"value": gr.ssh_private_key+'',
+    																	"runtime_config": gr.ssh_private_key_editable+''
+    																};
+
+    																if(gr.passphrase+'')
+    																	answer[gr.name+''].passphrase = {
+    																	"name": 'passphrase',
+    																	"question_text": 'Passphrase',
+    																	"value": gr.passphrase+'',
+    																	"runtime_config": gr.passphrase_editable+''
+    																};
+    															}else{
+    																answer[gr.name+''].password = {
+    																	"name": 'password',
+    																	"question_text": 'Password',
+    																	"value": gr.password+'',
+    																	"runtime_config": gr.secret_editable+''
+    																};
+    															}
+
+    															answer[gr.name+''].uuid = gr.uuid+'';
+    															answer[gr.name+''].description = gr.description+'';
+    															answer[gr.name+''].is_default = gr.is_default+'';
+    															answer[gr.name+''].is_secret_modified = gr.is_secret_modified+'';
+    															answer[gr.name+''].name = gr.name+'';
+    															answer[gr.name+''].state = gr.state+'';
+
+    															answer[gr.name+''].environment = gr.environment+'';
+    															answer[gr.name+''].project = gr.project+'';
+
+    															answer[gr.name+''].username_isdisabled = gr.username_isdisabled+'';
+    															answer[gr.name+''].secret_isdisabled = gr.secret_isdisabled+'';
+    															answer[gr.name+''].ssh_private_key_isdisabled = gr.ssh_private_key_isdisabled+'';
+    															answer[gr.name+''].passphrase_isdisabled = gr.passphrase_isdisabled+'';
+
+    															i++;
+    														}
+
+    														this.logger.debug("Fetched " + i + " credentials.");
+
+    														return JSON.stringify(answer);
+
+    													}catch(e){
+    														this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.fetchEnvironmentCredentials. Error:- "+e);
+    													}
+
+    												},*/
+
+    mappedCredentials: function(projects) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.mappedCredentials.");
+			var project_array = projects.split(','); 
+            var arr = [];
+			var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_calm_credential');
+			for(var i=0; i<= project_array.length; i++){
+				if(i==0)
+					var gs = gr.addQuery('project.sys_id' , project_array[i]+'');
+				else 
+					gs.addOrCondition('project.sys_id' , project_array[i]+'');
+			}
+            gr.query();
+            while (gr.next()) {
+                arr.push({
+                    'label': gr.name + '',
+                    'value': gr.sys_id + '',
+                    'type': gr.type + '',
+                    'username': gr.username + ''
+                });
+            }
+
+            return JSON.stringify(arr);
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.mappedCredentials. Error:- " + e);
+        }
+    },
+
+    getCatalogInfo: function(sysId) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getCatalogInfo.");
+
+            var catalogItem = new GlideRecord(this.appUtil.configuration.table.runtimeConfig + '');
+            catalogItem.addQuery('item_name', sysId);
+            //catalogItem.get(sysId);
+            //this.logger.info("Fetching Catalog Details for "+blueprint.name);
+            catalogItem.query();
+
+            if (catalogItem.next()) {
+                var rtn = {
+                    "itemName": catalogItem.item_name.name + '',
+                    "description": catalogItem.item_name.getRefRecord().description_markdown + '',
+                    "usersName": catalogItem.user_criteria.user.getDisplayValue() + '',
+                    "groupsName": catalogItem.user_criteria.group.getDisplayValue() + '',
+                    "usersSysId": catalogItem.user_criteria.user + '',
+                    "groupsSysId": catalogItem.user_criteria.group + ''
+                };
+                return JSON.stringify(rtn);
+            }
+
+            return '';
+
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getCatalogInfo. Error:- " + e);
+        }
+
+    },
+
+    getRealtedCatalogItems: function(sysId) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getRealtedCatalogItems.");
+
+            var catalogItem = new GlideRecord(this.appUtil.configuration.table.runtimeConfig + '');
+            catalogItem.addQuery('blueprint', sysId);
+            //catalogItem.get(sysId);
+            //this.logger.info("Fetching Catalog Details for "+blueprint.name);
+            catalogItem.query();
+            var answer = {};
+
+            var k = 0;
+
+            while (catalogItem.next()) {
+                answer[k] = {
+                    'name': catalogItem.item_name.name + '',
+                    'sys_id': catalogItem.item_name + ''
+                };
+
+                k++;
+            }
+
+            return JSON.stringify(answer);
+
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getRealtedCatalogItems. Error:- " + e);
+        }
+
+    },
+
+    getBlueprintInfo: function(sysId) {
+        try {
+
+            this.logger.debug("Inside x_nuta2_nutanix_ca_nutanix_runtime_configuration.getBlueprintInfo.");
+
+            var catalogItem = new GlideRecord(this.appUtil.configuration.table.catItem + '');
+            if (catalogItem.get(sysId)) {
+                catalogItem = new GlideRecord(catalogItem.sys_class_name + '');
+                if (catalogItem.get(sysId)) {
+                    var rtn = {
+                        "itemName": catalogItem.name + '',
+                        "description": catalogItem.description_markdown + '',
+                    }
+                    return JSON.stringify(rtn);
+                }
+            }
+
+            return '';
+
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getBlueprintInfo. Error:- " + e);
+        }
+
+    },
+
+    fetchRuntimeVariablesValue: function(sysId) {
+        try {
+            this.logger.debug("Inside x_nuta2_nutanix_ca_nutanix_runtime_configuration.fetchRuntimeVariablesValue.");
+            var gr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig + '');
+            if (gr.get(sysId)) {
+                var arr = {};
+
+                if (gr) {
+                    arr = {
+                        "application_profile": {
+                            "sys_ids": gr.multiple_application_profile + ''
+                        },
+                        "blueprint": {
+                            "name": gr.blueprint.name + ' ' + ((gr.blueprint.getRefRecord().version) ? gr.blueprint.getRefRecord().version : ''),
+                            "sys_id": gr.blueprint + '',
+                            "class": gr.blueprint.sys_class_name + ''
+                        },
+                        "project": {
+                            "sys_ids": gr.multiple_projects + ''
+                        },
+                        "item_name": gr.item_name + ''
+                    };
+
+                    return JSON.stringify(arr);
+                }
+
+                return '';
+            }
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.fetchRuntimeVariablesValue. Error:- " + e);
+        }
+    },
+
+    checkDuplicate: function(catName, catSysId) {
+        try {
+            this.logger.debug("Inside x_nuta2_nutanix_ca_nutanix_runtime_configuration.checkDuplicate.");
+            var gr = new GlideRecord(this.appUtil.configuration.table.runtimeConfig + '');
+            if (catSysId)
+                gr.addEncodedQuery('item_name.name=' + catName + '^item_name!=' + catSysId);
+            else
+                gr.addEncodedQuery('item_name.name=' + catName);
+            gr.query();
+
+            if (gr.next())
+                return 'yes';
+
+            return 'no';
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.checkDuplicate. Error:- " + e);
+        }
+
+    },
+    fetchMultipleBlueprints: function(blueprintType) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.fetchMultipleBlueprints.");
+            var gr = new GlideRecord(this.appUtil.configuration.table.catalogProjectRelation + '');
+            if (blueprintType == 'unpublished')
+                gr.addQuery('catalog_item.category', gs.getProperty('x_nuta2_nutanix_ca.nutanix_unpublishedBP_sysId'));
+            else
+                gr.addQuery('catalog_item.category', gs.getProperty('x_nuta2_nutanix_ca.nutanix_category_sysId'));
+            gr.orderBy('catalog_item.name');
+            gr.query();
+
+            var ans = {};
+            var i = 0;
+            while (gr.next()) {
+                if ((blueprintType == 'unpublished' && gr.catalog_item.state + '' == 'ACTIVE') || (blueprintType != 'unpublished' && gr.catalog_item.state + '' == 'active')) {
+                    ans[i] = {
+                        'sys_id': gr.catalog_item + '',
+                        'name': gr.catalog_item.name + '' + " " + gr.version + ''
+                    };
+                    i++;
+                }
+            }
+
+            this.logger.debug("Fetched " + i + " blueprints.");
+            return JSON.stringify(ans);
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.fetchMultipleBlueprints. Error:- " + e);
+        }
+    },
+    fetchMultipleProjects: function(blueprint, blueprintType) {
+        try {
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.fetchBlueprints. blueprint ");
+            var gr = new GlideRecord(this.appUtil.configuration.table.catalogProjectRelation + '');
+            gr.addQuery('catalog_item', blueprint);
+            if (blueprintType == 'unpublished')
+                gr.addQuery('catalog_item.category', gs.getProperty('x_nuta2_nutanix_ca.nutanix_unpublishedBP_sysId'));
+            else
+                gr.addQuery('catalog_item.category', gs.getProperty('x_nuta2_nutanix_ca.nutanix_category_sysId'));
+            gr.orderBy('catalog_item.name');
+            gr.query();
+            var ans = {};
+            var i = 0;
+            while (gr.next()) {
+                if ((blueprintType == 'unpublished' && gr.catalog_item.state + '' == 'ACTIVE') || (blueprintType != 'unpublished' && gr.catalog_item.state + '' == 'active')) {
+                    ans[i] = {
+                        'name': gr.catalog_item.name + '' + " " + gr.version + '',
+                        'project_sys_id': gr.projects + ''
+                    };
+                    i++;
+                }
+            }
+            this.logger.debug("Fetched " + i + " project.");
+            return JSON.stringify(ans);
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.fetchMultipleProjects. Error:- " + e);
+        }
+    },
+    getMultipleProfileVariableDetails: function(projects, blueprint, profiles, cat_item, delta_profiles, type) {
+        try {
+            this.logger.debug("####Inside Nutanix_FetchConfigureSettingDropdown.getMultipleProfileVariableDetails.");
+			
+			var answer ={};
+			if(type == "update"){
+				answer = this.getProfileVariableData(profiles, cat_item, JSON.stringify(answer));
+				if(delta_profiles != '')
+					answer = this.getProfileVariableData(delta_profiles, blueprint, answer);
+			}
+			else{
+				answer = this.getProfileVariableData(profiles, blueprint, JSON.stringify(answer));
+			}
+
+            this.logger.debug("####Inside Nutanix_FetchConfigureSettingDropdown.getMultipleProfileVariableDetails."+answer);
+            return answer;
+        } catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.getMultipleProfileVariableDetails. Error:- " + e);
+        }
+
+    },
+	getMultipleServiceVariableDetails: function(projects, blueprint, profiles, type, bpType, cat_item, delta_profiles) {
+    try{
+this.logger.debug("--Inside Nutanix_FetchConfigureSettingDropdown.getMultipleServiceVariableDetails.Projects "+projects+" Blueprint "+blueprint+" Profiles "+profiles+" Type "+type+" BpType "+bpType);
+			
+			var multipleService = [];
+			if(type == 'update'){
+				multipleService = this.getServiceVariableData(projects, cat_item, profiles, type, bpType, JSON.stringify(multipleService));
+				multipleService = this.getServiceVariableData(projects, blueprint, delta_profiles, type, bpType, multipleService);
+			}
+			else{
+				multipleService = this.getServiceVariableData(projects, blueprint, profiles, type, bpType, JSON.stringify(multipleService));
+			}
+	 
+			this.logger.debug("Nutanix_FetchConfigureSettingDropdown.getMultipleServiceVariableDetails final array. return : "+JSON.stringify(multipleService));
+            return multipleService;   
+		} catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.noProfileVariableDetails. Error:- " + e);
+        }
+    },
+	
+	noProfileVariableDetails: function(projects, blueprint, profiles) {
+		this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.noProfileVariableDetails.");
+        try {
+			var project = projects.split(',');
+            var profile = profiles.split(',');
+			var answer = [];			
+			this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.noProfileVariableDetails. project : "+JSON.stringify(project)+" profile "+JSON.stringify(profile)+' answer '+JSON.stringify(answer));
+			for (var i in profile) {
+				var gr = new GlideAggregate(this.appUtil.configuration.table.variablesProperties + '');
+				gr.addQuery('catalog_item', blueprint);
+				gr.addQuery('isprofilevariable', true);
+				gr.addQuery('application_profile', profile[i]);
+				gr.query();
+				if(gr.getRowCount()==0 || gr.getRowCount()<1){
+					answer.push(profile[i]);
+				}	
+            }
+			this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.noProfileVariableDetails. answer : "+JSON.stringify(answer));
+			return JSON.stringify(answer);   
+		} catch (e) {
+            this.logger.error("Exception caught inside Nutanix_FetchConfigureSettingDropdown.noProfileVariableDetails. Error:- " + e);
+        }
+    },
+	getProjectSubnet: function(catalog, project_uuid) {
+        try {
+            var clusterJson = {};
+            var catalogSysid;
+            this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getProjectSubnet. catalog : "+catalog+" project_uuid : "+project_uuid);
+            var gr = new GlideRecord('x_nuta2_nutanix_ca_nutanix_runtime_configuration');
+            gr.addQuery('item_name', catalog);
+            gr.query();
+            if (gr.next()) {
+                var grProject = new GlideRecord(this.appUtil.configuration.table.Project + '');
+                grProject.addQuery('uuid', project_uuid+ '');
+                grProject.query();
+                if (grProject.next()) {
+                    var subnetList = grProject.subnet.split(',');
+                    for (var x in subnetList) {
+                        var grSubnet = new GlideRecord(this.appUtil.configuration.table.subnet + '');
+                        grSubnet.addQuery('sys_id', subnetList[x]);
+                        grSubnet.query();
+                        if (grSubnet.next()) {
+                            if (!clusterJson[grSubnet.cluster_name + '']) {
+                                clusterJson[grSubnet.cluster_name + ''] = {};
+                                clusterJson[grSubnet.cluster_name + '']['uuid'] = grSubnet.cluster_uuid + '';
+                                clusterJson[grSubnet.cluster_name + '']['subnet'] = {};
+                            }
+
+                            clusterJson[grSubnet.cluster_name + '']['subnet'][grSubnet.uuid + ''] = grSubnet.name + '';
+                        }
+
+                    }
+
+
+                }
+
+            }
+            /*setting session*/
+            var grCat = new GlideRecord('x_nuta2_nutanix_ca_nutanix_catalog_items');
+            grCat.addQuery('sys_id', catalog);
+            grCat.query();
+            if (grCat.next()) {
+                var gr = new GlideRecord('item_option_new');
+                gr.addQuery('cat_item.name', grCat.name + '');
+                gr.query();
+                var catalog_clusterJSON = {};
+                while (gr.next()) {
+                    if ((gr.name + '').endsWith('cluster_name') && gr.question_text == 'Cluster Name') {
+                        catalog_clusterJSON[gr.sys_id + ''] = {};
+                        catalog_clusterJSON[gr.sys_id + '']['name'] = gr.name + '';
+                        catalog_clusterJSON[gr.sys_id + '']['label'] = gr.question_text + '';
+                        catalog_clusterJSON[gr.sys_id + '']['value'] = gr.default_value + '';
+                    }
+                }
+
+                for (var k in catalog_clusterJSON) {
+                    var serviceName = (catalog_clusterJSON[k].name + '').slice(0, (catalog_clusterJSON[k].name).length - 12);
+                    catalog_clusterJSON[k]['nics'] = {};
+                    var gr = new GlideRecord('item_option_new');
+                    gr.addQuery('cat_item.name', grCat.name + '');
+                    gr.query();
+                    while (gr.next()) {
+                        if ((gr.name + '').indexOf(serviceName) != -1 && (gr.name + '').indexOf('_nic_') != -1) {
+                            catalog_clusterJSON[k]['nics'][gr.sys_id + ''] = gr.name + '';
+                        }
+                    }
+                }
+            }
+
+            /**/
+
+
+            var catNicJson = {
+                "catalog_data": catalog_clusterJSON,
+                "cluster_info": clusterJson
+            };
+			 this.logger.debug("**Inside Nutanix_FetchConfigureSettingDropdown.getProjectSubnet. final answer : "+JSON.stringify(catNicJson));
+            return (JSON.stringify(catNicJson));
+
+        } catch (e) {
+            this.logger.error("Inside Nutanix_FetchConfigureSettingDropdown.getProjectSubnet." + e);
+        }
+    },	
+	
+	getProfileVariableData : function(profiles, blueprint, answers){
+       
+        var profile = profiles.split(',');
+		var answer = JSON.parse(answers);
+		
+		var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties + '');
+		for (var i in profile) {
+						if (i == 0)
+							var qc = gr.addQuery('application_profile', profile[i]);
+						else
+							qc.addOrCondition('application_profile', profile[i]);
+					}
+		gr.addQuery('catalog_item', blueprint);
+		gr.addQuery('isprofilevariable', true);
+		gr.orderBy('variable.name');
+		gr.query();
+		
+		var i = 0;
+		while (gr.next()) {
+			
+						/*if (gr.is_hidden == true)
+							continue;*/
+
+						var opt = [];
+						if (gr.variable.type + '' == 5) {
+							var optionRec = new GlideRecord("question_choice");
+							optionRec.addQuery('question', gr.variable + '');
+							optionRec.query();
+							while (optionRec.next()) {
+
+								opt.push(optionRec.value + '');
+
+							}
+
+						}
+						else if (gr.variable.type + '' == 21) {
+							var varRefRec = gr.variable.getRefRecord().reference_qual + '';
+							varRefRec = varRefRec.substr(9, varRefRec.length);
+							var optionRec = new GlideRecord(this.appUtil.configuration.table.dropDownTable + '');
+							optionRec.addQuery('variable', varRefRec);
+							optionRec.query();
+							while (optionRec.next()) {
+								opt.push(optionRec.value + '');
+							}
+
+						}
+			
+						answer[gr.sys_id + ''] = {
+							'name': gr.variable.name + '',
+							'question_text': gr.variable.question_text + '',
+							'value': gr.default_value + '',
+							'runtime_config': gr.runtime_config + '',
+							'type': gr.variable.type + '',
+							'isprofilevariable': gr.isprofilevariable + '',
+							'uuid': gr.uuid + '',
+							'isdisabled': gr.isdisabled + '',
+							"val_type": gr.value_type + '',
+							"description": gr.variable.help_text + '',
+							"mandatory": gr.variable.mandatory + '',
+							"regex": gr.field_regex + '',
+							"options": opt,
+							"data_type": gr.data_type + '',
+							"uuid": gr.uuid + '',
+							"application_profile": gr.application_profile + '',
+							"field_json" : this.appUtil.getMacroDependencies(gr.field_json + ""),
+							"field" : gr.field_json + "",
+							"isHidden": gr.is_hidden + ""
+						};
+						i++;
+		}
+		
+		return JSON.stringify(answer);
+	},
+	getServiceVariableData : function(projects, blueprint, profiles, type, bpType, multipleService){
+		var project_array = projects.split(',');
+		var profile_array = profiles.split(',');
+		var multipleService = JSON.parse(multipleService);
+		for(var pro =0; pro< profile_array.length; pro++){
+			    var profile = profile_array[pro];
+				var variables = new GlideRecord(this.appUtil.configuration.table.applicationProfiles + '');
+				if (variables.get(profile)) {
+					this.logger.info("Nutanix_FetchConfigureSettingDropdown.getMultipleServiceVariableDetails Feach ServiceVariable of "+variables.name+" Profile.");
+				}
+				var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties + '');
+				gr.addQuery('application_profile', profile_array[pro]);
+				gr.addQuery('catalog_item', blueprint);
+				gr.addQuery('isprofilevariable', false);
+				gr.orderBy('variable.order');
+				gr.query();
+				
+this.logger.info("Nutanix_FetchConfigureSettingDropdown.getMultipleServiceVariableDetails Feach ServiceVariable of "+variables.name+" Profile. Feached "+gr.getRowCount()+" Count");
+				var answer = {};
+				var i = 0;
+				while (gr.next()) {
+					
+					if (!answer[variables.name+'_'+gr.service_name.name + ''])
+						answer[variables.name+'_'+gr.service_name.name + ''] = {};
+					var categoryName = gr.category_name.name + '';
+					if (gr.category_name.name + '' == gr.variable.name + '') {
+						if (!answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + ''])
+							answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + ''] = {};
+						if (bpType == "published" && type == "new") {
+							var ans = (this.getVariablePatchedValue(type + '', gr.default_value + '', gr.sys_id, gr.variable.name + '', gr.category_name.name + '', gr.category_name.question_text + ''));
+							this.logger.debug("--Inside Nutanix_FetchConfigureSettingDropdown.getMultipleServiceVariableDetails.Patched Value for " + gr.variable.name + " :: " + ans);
+							answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + '']['new_' + gr.sys_id + ''] = (ans) ? JSON.parse(ans) : [];
+							answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + '']['new_' + gr.sys_id + ''].notCmplx = false;
+						} 
+						else {
+							answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + ''][gr.sys_id + ''] = (gr.default_value + '') ? JSON.parse(gr.default_value + '') : {};
+							answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + ''][gr.sys_id + ''].notCmplx = false;
+						}
+					}else{
+						/*if (gr.is_hidden == true)
+							continue;*/
+						if (!answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + ''])
+							answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + ''] = {};
+						var catname = (gr.category_name.name + '').substring(((gr.service_name.name + '').length) + 1);
+						var varname = (gr.variable.name + '').substring(((gr.service_name.name + '').length) + 1);
+						var default_value = "";
+						var runtime_config = gr.runtime_config + '';
+						var isdisabled = gr.isdisabled + '';
+						var ans, parsedAns;
+							if (catname == "ssh_keys" && bpType == "published" && type == "new") {
+								var hasKey;
+								var gr_ssh = new GlideRecord(this.appUtil.configuration.table.variablesProperties + '');
+								gr_ssh.addQuery('application_profile', profile);
+								gr_ssh.addQuery('catalog_item', blueprint);
+								gr_ssh.addQuery('isprofilevariable', false);
+								gr_ssh.addQuery('variable.name', 'CONTAINS', 'key_0');
+								gr_ssh.orderBy('variable.order');
+								gr_ssh.query();
+									if (gr_ssh.next()) {
+										hasKey = "true";
+									}
+									if (hasKey != "true") {
+										ans = this.getVariablePatchedValue(type + '', gr.default_value + '', gr.sys_id, gr.variable.name + '', gr.category_name.name + '', gr.category_name.question_text + '', "true");
+										parsedAns = (ans) ? JSON.parse(ans) : {};
+										answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + ''] = parsedAns;
+									}
+							}
+							if ((!gr.default_value) && bpType == "published" && type == "new") {
+									ans = this.getVariablePatchedValue(type + '', gr.default_value + '', gr.sys_id, gr.variable.name + '', gr.category_name.name + '', gr.category_name.question_text + '');
+									parsedAns = (ans) ? JSON.parse(ans) : "";
+									this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getMultipleServiceVariableDetails.Patched Value for " + gr.variable.name + " :: " + ans);
+										if (parsedAns) {
+										default_value = parsedAns.value + '';
+										var isSupported = (default_value + '' == 'Cloud-init' || default_value + '' == 'Sysprep' || (varname + '').startsWith('key_') || (this.disabledFields.includes(varname) && varname + '' != 'name' && varname + '' != 'type')) ? false : true;
+										runtime_config = ((default_value + '').indexOf('@@') != -1 || isSupported + '' == 'false') ? false : (parsedAns.runtime + '') ? parsedAns.runtime + '' : gr.runtime_config + '';
+										isdisabled = ((default_value + '').indexOf('@@') != -1 || isSupported + '' == 'false') ? true : (runtime_config + '' == 'true') ? false : true;    	
+										}
+							}
+
+                    /*Advanced Variable*/
+                    var opt = [];
+                    if (gr.variable.type + '' == 5 && gr.isservicevariable == true) {
+                        var optionRec = new GlideRecord("question_choice");
+                        optionRec.addQuery('question', gr.variable + '');
+                        optionRec.query();
+                        while (optionRec.next()) {
+                            opt.push(optionRec.value + '');
+                        }
+                    } else if (gr.variable.type + '' == 21 && gr.isservicevariable == true) {
+                        var varRefRec = gr.variable.getRefRecord().reference_qual + '';
+                        varRefRec = varRefRec.substr(9, varRefRec.length);
+                        var optionRec = new GlideRecord(this.appUtil.configuration.table.dropDownTable + '');
+                        optionRec.addQuery('variable', varRefRec);
+                        optionRec.query();
+                        while (optionRec.next()) {
+                            opt.push(optionRec.value + '');
+                        }
+                    }
+                    answer[variables.name+'_'+gr.service_name.name + ''][variables.name+'_'+gr.category_name.name + ''][gr.sys_id + ''] = {
+                        'name': gr.variable.name + '',
+                        'question_text': gr.variable.question_text + '',
+                        'value': (gr.default_value + '') ? gr.default_value + '' : default_value,
+                        'runtime_config': (gr.default_value + '') ? gr.runtime_config + '' : runtime_config,
+                        'type': gr.variable.type + '',
+                        'isprofilevariable': gr.isprofilevariable + '',
+                        'uuid': gr.uuid + '',
+                        'isdisabled': (gr.default_value + '') ? gr.isdisabled + '' : isdisabled,
+                        'isSupported': gr.issupported + '',
+                        'isservicevariable': gr.isservicevariable + '',
+                        'notCmplx': true,
+                        'val_type': gr.value_type + '',
+                        'description': gr.variable.help_text + '',
+                        'mandatory': gr.variable.mandatory + '',
+                        'regex': gr.field_regex + '',
+                        'options': opt,
+                        'data_type': gr.data_type + '',
+                        'serviceField': (gr.isprofilevariable + '' == 'false' && gr.isservicevariable + '' == 'false') ? true : false,
+						"field_json" : (gr.isservicevariable+''=='true') ? this.appUtil.getMacroDependencies(gr.field_json + "") : {},
+						"field" : (gr.isservicevariable+''=='true') ? gr.field_json + "" : "{}",
+						"isHidden": gr.is_hidden + ""
+                    };
+                }
+                i++;
+            }
+
+            this.logger.debug("--Inside Nutanix_FetchConfigureSettingDropdown.getMultipleServiceVariableDetails. all service variable value answer" + variables.name + " :: " + JSON.stringify(answer));
+			if(i>0){
+				var returnJSON = {};
+				returnJSON['profile'] = variables.name+'';
+				returnJSON['service_configuration'] = answer;
+				returnJSON['profile_sys_id'] = variables.sys_id+'';
+					if(pro == 0)
+						returnJSON['subnet_list'] = this.getNutanixSubnetList(projects);
+				this.logger.debug("Inside Nutanix_FetchConfigureSettingDropdown.getMultipleServiceVariableDetails "+JSON.stringify(returnJSON));
+				multipleService.push(returnJSON); 
+			}
+		} 
+		return JSON.stringify(multipleService);
+	},
+	
+    type: 'Nutanix_FetchConfigureSettingDropdown'	
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-28 19:21:56</sys_created_on>
+        <sys_id>92e8017f37112300fdfc097973990e33</sys_id>
+        <sys_mod_count>788</sys_mod_count>
+        <sys_name>Nutanix_FetchConfigureSettingDropdown</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_92e8017f37112300fdfc097973990e33</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-16 11:19:24</sys_updated_on>
+    </sys_script_include>
+</record_update>

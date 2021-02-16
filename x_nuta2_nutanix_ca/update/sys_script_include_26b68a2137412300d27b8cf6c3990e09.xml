@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_Calm_Logger</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Use this Script Include to manage logs - Info, Warning, Debug, Error</description>
+        <name>Nutanix_Calm_Logger</name>
+        <script><![CDATA[var Nutanix_Calm_Logger = Class.create();
+Nutanix_Calm_Logger.prototype = {
+	initialize: function() {
+		this.logLevel = gs.getProperty('x_nuta2_nutanix_ca.Log Verbosity');
+		this.plugin_version = gs.getProperty('x_nuta2_nutanix_ca.plugin_version');
+		
+	},
+	
+	debug: function(s) {
+		if (this.logLevel >= 3){
+			gs.info( this.plugin_version+' DEBUG >> '+s, 'Nutanix Calm');
+		}
+	},
+	info:  function(s) {
+		if (this.logLevel >= 2){
+			gs.info(this.plugin_version+' '+ s,'Nutanix Calm');
+		}
+	},
+	warn: function(s) {
+		if (this.logLevel >= 1){
+			gs.warn(this.plugin_version+' '+ s,'Nutanix Calm');
+		}
+	},
+	error: function(s) {
+		if (this.logLevel >= 0){
+			gs.error(this.plugin_version+' '+ s,'Nutanix Calm');
+		}
+	},
+	
+	type: 'Nutanix_Calm_Logger'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-10-09 13:19:33</sys_created_on>
+        <sys_id>26b68a2137412300d27b8cf6c3990e09</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>Nutanix_Calm_Logger</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_26b68a2137412300d27b8cf6c3990e09</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-01-24 06:46:15</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_script">
+    <sys_transform_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <map display_value="Nutanix Transform MarketPlaceItems">5228bcc3db91230084249235ca961967</map>
+        <order>100</order>
+        <script><![CDATA[(function runTransformScript(source, map, log, target /*undefined onStart*/ ) {
+
+	// Add your code here
+	var appUtil = new Nutanix_Calm_Utils();
+	var logger =  new Nutanix_Calm_Logger();
+	
+	var blueprintTemplate = JSON.parse(source.app_blueprint_template);
+	blueprintTemplate = blueprintTemplate.status.resources;
+	
+	var iconReference = source.icon_reference_list+'';
+	
+	if(blueprintTemplate.default_credential_local_reference && blueprintTemplate.credential_definition_list){
+		var defaultCredentialBody = {
+			'default_credential_local_reference': blueprintTemplate.default_credential_local_reference,
+			'sys_id': target.sys_id+''
+		};
+		appUtil.insertIntoQueue("ProcessingCredentials", '', JSON.stringify(defaultCredentialBody), JSON.stringify(blueprintTemplate.credential_definition_list), 'Process credentials', 'This job processes the imported credentials.');
+	}
+	if(target.template_type == "Single Vm"){
+		
+		var service_body = [{
+				"uuid" : "singleVm-default-service-uuid",
+				"name" : "Single Vm Configuration"
+			}];
+		
+		var catVariableBody={
+			"substrate_definition_list": (blueprintTemplate.substrate_definition_list) ? blueprintTemplate.substrate_definition_list : "" ,
+			"app_profile_list": (blueprintTemplate.app_profile_list) ? blueprintTemplate.app_profile_list : "",
+			"service_definition_list": service_body,
+			"package_definition_list": (blueprintTemplate.package_definition_list) ? blueprintTemplate.package_definition_list : ""
+		};
+		//gs.error("Single categories :: "+JSON.stringify(catVariableBody));
+		appUtil.insertIntoQueue("processCatalogVariables", '', target.sys_id+'', JSON.stringify(catVariableBody), 'Process catalog variables', 'This job processes the imported catalog variables.');
+		
+	}else if(blueprintTemplate.package_definition_list && blueprintTemplate.substrate_definition_list && blueprintTemplate.app_profile_list && blueprintTemplate.service_definition_list ) {
+		
+		var catVariableBody={
+			"substrate_definition_list": (blueprintTemplate.substrate_definition_list) ? blueprintTemplate.substrate_definition_list : "" ,
+			"app_profile_list": (blueprintTemplate.app_profile_list) ? blueprintTemplate.app_profile_list : "",
+			"service_definition_list": (blueprintTemplate.service_definition_list) ? blueprintTemplate.service_definition_list : "",
+			"package_definition_list": (blueprintTemplate.package_definition_list) ? blueprintTemplate.package_definition_list : ""
+		};
+		//gs.error("Multi categories :: "+JSON.stringify(catVariableBody));
+		appUtil.insertIntoQueue("processCatalogVariables", '', target.sys_id+'', JSON.stringify(catVariableBody), 'Process catalog variables', 'This job processes the imported catalog variables.');
+
+	}
+	
+	var profile = JSON.stringify(blueprintTemplate.app_profile_list);
+	
+	if(iconReference) 
+		appUtil.insertIntoQueue("processingIcon", '', target.sys_id+'', iconReference, 'Process icons', 'This job processes the icons of imported marketplace items.');
+	
+	
+	//appUtil.insertIntoQueue("ProcessApplicationProfiles", '', target.sys_id+'', profile+'');
+	var appBody = {
+		"parameter": target.sys_id+'',
+		"payload": profile+'',
+		"substrate" : JSON.stringify(blueprintTemplate.substrate_definition_list)
+	};
+	var call = new Nutanix_ImportApplicationProfiles();
+	call.processApplicationProfiles(appBody);
+	
+	appUtil.insertIntoQueue("MapCatItemToProject", '', target.sys_id+','+target.version, source.project_reference_list+'', 'Map catalog items to project', 'This job maps the catalog items to their respective projects.');
+
+//	appUtil.insertIntoQueue("createUserCriteria", '', '', JSON.stringify(body));
+	
+})(source, map, log, target);]]></script>
+        <sys_class_name>sys_transform_script</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-31 12:50:26</sys_created_on>
+        <sys_id>0903532837252300fdfc097973990e0c</sys_id>
+        <sys_mod_count>34</sys_mod_count>
+        <sys_name>onAfter</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_script_0903532837252300fdfc097973990e0c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-06 06:42:25</sys_updated_on>
+        <when>onAfter</when>
+    </sys_transform_script>
+</record_update>

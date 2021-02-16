@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section caption="Environments" section_id="f40a4e81370a6b00fdfc097973990e88" sys_domain="global" table="x_nuta2_nutanix_ca_nutanix_environment" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>x_nuta2_nutanix_ca_Nutanix_logo_on_config.xml</element>
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>42f43450db162300570c9b81ca961933</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter display_value="Nutanix Environment">df480601370a6b00fdfc097973990e46</sys_ui_formatter>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type>formatter</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.begin_split</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>86f43450db162300570c9b81ca961933</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type>.begin_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>name</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>0af43450db162300570c9b81ca961933</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>state</element>
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>8af43450db162300570c9b81ca961933</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>project</element>
+            <position>4</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>0ef43450db162300570c9b81ca961933</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>5</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>8ef43450db162300570c9b81ca961933</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>owner_name</element>
+            <position>6</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>02f43450db162300570c9b81ca961934</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>sys_created_on</element>
+            <position>7</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>82f43450db162300570c9b81ca961934</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>sys_updated_on</element>
+            <position>8</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>06f43450db162300570c9b81ca961934</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.end_split</element>
+            <position>9</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>86f43450db162300570c9b81ca961934</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type>.end_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>description</element>
+            <position>10</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-12-06 13:27:20</sys_created_on>
+            <sys_id>0af43450db162300570c9b81ca961934</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Environments" display_value="Environments" name="x_nuta2_nutanix_ca_nutanix_environment" sys_domain="global" view="Default view">f40a4e81370a6b00fdfc097973990e88</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:20</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption>Environments</caption>
+            <header>false</header>
+            <name>x_nuta2_nutanix_ca_nutanix_environment</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>nikita.kumari</sys_created_by>
+            <sys_created_on>2018-11-26 17:18:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>f40a4e81370a6b00fdfc097973990e88</sys_id>
+            <sys_mod_count>1</sys_mod_count>
+            <sys_name>Environments</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_section_f40a4e81370a6b00fdfc097973990e88</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-12-06 13:27:19</sys_updated_on>
+            <sys_user/>
+            <title>false</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

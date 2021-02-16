@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>Variables to be displayed for the AWS profile</description>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.aws_display_vars</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin,x_nuta2_nutanix_ca.user</read_roles>
+        <suffix>aws_display_vars</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-03-01 09:55:50</sys_created_on>
+        <sys_id>c9927d67dbbf2300bfa82a9a489619c0</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.aws_display_vars</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_c9927d67dbbf2300bfa82a9a489619c0</sys_update_name>
+        <sys_updated_by>Bharat</sys_updated_by>
+        <sys_updated_on>2019-03-15 07:22:42</sys_updated_on>
+        <type>string</type>
+        <value>instancename,associatepublicipaddress,instancetype,region,availabilityzone,machineimage,iamrole,keypairs,vpc,includeclassicsecuritygroup,securitygroups,subnet,userdata,awstags,STORAGE,CONNECTION,DEPLOYMENTCONFIG,VARIABLES,vmname,images,sockets,numvcpuspersocket,memorysizemib,corespervcpu,memory,guestcustomization,VDISKS,VGPUS,CATEGORIES,NETWORKADAPTERS,zone,machinetype,DISKS,BLANKDISKS,NETWORKING,SSHKEYS,MANAGEMENT,APIACCESS,resourcegroup,availabilityset,location,hardwareprofile,tags,OSPROFILE,STORAGEPROFILE,NETWORKPROFILES,drsmode,host,template,datastore,templatecontrollers,templatedisks,enable,TEMPLATENETWORKADAPTERS,CONTROLLERS,DISKS,NETWORKADAPTERS,VMGUESTCUSTOMIZATION,CONFIGURATION</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin,x_nuta2_nutanix_ca.user</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=c9927d67dbbf2300bfa82a9a489619c0"/>
+</record_update>

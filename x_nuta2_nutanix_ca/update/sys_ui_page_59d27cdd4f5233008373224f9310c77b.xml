@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var os_type = gel("os_type").value + "";
+var ngtState = gel("ngt_state").value + "";
+var calm_version = gel("calm_version").value + "";
+var ngt_services = gel("ngt_services").value + "";
+
+var $j = jQuery.noConflict();
+
+if(ngt_services) {
+	ngt_services = ngt_services.split(',');	
+	if(ngt_services.indexOf('SSR') != -1)	
+		$j('#ngt_self_service_restore').prop('checked', true);	
+	if(ngt_services.indexOf('VSS') != -1)	
+		$j('#ngt_vss_snapshot').prop('checked', true);	
+}
+
+if(calm_version != "2.7" && ngtState == "MOUNTED") {
+	$j('#unmountNGT').show();
+	$j('#skipAndMount').hide();
+}
+
+if(os_type == 'Windows')
+	$j('#Windows_guest_script').show();
+
+$j('#script_windows').on('shown.bs.collapse', function() {
+    $j("#icon_change").addClass('icon-chevron-down').removeClass('icon-chevron-right');
+});
+
+$j('#script_windows').on('hidden.bs.collapse', function() {
+    $j("#icon_change").addClass('icon-chevron-right').removeClass('icon-chevron-down');
+});
+
+new GlideModal().get("dialog_loading").destroy();
+
+$j('#skipAndMount').mousedown(skipAndMount);
+$j('#cancelAct').mousedown(cancelDialog);
+$j('#enterCreds').mousedown(showCredentialForm);
+$j('#submitCreds').mousedown(runWithCreds);
+$j('#unmountNGT').mousedown(unmountNGT);
+$j("input").click(function(){ $j(".error_data").html('');});
+
+function unmountNGT() {
+	var ngt_json = _getFormValues();
+	for(var i = 0; i < ngt_json.length; i++) {
+		if(ngt_json[i].name == "ngt_mount_state") {
+			ngt_json[i].value = "UNMOUNTED";
+		}
+	}
+	$j('#skipAndMount').prop("disabled", true);
+	$j('#cancelAct').prop("disabled", true);
+	$j('#enterCreds').prop("disabled", true);
+	$j('#submitCreds').prop("disabled", true);
+	$j('#unmountNGT').prop("disabled", true);
+	ngtRunAction(ngt_json);
+}
+
+function cancelDialog() {
+	GlideModal.get().destroy();
+}
+
+function _ngtScriptWindows(ngtValue) {
+	
+	var winRMAuth = $j('#win_rm').is(":checked");
+ 
+	if(winRMAuth && os_type == 'Windows')
+		ngtValue = "$c = New-SelfSignedCertificate -DnsName $env:computername -CertStoreLocation cert:\\LocalMachine\\My ; \nwinrm create winrm/config/Listener?Address=*+Transport=HTTPS \"@{Hostname=`\"$env:computername`\";CertificateThumbprint=`\"$($c.ThumbPrint)`\"}\" \n cmd /c 'winrm set winrm/config/service/auth @{Basic=\"true\"}';\n netsh advfirewall firewall add rule name=\\\"WinRM-HTTPS\\\" dir=in localport=5986 protocol=TCP action=allow";
+	
+	return ngtValue;
+}
+
+function _getFormValues() {
+	
+	var act_json = ["${JS:sysparm_actVarsArr}"];
+	var parsed_act_json = JSON.parse(act_json);
+	
+	var ssr_status = $j('#ngt_self_service_restore').is(":checked").toString();
+	var vss_status = $j('#ngt_vss_snapshot').is(":checked").toString();
+	var ngt_restart = $j("input[name='ngt_restart']:checked").val();
+	var ngt_state = '';
+	var ngt_script = '';
+	var ngt_mount_state = '';
+	
+	for(var i in parsed_act_json) {
+		if(parsed_act_json[i].name == 'ngt_state')
+			ngt_state = parsed_act_json[i].value + '';
+		if(parsed_act_json[i].name == 'ngt_script')
+			ngt_script =_ngtScriptWindows(parsed_act_json[i].value + '');
+		if(parsed_act_json[i].name == 'ngt_mount_state')
+			ngt_mount_state = parsed_act_json[i].value + '';
+	}
+	
+	var ngt_json = [{"name":"ngt_self_service_restore","value":ssr_status},{"name":"ngt_vss_snapshot","value":vss_status},{"name":"ngt_restart","value":ngt_restart},{"name":"ngt_state","value":ngt_state},{"name":"ngt_username","value":""},{"name":"ngt_password"},{"name":"ngt_script","value":ngt_script},{"name":"ngt_mount_state","value":ngt_mount_state}];
+	
+	return ngt_json;
+}
+
+function showCredentialForm() {
+	$j('#cancelAct').hide();
+	$j('#enterCreds').hide();
+	$j('.ngt-form').hide();
+	$j('.credential-form').show();
+	$j('#submitCreds').show();
+}
+
+function _getCredentials() {
+	var cred_install_json = _getFormValues();
+	
+	for(var i in cred_install_json) {
+		if(cred_install_json[i].name == "ngt_username")
+			cred_install_json[i].value = $j('#ngt_username').val();
+		if(cred_install_json[i].name == "ngt_password")
+			cred_install_json[i].value = $j('#ngt_password').val();
+		if(cred_install_json[i].name == 'ngt_state')
+			cred_install_json[i].value = 'INSTALLED';
+	}
+	
+	return cred_install_json;
+}
+
+function skipAndMount() {
+	ngtRunAction(_getFormValues());
+	$j('#skipAndMount').prop("disabled", true);
+	$j('#cancelAct').prop("disabled", true);
+	$j('#enterCreds').prop("disabled", true);
+	$j('#submitCreds').prop("disabled", true);
+}
+
+function runWithCreds() {
+	if($j('#ngt_username').val() && $j('#ngt_password').val()) {
+		ngtRunAction(_getCredentials());
+		$j('#skipAndMount').prop("disabled", true);
+		$j('#cancelAct').prop("disabled", true);
+		$j('#enterCreds').prop("disabled", true);
+		$j('#submitCreds').prop("disabled", true);
+	}
+	else {
+		$j(".error_data").html('');
+		$j(".error_data").html('<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">Please enter credentials.</div>');
+	}
+}
+
+function ngtRunAction(install_ngt_json) {
+	
+	var actSysId = "${JS:sysparm_sysId}";
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'runAction');
+	gajax.addParam('sysparm_actionsysid', actSysId+'');
+	gajax.addParam('sysparm_actionVars', JSON.stringify(install_ngt_json));
+	gajax.getXML(getResponse);
+		
+	function getResponse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		g_form.addInfoMessage(answer);
+		GlideModal.get().destroy();
+	}
+}]]></client_script>
+        <description>NGT install page</description>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Install_NGT.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+    
+	<g:evaluate var="jvar_not" object="true">
+		var calm_version = gs.getProperty("x_nuta2_nutanix_ca.calm_version") + '';
+		
+		var appUtil= new Nutanix_Calm_Utils();
+		var not = new GlideRecordSecure(appUtil.configuration.table.NutanixCalmAction);
+		if(not.get('${JS:sysparm_sysId}'))
+		{
+			var app_id = not.parent_uuid+'';
+		}
+		var app_json = appUtil.makeCalmApiCall('GET', '/apps/'+app_id, '');
+		var os_type = JSON.parse(app_json.getBody()).status.resources.deployment_list[0].substrate_configuration.os_type + '';
+		var ngt_state = "";
+		var ngt_services = "";
+		var app_gr = new GlideRecordSecure("x_nuta2_nutanix_ca_nutanix_calm_application");
+		app_gr.addQuery("uuid", app_id);
+		app_gr.query();
+		if(app_gr.next()) {
+			ngt_state = app_gr.ngt_state + "";
+			ngt_services = app_gr.services_enabled + "";
+		}
+		ngt_state;
+		os_type;
+		calm_version;
+		ngt_services;
+	</g:evaluate>
+	
+	<input type="hidden" name="ngt_state" id="ngt_state" value="${JS:ngt_state}"/>
+	<input type="hidden" name="os_type" id="os_type" value="${JS:os_type}"/>
+	<input type="hidden" name="calm_version" id="calm_version" value="${JS:calm_version}"/>
+	<input type="hidden" name="ngt_services" id="ngt_services" value="${JS:ngt_services}"/>
+	
+	<body>
+		<div class="error_data"></div>
+		<div class="ngt-form">
+			<div class="form-group">
+				<label style="margin-bottom: 10px;" class="control-label">With NGT, you can also choose to install the following applications</label>
+				<div class="form-group">
+					<span class="input-group-checkbox">
+						<input id="ngt_self_service_restore" class="checkbox" type="checkbox" value="false"/>
+						<label for="ngt_self_service_restore" class="checkbox-label" id="ssr_label">Enable Self Service Restore (SSR)</label>
+					</span>
+				</div>
+				<div class="form-group">
+					<span class="input-group-checkbox">
+						<input id="ngt_vss_snapshot" class="checkbox" type="checkbox" value="false"/>
+						<label for="ngt_vss_snapshot" class="checkbox-label" id="vss_label">Enable Volume Snapshot Service (VSS)</label>
+					</span>
+				</div>
+			</div>
+			<div style="border-bottom: 2px solid #e6e6e6; padding-top: 5px;"></div>
+			<div style="padding-top: 7px;">
+				<div class="form-group">
+					<span class="input-group-radio">
+						<input class="radio" type="radio" name="ngt_restart" id="restart_immediate" value="true"/>
+						<label for="restart_immediate" class="radio-label" id="restart_immediate_label">Restart as soon as the install is completed</label>
+					</span>
+				</div>
+				<div class="form-group" style="display:none;">
+					<span class="input-group-radio">
+						<input class="radio" type="radio" name="ngt_restart" id="restart_date" value="" disabled=""/>
+						<label for="restart_date" class="radio-label" id="restart_date_label">Restart at specific date and time after the install is completed</label>
+					</span>
+				</div>
+				<div class="form-group">
+					<span class="input-group-radio">
+						<input class="radio" type="radio" name="ngt_restart" id="skip_restart" value="false" checked=""/>
+						<label for="skip_restart" class="radio-label" id="skip_restart_label">Skip restart</label>
+					</span>
+				</div>
+			</div>
+            <div class="alert alert-warning" style="padding: 5px 16px; position: relative; margin: 5px 0px;"><b>Warning:</b>To install NGT on your VM, you must enter credentials for the installed image. If you want to do it later, you can simply mount NGT for now.</div>
+			</div>
+			<div class="credential-form" style="display:none">
+				<label class="form-input">Enter guest operating username and password below</label>
+				<div class="form-group">
+					<label>Username</label>
+					<input type="text" class="form-control" spellcheck="false" name="ngt_username" id="ngt_username" placeholder="Username" maxlength="64" value="" />
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<input type="password" class="form-control" spellcheck="false" name="ngt_password" id="ngt_password" maxlength="64" placeholder="Password" value="" autocomplete="new-password"/>
+				</div>
+				<div id="Windows_guest_script" style="display: none; padding-top: 10px;">
+				<span class="input-group-radio">
+					<input id="win_rm" class="checkbox" type="checkbox" checked=""/>
+					<label for="win_rm" class="checkbox-label" id="win_rm_label">Enable WinRM in basic auth mode</label>
+				</span>
+				<div data-toggle="collapse" data-target="#script_windows" style="padding-top: 10px;">
+					<span id="icon_change" class="icon-chevron-down" style="padding-right: 5px;"/><strong><label>Script</label></strong>
+				</div>
+				<div id="script_windows" class="collapse in" style="padding-top: 10px;">
+					<textarea id="windows_guest_script" class="form-control" readOnly="">$c = New-SelfSignedCertificate -DnsName $env:computername -CertStoreLocation cert:\LocalMachine\My ; 
+winrm create winrm/config/Listener?Address=*+Transport=HTTPS "@{Hostname=`"$env:computername`";CertificateThumbprint=`"$($c.ThumbPrint)`"}" 
+ cmd /c 'winrm set winrm/config/service/auth @{Basic="true"}';
+ netsh advfirewall firewall add rule name=\"WinRM-HTTPS\" dir=in localport=5986 protocol=TCP action=allow</textarea>
+				</div> 
+			</div>
+			</div>
+		<div class="modal-footer">
+                    <div class="row">
+                        <div class="col-sm-9 pull-right" style="width: max-content;">
+                            <button class="btn btn-default" id="cancelAct">Cancel</button>
+							<button class="btn btn-default" id="skipAndMount">Skip and Mount</button>
+							<button class="btn btn-default" id="unmountNGT" style="display: none;">Unmount</button>
+                            <button class="btn btn-primary" id="enterCreds">Enter Credentials</button>
+							<button class="btn btn-primary" id="submitCreds" style="display:none;">Done</button>
+                        </div>
+                    </div>
+                </div>
+		</body>
+		<style>
+			input[type="checkbox"]  {
+			margin: auto 4px 3px auto;
+			}
+			input[type="radio"]  {
+			margin: auto 10px 3px auto;
+			}
+		</style>
+    </j:jelly>]]></html>
+        <name>Install_NGT</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-06-26 12:03:39</sys_created_on>
+        <sys_id>59d27cdd4f5233008373224f9310c77b</sys_id>
+        <sys_mod_count>174</sys_mod_count>
+        <sys_name>Install_NGT</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_59d27cdd4f5233008373224f9310c77b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-29 07:54:09</sys_updated_on>
+    </sys_ui_page>
+</record_update>

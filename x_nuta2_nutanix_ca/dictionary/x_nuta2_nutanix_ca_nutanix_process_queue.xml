@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Process Queues" max_length="40" name="x_nuta2_nutanix_ca_nutanix_process_queue" type="collection">
+        <element active="false" attributes="edge_encryption_enabled=true" default="9947bfa0371d2300d27b8cf6c3990e3e" label="Calm Instance" max_length="100" name="calm_instance" reference="x_nuta2_nutanix_ca_calm_plugin_configuration" type="reference"/>
+        <element label="Comments" max_length="100" name="comments" type="string"/>
+        <element label="Description" max_length="255" name="description" type="string"/>
+        <element label="Method" max_length="50" name="method" type="string"/>
+        <element label="Parameter" max_length="1048576" name="parameter" type="string"/>
+        <element label="Payload" max_length="1048576" name="payload" type="string"/>
+        <element label="Process Name" max_length="255" name="process_name" type="string"/>
+        <element attributes="edge_encryption_enabled=true" choice="3" default="ready" label="State" max_length="40" name="state" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Waiting" sequence="0" value="waiting"/>
+                <element inactive_on_update="false" label="Ready" sequence="1" value="ready"/>
+                <element inactive_on_update="false" label="Processing" sequence="2" value="processing"/>
+                <element inactive_on_update="false" label="Complete" sequence="3" value="complete"/>
+                <element inactive_on_update="false" label="Error" sequence="4" value="error"/>
+            </choice>
+        </element>
+        <element label="Topic" max_length="40" name="topic" type="string"/>
+        <index name="index">
+            <element name="calm_instance"/>
+        </index>
+    </element>
+</database>

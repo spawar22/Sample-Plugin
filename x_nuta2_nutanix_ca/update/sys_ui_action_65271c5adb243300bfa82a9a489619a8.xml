@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_action">
+    <sys_ui_action action="INSERT_OR_UPDATE">
+        <action_name>delete_inventory</action_name>
+        <active>true</active>
+        <client>true</client>
+        <client_script_v2><![CDATA[function onClick(g_form) {
+
+}]]></client_script_v2>
+        <comments>Deletes the current calm inventory</comments>
+        <condition>(gs.hasRole("admin") || gs.hasRole("x_nuta2_nutanix_ca.calm_admin") )&amp;&amp;gs.getProperty('x_nuta2_nutanix_ca.check.authentication')=='true'&amp;&amp;gs.getProperty('x_nuta2_nutanix_ca.calm_version')!=''&amp;&amp;new Nutanix_ClientServerScriptBridge().checkQueue();</condition>
+        <form_action>true</form_action>
+        <form_button>true</form_button>
+        <form_button_v2>false</form_button_v2>
+        <form_context_menu>false</form_context_menu>
+        <form_link>false</form_link>
+        <form_menu_button_v2>false</form_menu_button_v2>
+        <form_style/>
+        <hint>Deletes the current calm inventory</hint>
+        <isolate_script>false</isolate_script>
+        <list_action>false</list_action>
+        <list_banner_button>false</list_banner_button>
+        <list_button>false</list_button>
+        <list_choice>false</list_choice>
+        <list_context_menu>false</list_context_menu>
+        <list_link>false</list_link>
+        <list_save_with_form_button>false</list_save_with_form_button>
+        <list_style/>
+        <name>Delete Inventory</name>
+        <onclick>deleteConfirmation()</onclick>
+        <order>150</order>
+        <script><![CDATA[//Client-side 'onclick' function
+function deleteConfirmation() {
+	var delConfirm = confirm("This will clean up the complete inventory of Calm entities in ServiceNow CMDB including the Nutanix Calm Catalog.  Do you really want to continue?");
+	if(delConfirm) {
+		deleteInventory();
+	}
+	else
+		return false;
+}
+
+function deleteInventory() {
+	var href = parent.location.toString();
+	if(href.indexOf("nav_to.do?uri=%2F") >= 0){
+		parent.location = "/nav_to.do?uri=%2Fsyslog_app_scope_list.do?sysparm_userpref_module=1798dae54f41230065e48020a310c763&sysparm_clear_stack=true";
+		
+	} else{
+		parent.location = "/syslog_app_scope_list.do?sysparm_userpref_module=1798dae54f41230065e48020a310c763&sysparm_clear_stack=true";
+		
+	}
+	//Call the UI Action and skip the 'onclick' function
+	gsftSubmit(null, g_form.getFormElement(), 'delete_inventory');
+}
+
+//Code that runs without 'onclick'
+
+if(typeof window == 'undefined')
+	runScriptCode();
+
+//Server-side function
+function runScriptCode(){
+	
+	var cleanInventory = new Nutanix_ClientServerScriptBridge();
+	cleanInventory.cleanInstance();
+}]]></script>
+        <show_insert>true</show_insert>
+        <show_multiple_update>false</show_multiple_update>
+        <show_query>false</show_query>
+        <show_update>true</show_update>
+        <sys_class_name>sys_ui_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-04-03 12:49:10</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>65271c5adb243300bfa82a9a489619a8</sys_id>
+        <sys_mod_count>22</sys_mod_count>
+        <sys_name>Delete Inventory</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_action_65271c5adb243300bfa82a9a489619a8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-10-23 12:12:30</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_calm_plugin_configuration</table>
+        <ui11_compatible>true</ui11_compatible>
+        <ui16_compatible>false</ui16_compatible>
+    </sys_ui_action>
+</record_update>

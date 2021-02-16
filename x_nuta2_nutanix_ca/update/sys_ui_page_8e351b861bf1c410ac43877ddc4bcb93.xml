@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var $j = jQuery.noConflict();
+
+new GlideModal().get("dialog_loading").destroy();
+
+$j('#snap_delete').mousedown(runAction);
+$j('#cancelAct').mousedown(cancelDialog);
+
+function runAction() {
+	$j('#snap_delete').prop("disabled", true);
+	$j('#cancelAct').prop("disabled", true);
+	
+	var act_sys_id = gel("action_snapshot_delete_sys_id").value + '';
+	var snapshot_uuid = gel("snapshot_uuid").value + '';
+	
+	var consolidate_vm = $j('#conolidate_vm').is(":checked").toString();
+	var remove_children = $j('#remove_children').is(":checked").toString();
+	
+	var json_var = [{"name":"snapshot_id","value":snapshot_uuid},{"name":"remove_children","value":remove_children},{"name":"consolidate","value":consolidate_vm},{"name":"suppress_power_on","value":"false"}];
+	
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'runAction');
+	gajax.addParam('sysparm_actionsysid', act_sys_id + '');
+	gajax.addParam('sysparm_actionVars', JSON.stringify(json_var));
+	gajax.getXML(getResponse);
+		
+	function getResponse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		g_form.addInfoMessage(answer);
+		GlideModal.get().destroy();
+	}
+}
+
+function cancelDialog() {
+	GlideModal.get().destroy();
+}]]></client_script>
+        <description>Snapshot delete VMWare</description>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Snapshot_delete_vmware.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	
+	<j:set var="jvar_element_id" value="${JS:sysparm_sysId}"/>
+	<g:evaluate var="jvar_not" object="true">
+		var appUtil= new Nutanix_Calm_Utils();
+		var not = new GlideRecordSecure(appUtil.configuration.table.recoveryPoints);
+		if (not.get('${jvar_element_id}'))
+		{
+		var app_id = not.parent_uuid + "";
+		var snapshot_uuid = not.uuid + "";
+		}
+		var action_snapshot_delete_sys_id = "";
+		var actGR = new GlideRecordSecure(appUtil.configuration.table.NutanixCalmAction);
+		actGR.addQuery("parent_uuid",app_id + "");
+		actGR.addQuery("type","system");
+		actGR.addQuery("name","action_snapshot_delete");
+		actGR.query();
+		if(actGR.next()) {
+			action_snapshot_delete_sys_id = actGR.sys_id + "";
+		}
+		
+		action_snapshot_delete_sys_id;
+		snapshot_uuid;
+	</g:evaluate>
+	
+	<input type="hidden" name="action_snapshot_delete_sys_id" id="action_snapshot_delete_sys_id" value="${JS:action_snapshot_delete_sys_id}"/>
+	<input type="hidden" name="snapshot_uuid" id="snapshot_uuid" value="${JS:snapshot_uuid}"/>
+	
+	<body>
+		<div>
+			<label style="margin-bottom: 20px;" class="control-label" id="delete_warning_label"><strong>Are you sure you want to delete this Snapshot?</strong></label>
+			<div class="form-group">
+				<span class="input-group-checkbox">
+					<input id="conolidate_vm" class="checkbox" type="checkbox" value="false"/>
+					<label for="conolidate_vm" class="checkbox-label"><strong>Consolidate</strong></label>
+				</span>
+			</div>
+			<div class="form-group">
+				<span class="input-group-checkbox">
+					<input id="remove_children" class="checkbox" type="checkbox" value="false"/>
+					<label for="remove_children" class="checkbox-label"><strong>Remove Children</strong></label>
+				</span>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-sm-9 pull-right" style="width: max-content;">
+					<button class="btn btn-default" id="cancelAct">Cancel</button>
+					<button class="btn btn-primary" id="snap_delete">Confirm Delete</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</j:jelly>]]></html>
+        <name>Snapshot_delete_vmware</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-12-20 07:28:21</sys_created_on>
+        <sys_id>8e351b861bf1c410ac43877ddc4bcb93</sys_id>
+        <sys_mod_count>25</sys_mod_count>
+        <sys_name>Snapshot_delete_vmware</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_8e351b861bf1c410ac43877ddc4bcb93</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-23 10:12:08</sys_updated_on>
+    </sys_ui_page>
+</record_update>

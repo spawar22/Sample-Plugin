@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element audit="true" label="Application Action Request" max_length="40" name="x_nuta2_nutanix_ca_app_action_workflow_trigger" type="collection">
+        <element display="true" label="Action" max_length="40" name="actionsysid" reference="x_nuta2_nutanix_ca_nutanix_calm_action" type="reference"/>
+        <element label="Action JSON" max_length="8000" name="action_json" type="string"/>
+        <element active="false" choice="3" default="not requested" label="Action Status" max_length="40" name="action_status" type="choice">
+            <choice/>
+        </element>
+        <element label="Application" max_length="32" name="application" reference="x_nuta2_nutanix_ca_nutanix_calm_application" type="reference"/>
+        <element choice="3" default="not_requested" label="Approval Status" max_length="40" name="approval_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Approved" value="approved"/>
+                <element inactive_on_update="false" label="Cancel" value="cancel"/>
+                <element inactive_on_update="false" label="Not Required" value="not_required"/>
+                <element inactive_on_update="false" label="Rejected" value="rejected"/>
+                <element inactive_on_update="false" label="Waiting for approval" value="waiting_for_approval"/>
+            </choice>
+        </element>
+        <element label="App UUID" max_length="40" name="app_uuid" type="string"/>
+        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element label="Approver comments" max_length="500" name="request_approved_rejected_reason" type="journal_input"/>
+        <element active="false" attributes="ref_ac_columns=approver;document_id;state" label="Request Approver" max_length="32" name="request_approver" reference="sysapproval_approver" type="reference"/>
+        <element label="User Name" max_length="40" name="user_name" reference="sys_user" type="reference"/>
+        <index name="index">
+            <element name="actionsysid"/>
+        </index>
+        <index name="index2">
+            <element name="application"/>
+        </index>
+        <index name="index3">
+            <element name="user_name"/>
+        </index>
+        <index name="index4">
+            <element name="request_approver"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Restore Points" max_length="40" name="x_nuta2_nutanix_ca_restore_points" type="collection">
+        <element label="Children" max_length="2048" name="children" type="string"/>
+        <element label="Creation Time" max_length="40" name="creation_time" type="string"/>
+        <element label="Description" max_length="1024" name="description" type="string"/>
+        <element label="Expiration Time" max_length="40" name="expiration_time" type="string"/>
+        <element label="Name" max_length="100" name="name" type="string"/>
+        <element label="Parent" max_length="128" name="parent" type="string"/>
+        <element label="Parent UUID" max_length="40" name="parent_uuid" type="string"/>
+        <element label="Recovery Point Type" max_length="100" name="recovery_point_type" type="string"/>
+        <element label="UUID" max_length="128" name="uuid" type="string"/>
+    </element>
+</database>

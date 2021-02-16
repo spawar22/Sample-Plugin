@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl">
+    <sys_security_acl action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <admin_overrides>false</admin_overrides>
+        <advanced>true</advanced>
+        <condition/>
+        <description>Default access control on x_nuta2_nutanix_ca_nutanix_catalog_items</description>
+        <name>x_nuta2_nutanix_ca_nutanix_catalog_items</name>
+        <operation display_value="read">read</operation>
+        <script><![CDATA[answer = showCatalogItem();
+
+function showCatalogItem(){
+	
+	if(gs.hasRole('x_nuta2_nutanix_ca.calm_admin'))
+		return true;
+	
+	var gr = new GlideRecord('sc_cat_item_user_criteria_mtom');
+	var tmp = '';
+	var gr2 = new GlideRecord('sys_user_grmember');
+	gr2.addQuery('user', gs.getUserID());
+	gr2.addQuery('group.active', 'true');
+	gr2.query();
+	if(gr2.hasNext())
+		tmp = gr2.group;
+		while(gr2.next())
+		tmp = tmp + ',' + gr2.group;
+	
+	gr.addEncodedQuery('sc_cat_item='+current.sys_id+'^user_criteria.userDYNAMIC90d1921e5f510100a9ad2572f2b477fe^ORuser_criteria.groupIN'+tmp);
+	gr.query();
+	
+	if(gr.hasNext())
+		return true;
+	
+	return false;
+}]]></script>
+        <sys_class_name>sys_security_acl</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-08 21:27:08</sys_created_on>
+        <sys_id>d1469a9737e12300fdfc097973990e71</sys_id>
+        <sys_mod_count>14</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca_nutanix_catalog_items</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_security_acl_d1469a9737e12300fdfc097973990e71</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-03-16 14:22:55</sys_updated_on>
+        <type display_value="record">record</type>
+    </sys_security_acl>
+</record_update>

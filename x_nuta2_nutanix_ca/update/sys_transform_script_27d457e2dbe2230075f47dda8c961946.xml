@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_script">
+    <sys_transform_script action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <map display_value="AWS Providers">f4219baedba2230075f47dda8c961916</map>
+        <order>100</order>
+        <script><![CDATA[(function runTransformScript(source, map, log, target /*undefined onStart*/ ) {
+	// Add your code here
+	var appUtil = new Nutanix_Calm_Utils();
+	var storageJSON = appUtil.parse(source.create_spec);
+	if(storageJSON.resources.block_device_map){
+		appUtil.insertIntoQueue("processAWStorage", '', target.sys_id+"", appUtil.stringify(storageJSON.resources.block_device_map), 'Process AWS Storage', 'This job processes AWS Storage.');
+	}
+	if(storageJSON.resources.tag_list){
+		appUtil.insertIntoQueue("processTags", '', target.sys_id+"", appUtil.stringify(storageJSON.resources.tag_list), 'Process AWS Tags', 'This job processes AWS Tags.');
+	}
+
+})(source, map, log, target);]]></script>
+        <sys_class_name>sys_transform_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-12-26 11:13:50</sys_created_on>
+        <sys_id>27d457e2dbe2230075f47dda8c961946</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>onAfter</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_script_27d457e2dbe2230075f47dda8c961946</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-06-28 15:20:44</sys_updated_on>
+        <when>onAfter</when>
+    </sys_transform_script>
+</record_update>

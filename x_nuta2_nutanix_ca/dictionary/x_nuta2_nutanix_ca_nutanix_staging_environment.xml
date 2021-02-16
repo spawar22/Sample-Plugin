@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="sys_import_set_row" label="Nutanix Staging Environment" max_length="40" name="x_nuta2_nutanix_ca_nutanix_staging_environment" type="collection">
+        <element label="Creation Time" max_length="40" name="creation_time" type="string"/>
+        <element label="Credential Definition List" max_length="5000" name="credential_definition_list" type="string"/>
+        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element label="Kind" max_length="40" name="kind" type="string"/>
+        <element label="Last Update Time" max_length="40" name="last_update_time" type="string"/>
+        <element label="Message List" max_length="1000" name="message_list" type="string"/>
+        <element label="Name" max_length="40" name="name" type="string"/>
+        <element label="Owner Reference" max_length="1000" name="owner_reference" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Project" max_length="32" name="project" reference="x_nuta2_nutanix_ca_nutanix_project" type="reference"/>
+        <element label="Spec version" max_length="40" name="spec_version" type="string"/>
+        <element label="State" max_length="50" name="state" type="string"/>
+        <element label="Substrate Definition List" max_length="1000" name="substrate_definition_list" type="string"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+        <index name="index">
+            <element name="project"/>
+        </index>
+    </element>
+</database>

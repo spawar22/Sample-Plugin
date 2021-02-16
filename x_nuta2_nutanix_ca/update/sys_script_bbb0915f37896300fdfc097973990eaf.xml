@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_nuta2_nutanix_ca_nutanix_process_queue</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition table="x_nuta2_nutanix_ca_nutanix_process_queue">state=ready^EQ<item display_value="Ready" endquery="false" field="state" goto="false" newquery="false" operator="=" or="false" value="ready"/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </filter_condition>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>CALM Queue Post Insert BR</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+	this.logger = new Nutanix_Calm_Logger();
+	
+	// Add your code here
+	try{
+		var topic = current.topic+'';		
+		current.state = "processing";
+		current.update();
+		
+		var call="";
+		var callFunction ="";
+		switch (topic) {
+				
+			case "startMigration" :                 call = new Migration_Script();
+													callFunction = call.updateCatalog();
+													current.comments = "Migration Completed.";
+													current.state = "complete";
+													break;
+				
+			case "start1_4_3_Migration" :           var appUtil = new Nutanix_Calm_Utils();
+													appUtil.migrateV1_4_3();
+													current.comments = "V_1_4_3Migration Completed.";
+													current.state = "complete";
+													
+													break;
+				
+			case "startInventorySync" :             call = new Nutanix_ImportUsers();
+													call.startUsersImport();
+				
+													call = new Nutanix_ImportUsers();
+													call.startGroupsImport();
+
+													call = new Nutanix_Import_Subnets();
+													call.startSubnetImport();
+				
+													call = new Nutanix_ImportProjects();
+													call.startImportProjects();
+
+													//call = new Nutanix_Categories();
+													//call.importCategoryData();
+
+													call = new Nutanix_ImportBlueprints();
+													call.startImportBlueprints();
+
+													call = new Nutanix_Import_Marketplace_Items();
+													call.startImportMPI();
+
+													call = new NutanixAppIntermediateDao();
+													call.startAppImport();
+													call.startDeletedAppImport();
+				
+				                                    current.comments = "Imports Started.";
+													current.state = "complete";				
+													
+													break;
+				
+			case "ProcessApplicationProfiles" :     call = new Nutanix_ImportApplicationProfiles();
+													callFunction = call.processApplicationProfiles(current);													
+				                                    current.comments = "Application Profiles processed";
+													current.state = "complete";
+				
+													current.process_name = 'Process application profiles';			
+													current.description = 'This process invokes the import of application profiles.';
+													break;				
+				
+				
+			case "importApplications" :             call = new NutanixAppIntermediateDao();
+													call.importApplications(current);
+				                                    current.comments = "Aplications imported";
+				                                    current.state = "complete";
+				
+													break;		
+				
+			case "processImportedApp" :             call = new NutanixAppIntermediateDao();
+				                                    current.comments = "Imported Applications processed";
+													call.processImportedApp(current);													
+				                                    current.state = "complete";
+				
+													break;	
+				
+			case "importDeletedApplications" :      call = new NutanixAppIntermediateDao();
+													call.importDeletedApplications(current);
+				                                    current.comments = "Deleted Aplications imported";
+				                                    current.state = "complete";
+				
+													break;		
+						
+			
+			case "importProjectData" :              call = new Nutanix_ImportProjects();
+													callFunction = call.importProjectData(current);
+													current.comments = "Projects imported";
+													current.state = "complete";
+				
+													break;
+				
+			case "processImportProjectData" :       call = new Nutanix_ImportProjects();
+													current.comments = "Imported Projects processed";
+													callFunction = call.processImportProjectData(current);
+													current.state = "complete";
+				
+													break;
+				
+			case "importBlueprintDataByUUID" :      call = new Nutanix_ImportBlueprints();
+													callFunction = call.importBlueprintDataByUUID(current);
+													current.comments = "Blueprint details imported";
+													current.state = "complete";
+				
+													break;
+				
+			case "processImportBlueprintData" :     call = new Nutanix_ImportBlueprints();
+													current.comments = "Imported Blueprint processed";
+													callFunction = call.processImportBlueprintData(current);
+													current.state = "complete";
+				
+													break;
+			case "importMPIData" :                  call = new Nutanix_Import_Marketplace_Items();
+													callFunction = call.importMPIData(current);
+													current.comments = "MarketplaceItem imported";
+													current.state = "complete";
+				
+													break;
+				
+			case "processImportMPIData" :           call = new Nutanix_Import_Marketplace_Items();
+													current.comments = "Imported MarketplaceItem processed";
+													callFunction = call.processImportMPIData(current);
+													current.state = "complete";
+				
+													break;
+				
+			/*case "createUserCriteria" :             call = new Nutanix_ImportBlueprints();
+													current.comments = "Adding User Criteria.";
+													callFunction = call.createUserCriteria(current);
+													current.state = "complete";
+													break;*/
+				
+			case "MapCatItemToProject" :            if(current.payload != "") {
+														call = new Nutanix_ImportProjects();
+														current.comments = "Mapping Catalog Items to Projects";
+														callFunction = call.MapCatItemToProject(current);
+														current.state = "complete";
+				
+														break;
+													}
+													else{
+														current.comments = "No Project reference list for SysId:"+current.parameter;
+														current.state = "complete";
+														break;
+													}
+				
+			case "ProcessingCredentials" :           call = new Nutanix_ImportCredentials();
+													 current.comments = "Imported Credentials processed";
+													 callFunction = call.ProcessingCredentials(current);
+													 current.state = "complete";
+				
+													 break;
+												
+			case "processCatalogVariables" :        call = new Nutanix_CreateCatalogVariables();
+													callFunction = call.processCatalogVariables(current);
+													current.comments = "Blueprint/MPI variables created.";
+													current.state = "complete";
+				
+													break;
+				
+			case "processingIcon" :                 call = new Nutanix_Import_Marketplace_Items();
+													callFunction = call.processingIcon(current);
+													current.comments = "Imported MarketplaceItem Icons processed.";
+													current.state = "complete";
+				
+													break; 
+				
+			case "startImportEnvironment":          call = new Nutanix_ImportEnvironment();
+													callFunction = call.startImportEnvironment(current);
+													current.comments = "Import of environments";
+													current.state = "complete";
+				
+													break; 
+				
+			case "processImportedEnvironment" :     call = new Nutanix_ImportEnvironment();
+													callFunction = call.processImportedEnvironment(current);
+													current.comments = "Processing of environment";
+													current.state = "complete";
+				
+													break; 
+				
+			case "processEnvCredentials" :          call = new Nutanix_ImportCredentials();
+													callFunction = call.processEnvCredentials(current);
+													current.comments = "Processing of environment credentials";
+													current.state = "complete";
+				
+													break;
+				
+			case "importUsers" :                    call = new Nutanix_ImportUsers();
+													callFunction = call.importUsers(current);
+													current.comments = "Updates the UUID of imported users to those of calm";
+													current.state = "complete";
+				
+													break;
+				
+			case "importGroups" :                    call = new Nutanix_ImportUsers();
+													callFunction = call.importGroups(current);
+													current.comments = "Updates the UUID of imported groups to those of calm";
+													current.state = "complete";
+				
+													break;
+				
+			case "processProviders" :               call = new Nutanix_ProcessProviders();
+													callFunction = call.processProviders(current);
+													current.comments = "Processing of environment providers";
+													current.state = "complete";
+				
+													break;   
+				
+// 			case "processAWStorage" :               call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processAWStorage(current);
+// 													current.comments = "Processing of AWS storage";
+// 													current.state = "complete";
+				
+// 													break;   
+				
+// 			case "processTags" :                    call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processTags(current);
+// 													current.comments = "Processing of Tags";
+// 													current.state = "complete";
+				
+// 													break;    
+// 			case "processBlankDisk" :               call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processBlankDisk(current);
+// 													current.comments = "Processing of BlankDisk";
+// 													current.state = "complete";
+				
+// 													break;    
+// 			case "processNetworkInterfaces" :       call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processNetworkInterfaces(current);
+// 													current.comments = "Processing of NetworkInterfaces";
+// 													current.state = "complete";
+				
+// 													break;  
+				
+// 			case "processDisks" :                   call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processDisks(current);
+// 													current.comments = "Processing of Disks";
+// 													current.state = "complete";
+				
+// 													break; 
+				
+// 			case "processOSProfile" :               call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processOSProfile(current);
+// 													current.comments = "Processing of OS Profile";
+// 													current.state = "complete";
+				
+// 													break;    
+				
+// 			case "processNetworkProfiles" :         call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processNetworkProfiles(current);
+// 													current.comments = "Processing of Network Profiles";
+// 													current.state = "complete";
+				
+// 													break; 
+			
+// 			case "processDataDisk" :                call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processDataDisk(current);
+// 													current.comments = "Processing of Data Disk";
+// 													current.state = "complete";
+				
+// 													break; 
+			
+// 			case "processNutanixDisk" :             call = new Nutanix_ProcessProviders();
+// 													callFunction = call.processNutanixDisk(current);
+// 													current.comments = "Processing of Nutanix Disks.";
+// 													current.state = "complete";
+// 													break;
+				
+			case "processSubnets" :                 call = new Nutanix_Import_Subnets();
+													callFunction = call.processSubnets(current);
+													current.comments = "Processing of Subnets.";
+													current.state = "complete";
+				
+													break;
+				
+			case "importRecoveryPoints" :           call = new Nutanix_ImportRecoveryPoints();
+													callFunction = call.importRecoveryPoints(current);
+													current.comments = "Import of Recovery Points.";
+													current.state = "complete";
+				
+													break;
+				
+			case "processAhvRecoveryPoints" :       call = new Nutanix_ImportRecoveryPoints();
+													callFunction = call.processAhvRecoveryPoints(current);
+													current.comments = "Processing of AHV Recovery Points.";
+													current.state = "complete";
+				
+													break;
+				
+			case "processAwsRecoveryPoints" :       call = new Nutanix_ImportRecoveryPoints();
+													callFunction = call.processAwsRecoveryPoints(current);
+													current.comments = "Processing of AMIs.";
+													current.state = "complete";
+				
+													break;	
+			
+			case "processVmwareRecoveryPoints" :    call = new Nutanix_ImportRecoveryPoints();
+													callFunction = call.processVmwareRecoveryPoints(current);
+													current.comments = "Processing of VMWare Recovery Points.";
+													current.state = "complete";
+				
+													break;	
+				
+			case "startInventoryDelete" :           call = new Delete_Inventory();
+													call.deleteInventory();
+													current.comments = "Starts the deletion of calm snow data.";
+													current.state = "complete";
+													gs.setProperty('x_nuta2_nutanix_ca.Delete_Flag','0');
+													this.logger.info("Inventory deletion has successfully completed.");
+													break; 
+				
+			default :                               this.logger.error("Method :: "+topic+" not found inside CALM Queue Post Insert BR.");
+													break;
+				
+		}
+		
+	}catch(e) {
+		current.state = "error";
+		current.comments = "Exception caught inside CALM Queue Post Insert BR : "+e; 
+		this.logger.error("Exception caught inside CALM Queue Post Insert BR : "+e);
+		
+	}finally{
+		current.update();
+		this.logger.info("CALM Queue Post Insert BR ran sucessfully");
+	}
+
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-14 19:58:34</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>bbb0915f37896300fdfc097973990eaf</sys_id>
+        <sys_mod_count>78</sys_mod_count>
+        <sys_name>CALM Queue Post Insert BR</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_bbb0915f37896300fdfc097973990eaf</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-18 04:08:06</sys_updated_on>
+        <template/>
+        <when>async</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=bbb0915f37896300fdfc097973990eaf"/>
+</record_update>

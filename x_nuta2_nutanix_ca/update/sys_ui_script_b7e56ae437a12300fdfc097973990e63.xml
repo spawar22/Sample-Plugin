@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <name>x_nuta2_nutanix_ca.Calm_Catalog_Variable</name>
+        <script><![CDATA[var $j = jQuery.noConflict();
+var trigger_array = [];
+
+function render_variables(answer){
+    var profiles = g_form.getValue('multiple_application_profile');
+	var noProfileVar = [];
+	if(g_form.getValue('no_variables_for_profile')+'' != "[]")
+		noProfileVar =  JSON.parse(g_form.getValue('no_variables_for_profile'));
+	
+	var array_profile = profiles.split(',');
+	var profile_html = [];
+	var selected_profile = JSON.parse(g_form.getValue('profile_name_sys_id'));
+	
+	for(var n=0; n <array_profile.length; n++){
+		
+		if(noProfileVar.include(array_profile[n])){
+		var json ={
+			"profile" : array_profile[n],
+			"html" : "<span style=\"padding: 10px 15px 10px 15px; display: block; background: #e6e8ea; font-weight: bold;\" data-toggle=\"collapse\" data-target=\"#"+array_profile[n]+"\"><i class=\"fa fa-plus\"></i> "+selected_profile[array_profile[n]+''].name+"</span><div id="+array_profile[n]+" class=\"collapse\"><p style=\"padding: 10px 15px 10px 15px;\">No variables are defined for this profile.</p>"
+			};			
+		}
+		else{
+		var json ={
+			"profile" : array_profile[n],
+			"html" : "<span style=\"padding: 10px 15px 10px 15px; display: block; background: #e6e8ea; font-weight: bold;\" data-toggle=\"collapse\" data-target=\"#"+array_profile[n]+"\"+><i class=\"fa fa-plus\"></i> "+selected_profile[array_profile[n]+''].name+"</span><div id="+array_profile[n]+"  class=\"collapse\">"
+			};
+		}
+		profile_html.push(json);
+	}
+	var str = '';
+	
+	if(answer && answer!="{}"){
+		var variable_data = (answer)?answer:g_form.getValue('variable_data');
+
+		variable_data = JSON.parse(variable_data);
+
+		var k = 0;
+
+		for(var i in variable_data){
+			var row = variable_data[i];
+			
+			if(row.isHidden + '' == 'true')
+				continue;
+
+			var check ='';
+
+			if(row.runtime_config==true || row.runtime_config=='true')
+				check = 'checked="true"';
+
+			var setVal = "onchange=\"setVal('" + i +"', this.value)\"";
+			var setRun = "onchange=\"setRuntime('" + i +"', this.checked)\"";
+
+			var fieldType = (row.data_type+'' == 'SECRET')?'password':'text';
+			var placeHolder = (row.data_type+'' == 'SECRET') ? 'placeholder="*******"' :'';
+			var isDisabled = (row.isdisabled+''=='true')?'disabled':'';
+			var mandatoryAttr = (row.mandatory+''=='true')?'required':'';
+			var isCheckBoxDisabled = isDisabled;
+			var secrate_variable = (g_form.getValue('profile_secret_variables'));
+
+			var dependsStr = 
+				(row.field_json.all_dep.length != 0) ?'<div style="padding: 5px 1px; margin-bottom: 10px; background-color: #e8f0fa; color: #007eff; position: relative;">Depends on '+(row.field_json.all_dep.toString()).replace('_'+row.application_profile,'')+''+(secrate_variable.includes(row.field_json.all_dep.toString())?' value is secret and therefore not displayed </div>':'</div>') :"";
+			
+			if(row.data_type == 'EXEC_LOCAL' || row.data_type == 'HTTP_LOCAL' || row.data_type == 'EXEC_SECRET' || row.data_type == 'HTTP_SECRET') {
+				isCheckBoxDisabled = 'disabled';
+			}
+			var GWT_calm_format = {'DATE_TIME':'yyyy-MM-dd HH:mm:ss','DATE':'yyyy-MM-dd','TIME':'HH:mm:ss'};
+			
+			var spn = '';
+			
+			var inputType = '';
+
+			if(row.data_type+'' == 'SECRET')
+				spn = '<span class="field-icon toggle-password glyphicon glyphicon-eye-open spanField'+k+'" onclick="tooglePassword(\'field'+k+'\', \'spanField'+k+'\')"></span>';
+
+			if(k%2==0)
+				str = str + '<div class="containerStart">';
+
+			if(row.type+'' == '5')
+				inputType = '<select ' +placeHolder+ ' ' +isDisabled+ ' class="inputText field'+k+'" ' + setVal +' '+mandatoryAttr+'  id="'+row.uuid+'">'+_option_handler(row)+'</select>';
+			
+			if(row.type+'' == '21')
+				inputType = '<div><div id="span-'+row.uuid+'"></div><select ' +placeHolder+ ' ' +isDisabled+ ' '+mandatoryAttr+' onchange="selectOption(\'addOption\',this.value, \''+i+'\')" class="inputText field'+k+'" id="'+row.uuid+'">'+_option_handler(row)+'</select></div>';
+			
+			if(row.type+'' == '9')
+				inputType = '<span class="input-group"><input type="text" id="'+row.uuid+'" class="form-control" ' + setVal +' style="background-color:white;" ReadOnly="true" value="'+_option_handler(row)+'"/><span class="input-group-btn"><button class="btn btn-default" ' +isDisabled+ ' onclick="new GwtDateTimePicker(\''+row.uuid+'\', \''+GWT_calm_format[row.val_type]+'\', false)"><span class="icon-calendar icon"></span></button></span></span>';
+			
+			if(row.type+'' == '10')
+				inputType = '<span class="input-group"><input type="text" id="'+row.uuid+'" class="form-control" ' + setVal +' style="background-color:white;" ReadOnly="true" value="'+_option_handler(row)+'"/><span class="input-group-btn"><button class="btn btn-default" ' +isDisabled+ ' onclick="new GwtDateTimePicker(\''+row.uuid+'\', \''+GWT_calm_format[row.val_type]+'\', true)"><span class="icon-calendar icon"></span></button></span></span>';
+			
+			if(row.type+'' == '2')
+				inputType = '<textarea ' +placeHolder+ ' ' +isDisabled+ ' '+mandatoryAttr+' class="inputText field'+k+'" ' + setVal +'  id="'+row.uuid+'">'+_option_handler(row)+'</textarea>';
+			
+			if(row.type+'' == '6')
+				inputType = '<input type="'+fieldType+'" ' +placeHolder+ ' ' +isDisabled+ ' ' + setVal +' '+mandatoryAttr+' class="inputText field'+k+'" id="'+row.uuid+'" value="'+_option_handler(row)+'"/>';
+			
+			if(row.type+'' == '25')
+				inputType = '<input type="'+fieldType+'" ' +placeHolder+ ' ' +isDisabled+ ' ' + setVal +' '+mandatoryAttr+' class="inputText field'+k+'" id="'+row.uuid+'"/>';
+			
+			/*if(row.type+'' == '25') {
+				inputType = '<input class="inputText field'+k+'" type="password" value="' + row.value + '"' + setVal +' '+isDisabled+'>';
+				spn = '<span class="field-icon toggle-password glyphicon glyphicon-eye-open spanField'+k+'" onclick="tooglePassword(\'field'+k+'\', \'spanField'+k+'\')"></span>';
+			}
+			else if(row.type+'' == '21' || row.type+'' == '5') {
+				inputType = '<select id='+row.uuid+' class="inputText field'+k+'" '+ setVal +' '+isDisabled+'>'+_option_handler(row)+'</select>';
+			}
+			else {
+				inputType = '<input class="inputText field'+k+'" type="text" value="' + row.value + '"' + setVal +' '+isDisabled+'>';
+			}
+			*/
+			var desc = '';
+			if(row.description != '')
+				desc = '<div style="padding: 5px 1px; margin-bottom: 10px; background-color: #e8f0fa; color: #007eff; position: relative;">'+row.description+'</div>';
+			
+			var htmlStr = '<div style="padding:15px 40px;"><div style="padding:1px 1px 12px 1px; width: 100%"><span style="float:left;"><strong>' + row.question_text + '</span></strong><span style="float:right;"><input class="inputCheckbox" style="margin-right:2px" ' + setRun + ' type="checkbox" ' + check + ' '+isCheckBoxDisabled+'></input>Runtime </span></div> <div style="padding-top:14px;">'+desc+' '+dependsStr+' '+inputType+'</div>' + spn + '</div>';
+
+			//str = str + htmlStr;
+			for(var u=0; u<profile_html.length; u++){
+				if(profile_html[u].profile == row.application_profile){
+				    profile_html[u].html = profile_html[u].html + htmlStr;	
+				}
+			}
+
+// 			if(k%2!=0)
+// 				str = str + '</div>';
+
+			k++;
+
+		}	
+	}else{
+		str = "<p style='padding-bottom:20px'>No variables are defined for this profile.</p>";
+	}
+	$j(".bodyData").html('');
+	var str = '';
+	for(var a=0; a<profile_html.length; a++){
+		str = str + profile_html[a].html +'</div>';
+	}
+	jslog("Final HTML body : "+str);
+	$j(".bodyData").append(str);
+	
+	jslog(JSON.stringify(variable_data));
+	onChangeTrigger(variable_data);
+	_createDependencyJSON(variable_data);
+	
+	var second_var_run = JSON.parse((answer)?answer:g_form.getValue('variable_data'));
+	
+	for(var j in second_var_run) {
+		if(second_var_run[j].type + '' == '5')
+			$j("#"+second_var_run[j].uuid).val(second_var_run[j].value);
+		if(second_var_run[j].type + '' == '21')	
+			selectOption("initrun","", j);
+	}
+	
+	new GlideModal().get('loader').destroy();
+}
+
+function selectOption(type, multiValOption, key) {
+
+    multiValOption = unescape(multiValOption);
+    var variable_data = JSON.parse(g_form.getValue('variable_data'));
+    var row_uuid = variable_data[key].uuid + '';
+    var tmp_array = (variable_data[key].value != '') ? variable_data[key].value.split(',') : [];
+
+    if (type == 'addOption' && tmp_array.indexOf(multiValOption) == -1 && multiValOption != '') {
+        tmp_array.push(multiValOption);
+        $j('#' + row_uuid).find('option[value="' + multiValOption + '"]').remove();
+    }
+
+    if (type == 'removeOption' && tmp_array.indexOf(multiValOption) != -1) {
+        var index = tmp_array.indexOf(multiValOption);
+        if (index > -1) {
+            tmp_array.splice(index, 1);
+        }
+        var option = '<option value="' + multiValOption + '">' + multiValOption + '</option>';
+        $j("#" + row_uuid).append(option);
+    }
+    if (type == 'initrun') {
+        for (var k = 0; k < tmp_array.length; k++)
+            $j('#' + row_uuid).find('option[value="' + tmp_array[k] + '"]').remove();
+    }
+
+    variable_data[key].value = tmp_array.toString();
+
+    g_form.setValue('variable_data', JSON.stringify(variable_data));
+
+    var spanOptions = '';
+    for (var i = 0; i < tmp_array.length; i++) {
+        spanOptions += '<div style="display: -webkit-inline-box; margin: 3px;"><span style="margin: 3px; padding: 5px; border: 1px solid rgba(0, 126, 255, 0.24); line-height: 13px; font-size: 12px; display: inline-block; border-radius: 2px; background-color: rgba(0, 126, 255, 0.08); color: #007eff;">' + tmp_array[i] + '<a href="#" onclick="selectOption(\'removeOption\',\'' + escape(tmp_array[i]) + '\', \'' + key + '\')"><i class="icon-cross" style="padding-left: 7px;font-size: 11px;margin-top: -4px;"></i></a></span></div>';
+
+    }
+    $j("#span-" + row_uuid).html(spanOptions);
+}
+
+function onChangeTrigger(var_data) {
+	for(var i in var_data) {
+		var all_dep = var_data[i].field_json.all_dep;
+		console.log("***all_dep : "+all_dep);
+		trigger_array = trigger_array.concat(all_dep);
+	}
+}
+
+function macroReplace(yup, value) {
+	
+	var macroVar = "";
+	if(value.startsWith("@@{") && value.endsWith("}@@"))
+		macroVar = value.replace("@@{","").replace("}@@","");
+	
+	var form_data = JSON.parse(g_form.getValue("variable_data"));
+	for(var i in form_data) {
+		if(form_data[i].name + "" == macroVar)
+			value = form_data[i].value + "";	
+	}
+	
+	$j("#"+form_data[yup].uuid).val(value);
+	
+	return value;
+}
+
+function setVal(yup, value) {
+	
+	value = macroReplace(yup,value);
+	
+    var variable_data = JSON.parse(g_form.getValue('variable_data'));
+    variable_data[yup].value = value;
+    g_form.setValue('variable_data', JSON.stringify(variable_data));
+	var var_name = variable_data[yup].name + "";
+	if(trigger_array.indexOf(var_name) != -1) {
+		_createDependencyJSON(variable_data);
+	}
+    //_validateField(yup, value);
+}
+
+function setRuntime(yup, value) {
+    var variable_data = JSON.parse(g_form.getValue('variable_data'));
+    variable_data[yup].runtime_config = value;
+    g_form.setValue('variable_data', JSON.stringify(variable_data));
+}
+
+function responseParse(response) {
+    var answer = response.responseXML.documentElement.getAttribute("answer");
+    g_form.setValue('variable_data', answer);
+    render_variables(answer);
+}
+
+function getProfileVariableData() {
+
+    var loadingDialog = new GlideModal("loader", true);
+    loadingDialog.setTitle('Fetching profile Variables...');
+
+    var val = g_form.getValue('variable_data');
+
+    if (val) {
+        render_variables(val);
+        return;
+    }
+
+    loadingDialog.renderWithContent('<div class="loading-container"><div class="loading-indicator icon-loading icon-lg"></div></div>');
+
+    var type = g_form.getValue('type');
+
+    var project = g_form.getValue('multiple_project');
+    var blueprint = g_form.getValue('blueprint');
+    var application_profile = g_form.getValue('multiple_application_profile');
+	var cat_item = g_form.getValue('cat_item');
+	var delta_profile = g_form.getValue('delta_profiles');
+	
+    var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+    //	ga.addParam('sysparm_name', 'getProfileVariableDetails');
+    ga.addParam('sysparm_name', 'noProfileVariableDetails');
+    ga.addParam('sysparm_project', project);
+    ga.addParam('sysparm_blueprint', blueprint);
+    ga.addParam('sysparm_application_profile', application_profile);
+    ga.getXML(ParseNoProfileVar);
+ 
+	function ParseNoProfileVar(response) {
+	  var answer = response.responseXML.documentElement.getAttribute("answer");
+	  g_form.setValue('no_variables_for_profile', '');
+	  g_form.setValue('no_variables_for_profile', answer);
+	}
+
+
+    var ga = new GlideAjax('Nutanix_ClientServerScriptBridge');
+    //	ga.addParam('sysparm_name', 'getProfileVariableDetails');
+    ga.addParam('sysparm_name', 'getMultipleProfileVariableDetails');
+    ga.addParam('sysparm_project', project);
+    ga.addParam('sysparm_blueprint', blueprint);
+    ga.addParam('sysparm_application_profile', application_profile);
+	ga.addParam('sysparm_cat_item', cat_item);
+	ga.addParam('sysparm_delta_profiles', delta_profile);
+	ga.addParam('sysparm_type', type);
+    ga.getXML(responseParse);
+}
+
+function tooglePassword(field, fieldspan) {
+    var input = $j('.' + field);
+
+    if (input.attr("type") == "password") {
+        input.attr("type", "text");
+    } else {
+        input.attr("type", "password");
+    }
+}
+
+function _option_handler(arr_json) {
+
+    var options = '';
+    if (!(arr_json.type + '' == '21' || arr_json.type + '' == '5')) {
+        /*if (arr_json.data_type == 'EXEC_LOCAL' || arr_json.data_type == 'HTTP_LOCAL' || arr_json.data_type == 'EXEC_SECRET' || arr_json.data_type == 'HTTP_SECRET') {
+            _setRequestValues(arr_json);
+        } else*/
+            options = arr_json.value + '';
+    } else {
+        /*if (arr_json.data_type == 'EXEC_LOCAL' || arr_json.data_type == 'HTTP_LOCAL' || arr_json.data_type == 'EXEC_SECRET' || arr_json.data_type == 'HTTP_SECRET') {
+            g_form.addInfoMessage('Fetching values for variable "' + arr_json.question_text + '"');
+            _setRequestValues(arr_json);
+        } else {*/
+            options = '<option value=""></option>';
+            for (var i = 0; i < arr_json.options.length; i++) {
+                options += '<option value="' + arr_json.options[i] + '">' + arr_json.options[i] + '</option>';
+            }
+        //}
+    }
+
+    return options;
+}
+
+function _setRequestValues(pre_map) {
+	
+	new GlideModal().get('loader').destroy();
+	
+	var loadingDialog = new GlideModal('variable_loader', true);
+	loadingDialog.setTitle('Fetching variable values...'); 
+	loadingDialog.renderWithContent('<div class="loading-container"><div class="loading-indicator icon-loading icon-lg"></div></div>');
+	
+	var type = g_form.getValue('type_of_blueprint');
+	var blueprintSysId = g_form.getValue('blueprint');
+	
+	var gajax = new GlideAjax('Nutanix_ClientServerScriptBridge');
+	gajax.addParam('sysparm_name', 'getHttpValues');
+	gajax.addParam('sysparm_type', type);
+	gajax.addParam('sysparm_parentUuid', blueprintSysId + '');
+	gajax.addParam('sysparm_preMap', JSON.stringify(pre_map) + '');
+	gajax.getXML(getResponse);
+}
+
+function setVariableData(uuid, value) {
+	var var_data = JSON.parse(g_form.getValue("variable_data"));
+	for(var i in var_data) {
+		if(var_data[i].uuid + '' == uuid + '') {
+			var_data[i].value = value + '';
+			break;
+		}
+	}
+	jslog(uuid + " : " +value + ":" +JSON.stringify(var_data));
+	g_form.setValue("variable_data", JSON.stringify(var_data));
+}
+
+function getResponse(response){//var_data, loadingDialog){//, loadingDialog) {
+	var var_data = JSON.parse(g_form.getValue("variable_data"));
+	g_form.clearMessages();
+	var answer = response.responseXML.documentElement.getAttribute("answer");
+	var parsedAnswer = JSON.parse(answer);
+	var options = '';
+	for(var i in parsedAnswer) {
+		
+		var type = parsedAnswer[i].type + "";
+		var uuid = parsedAnswer[i].uuid + "";
+		if(type == "LOCAL") {
+			$j("#"+uuid).val(parsedAnswer[i].value);
+			//setVariableData(uuid, parsedAnswer[i].value + '');
+			for(var n in var_data) {
+				if(var_data[n].uuid + '' == uuid + '') {
+					var_data[n].value = parsedAnswer[i].value + '';
+					break;
+				}
+			}
+		}
+		
+		if(type == 'EXEC_LOCAL' || type == 'HTTP_LOCAL' || type == 'EXEC_SECRET' || type == 'HTTP_SECRET') {
+			if(parsedAnswer[i].state == 'SUCCESS') {
+				options = '<option value=""></option>';
+				var val_arr = [];
+				for(var j = 0; j < parsedAnswer[i].value.length; j++) {
+					options += '<option value="' +parsedAnswer[i].value[j]+'">'+parsedAnswer[i].value[j]+'</option>';
+					val_arr[j] = parsedAnswer[i].value[j] + "";
+				}
+				
+				for(var m in var_data) {
+					if(var_data[m].uuid == uuid)
+						var_data[m].options = val_arr;
+				}
+				
+				$j("#"+uuid).empty();
+				$j("#"+uuid).append(options);
+				$j("#"+uuid+" option[value='" + parsedAnswer[i].default_value + "']").attr("selected","selected");
+			}
+			else {
+				var msg = '';
+				for(var k = 0; k < parsedAnswer[i].error.length; k++)
+					msg += parsedAnswer[i].error[k];
+				g_form.addErrorMessage("Failed fetching values for variable '"+parsedAnswer[i].name+"': "+msg);
+			}
+		}
+	}
+	g_form.setValue('variable_data', JSON.stringify(var_data));
+	new GlideModal().get('variable_loader').destroy();
+}
+
+function _createDependencyJSON(var_data) {
+	
+	var pre_map = {};
+	var extApiFlag;
+	for(var i in var_data) {
+		var value = (var_data[i].isHidden + "" == "true") ? var_data[i].value + "" : $j("#"+var_data[i].uuid).val() + "";
+		pre_map[var_data[i].name] = {"depends_on":var_data[i].field_json, "value": value , "uuid": var_data[i].uuid, "type": var_data[i].data_type, "name": var_data[i].name};
+		if(var_data[i].data_type == 'EXEC_LOCAL' || var_data[i].data_type == 'HTTP_LOCAL' || var_data[i].data_type == 'EXEC_SECRET' || var_data[i].data_type == 'HTTP_SECRET') {
+			pre_map[var_data[i].name].requiresApiCall = true;
+			extApiFlag = true;
+		}
+	}
+	console.log("Pre Map:"+JSON.stringify(pre_map));
+	//if(extApiFlag)
+		_setRequestValues(pre_map);
+}
+
+/*function _validateField(index, field_val) {
+	
+	var variable_data = JSON.parse(g_form.getValue('variable_data'));
+	var var_name = variable_data[index].question_text + '';
+	var reg_exp_str = variable_data[index].regex + '';
+	var is_mandatory = variable_data[index].mandatory + '';
+	var reg_exp = new RegExp(reg_exp_str);
+	
+	$j(".error_body").html('');
+	if(!reg_exp.test(field_val)) {
+		var msg = var_name+"'s value "+field_val+" doesn't match with specified regex '"+reg_exp_str+"'";
+		var error_str = '<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">'+msg+'</div>';
+		$j(".error_body").append(error_str);
+	}
+	
+	if(is_mandatory && field_val == '')  {
+		var mandatory_msg =  "Variable '"+var_name+"' is marked as mandatory. Assign a value to it";
+		var man_error_str = '<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">'+mandatory_msg+'</div>';
+		//$j(".error_body").html('');
+		$j(".error_body").append(man_error_str);
+	}
+}*/
+]]></script>
+        <script_name>Calm_Catalog_Variable_Config_Script</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-31 09:42:02</sys_created_on>
+        <sys_id>b7e56ae437a12300fdfc097973990e63</sys_id>
+        <sys_mod_count>333</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.Calm_Catalog_Variable</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_script_b7e56ae437a12300fdfc097973990e63</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-13 08:26:03</sys_updated_on>
+        <ui_type>0</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

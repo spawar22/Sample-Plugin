@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="cloned_bp_json" label="Cloned BP JSON" language="en" table="x_nuta2_nutanix_ca_nutanix_catalog_items">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>cloned_bp_json</element>
+            <help/>
+            <hint/>
+            <label>Cloned BP JSON</label>
+            <language>en</language>
+            <name>x_nuta2_nutanix_ca_nutanix_catalog_items</name>
+            <plural>Cloned BP JSONs</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-03 11:05:44</sys_created_on>
+            <sys_id>8bdf1ef74fc13300778b22788310c79a</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Cloned BP JSON</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_documentation_x_nuta2_nutanix_ca_nutanix_catalog_items_cloned_bp_json_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-03 11:05:44</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_list parent="" relationship="" sys_domain="global" table="sc_req_item" version="2" view="nutanix_view">
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>number</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>0</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>0beb2e86dbd13300b4cbfbef29961982</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>cat_item</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>1</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>8beb2e86dbd13300b4cbfbef29961982</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>stage</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>2</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>0feb2e86dbd13300b4cbfbef29961982</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>state</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>3</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>8feb2e86dbd13300b4cbfbef29961982</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>request</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>4</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>03eb2e86dbd13300b4cbfbef29961983</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>request.requested_for</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>5</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>83eb2e86dbd13300b4cbfbef29961983</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>request.opened_by</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>6</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>07eb2e86dbd13300b4cbfbef29961983</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>x_nuta2_nutanix_ca_incident</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>7</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>87eb2e86dbd13300b4cbfbef29961983</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>sys_updated_on</element>
+            <list_id display_value="sc_req_item" element="NULL" name="sc_req_item" parent="NULL" relationship="NULL" sys_domain="global" view="f340ac98374ea700fdfc097973990e93">83eb2e86dbd13300b4cbfbef29961982</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>8</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_id>0beb2e86dbd13300b4cbfbef29961983</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element/>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <name>sc_req_item</name>
+            <parent/>
+            <position/>
+            <relationship/>
+            <sum>false</sum>
+            <sys_class_name>sys_ui_list</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2019-05-10 11:44:46</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>83eb2e86dbd13300b4cbfbef29961982</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>sc_req_item</sys_name>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_list_sc_req_item_nutanix_view</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2019-05-10 11:44:46</sys_updated_on>
+            <sys_user/>
+            <view display_value="Nutanix" name="nutanix_view">f340ac98374ea700fdfc097973990e93</view>
+            <view_name/>
+        </sys_ui_list>
+    </sys_ui_list>
+</record_update>

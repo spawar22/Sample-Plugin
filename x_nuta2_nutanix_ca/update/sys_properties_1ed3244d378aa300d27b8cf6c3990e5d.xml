@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>If true, incident will create on blueprint launch failed else not.</description>
+        <ignore_cache>true</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_nuta2_nutanix_ca.incident.blueprint.failed</name>
+        <read_roles>x_nuta2_nutanix_ca.calm_admin</read_roles>
+        <suffix>incident.blueprint.failed</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>mumtaz.ansari</sys_created_by>
+        <sys_created_on>2018-11-26 09:52:16</sys_created_on>
+        <sys_id>1ed3244d378aa300d27b8cf6c3990e5d</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>x_nuta2_nutanix_ca.incident.blueprint.failed</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_properties_1ed3244d378aa300d27b8cf6c3990e5d</sys_update_name>
+        <sys_updated_by>mumtaz.ansari</sys_updated_by>
+        <sys_updated_on>2018-11-26 12:55:28</sys_updated_on>
+        <type>boolean</type>
+        <value>true</value>
+        <write_roles>x_nuta2_nutanix_ca.calm_admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=1ed3244d378aa300d27b8cf6c3990e5d"/>
+</record_update>

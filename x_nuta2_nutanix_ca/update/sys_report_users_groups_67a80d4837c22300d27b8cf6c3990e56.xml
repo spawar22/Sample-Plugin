@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_report_users_groups">
+    <sys_report_users_groups action="INSERT_OR_UPDATE">
+        <group_id/>
+        <report_id display_value="Incidents">6fa80d4837c22300d27b8cf6c3990e55</report_id>
+        <sys_class_name>sys_report_users_groups</sys_class_name>
+        <sys_created_by>bharat.vajj</sys_created_by>
+        <sys_created_on>2018-11-23 09:59:16</sys_created_on>
+        <sys_id>67a80d4837c22300d27b8cf6c3990e56</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>6fa80d4837c22300d27b8cf6c3990e55</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_report_users_groups_67a80d4837c22300d27b8cf6c3990e56</sys_update_name>
+        <sys_updated_by>bharat.vajj</sys_updated_by>
+        <sys_updated_on>2018-11-23 09:59:16</sys_updated_on>
+        <user_id/>
+    </sys_report_users_groups>
+</record_update>

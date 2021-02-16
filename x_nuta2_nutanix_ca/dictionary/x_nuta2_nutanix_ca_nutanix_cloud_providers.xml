@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Cloud Providers" max_length="40" name="x_nuta2_nutanix_ca_nutanix_cloud_providers" type="collection">
+        <element label="Address" max_length="200" name="address" type="string"/>
+        <element label="Connection Port" max_length="250" name="connection_port" type="string"/>
+        <element label="Connection Type" max_length="250" name="connection_type" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Credential" max_length="32" name="credential" reference="x_nuta2_nutanix_ca_nutanix_calm_credential" type="reference"/>
+        <element label="Delay Secs" max_length="250" name="delay_secs" type="string"/>
+        <element label="Description" max_length="250" name="description" type="string"/>
+        <element label="Disable Readiness Probe" max_length="250" name="disable_readiness_probe" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Environment" max_length="32" name="environment" reference="x_nuta2_nutanix_ca_nutanix_environment" type="reference"/>
+        <element label="Name" max_length="250" name="name" type="string"/>
+        <element label="OS Type" max_length="250" name="os_type" type="string"/>
+        <element label="State" max_length="250" name="state" type="string"/>
+        <element label="Type" max_length="250" name="type" type="string"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+        <element display="true" label="Type" max_length="250" name="vm_type" type="string"/>
+        <index name="index">
+            <element name="environment"/>
+        </index>
+        <index name="index2">
+            <element name="credential"/>
+        </index>
+    </element>
+</database>

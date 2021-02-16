@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_ImportEnvironment</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_ImportEnvironment</name>
+        <script><![CDATA[var Nutanix_ImportEnvironment = Class.create();
+Nutanix_ImportEnvironment.prototype = {
+    initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+    },
+	startImportEnvironment : function(current){
+		var envUUID = '';
+		try{
+			this.logger.debug("Inside Nutanix_ImportEnvironment.startImportEnvironment");
+			envUUID = current.payload+'';
+			var response = this.appUtil.makeCalmApiCall("GET", this.appUtil.configuration.api.getEnvironment+envUUID+"","");
+			if(response.getStatusCode() == '200' || response.getStatusCode() == '201'){
+				this.logger.info("Connection established to "+this.appUtil.configuration.api.getEnvironment+envUUID+"");
+				//this.appUtil.insertIntoQueue("processImportedEnvironment", "", current.parameter+'', response.getBody());
+				//TO GET PROJECT NAME
+				var projectTable = new GlideRecord(this.appUtil.configuration.table.Project+"");
+				projectTable.addQuery('sys_id',current.parameter);
+				projectTable.query();
+				var projectName = '';
+				while(projectTable.next()){
+					projectName = projectTable.name;
+				}
+				//////
+				this.appUtil.insertIntoQueue("processImportedEnvironment", "", current.parameter+','+ projectName, response.getBody(), 'Process environment data', 'This job processes the imported environment data.');
+				this.logger.info("Successfully imported Environment of Project :- "+projectName);
+			}
+			else{
+				this.logger.debug("Nutanix_ImportEnvironment.startImportEnvironment :- Connection to environment/"+envUUID+ " not established :- "+response.haveError()+" Status code :- "+response.getStatusCode());
+			}
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportEnvironment.startImportEnvironment :- Exception caught during retrieval of environment/"+ envUUID +". Error: "+e);
+			this.logger.error("Exception caught during retrieval of environment/"+ envUUID +". Error: "+e);
+		}
+	},
+	processImportedEnvironment: function(current){
+		var envUUID = '';
+		try{
+			this.logger.debug("Inside Nutanix_ImportEnvironment.processImportedEnvironment");
+			var insertData = new GlideRecord(this.appUtil.configuration.table.stagingEnvironment+"");
+			var projectSysId = current.parameter.split(',')[0]+'';
+			var entity = this.appUtil.parse(current.payload);
+			var status = entity.status;
+			var resource = entity.status.resources;
+			var metadata = entity.metadata;
+			envUUID = metadata.uuid;
+			insertData.initialize();
+			var field;
+			insertData.name = current.parameter.split(',')[1]+''+" Environment";
+			//To insert status data
+			for(var key in status){
+				
+				field = status[key];
+				if( key != 'resources' && key != 'name') {
+					insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+				}
+			}
+			//To insert resources data
+			for(var key in resource){
+				field = resource[key];
+				insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+			}
+			//To insert metadata
+			for(var key in metadata){
+				if(key != 'name') {
+				field = metadata[key];
+				insertData[key] = (field.constructor === Object || field.constructor === Array ) ? JSON.stringify(field) : field+'';
+			}
+			}
+			insertData['project'] = projectSysId;
+			insertData.insert();
+		}
+		catch(e){
+			this.logger.debug("Nutanix_ImportEnvironment.processImportedEnvironment :- Exception caught during processing of environment/"+envUUID+". Error :- "+e);
+			this.logger.error("Exception caught during processing of environment/"+envUUID+". Error :- "+e);
+		}
+	},
+    type: 'Nutanix_ImportEnvironment'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>nikita.kumari</sys_created_by>
+        <sys_created_on>2018-11-26 09:54:06</sys_created_on>
+        <sys_id>b234e44937c26b00fdfc097973990e72</sys_id>
+        <sys_mod_count>28</sys_mod_count>
+        <sys_name>Nutanix_ImportEnvironment</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_b234e44937c26b00fdfc097973990e72</sys_update_name>
+        <sys_updated_by>bharat.vajj</sys_updated_by>
+        <sys_updated_on>2018-12-18 06:17:41</sys_updated_on>
+    </sys_script_include>
+</record_update>

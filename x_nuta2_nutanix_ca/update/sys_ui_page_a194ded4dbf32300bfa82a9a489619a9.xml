@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[var actSysId = '';
+var appUUID = gel("app_id").value + "";
+var act_var_JSON = "${JS:sysparm_actVarsArr}" + "";
+var actionName = "${JS:sysparm_actName}";
+
+new GlideModal().get("dialog_loading").destroy();
+
+var $j = jQuery.noConflict();
+
+function _set_values(arr_json) {
+	
+	var isDisabled = (arr_json.editables && arr_json.editables.value) ? '' :'disabled';
+	var data_type = arr_json.data_type + '';
+	var val_type = arr_json.val_type + '';
+	var type = arr_json.type + '';
+	var placeHolder = (type == 'SECRET') ? 'placeholder="*******"' :'';
+	var uuid_id = arr_json.uuid + '';
+	var show_time = (val_type == 'DATE_TIME') ? true : false;
+
+	var inputType = (arr_json.type == 'SECRET') ? 'password' : 'text';
+	var multiple = (data_type == 'LIST') ? 'multiple=""' : '';
+	var input_return = '';var GWT_calm_format = {'DATE_TIME':'dd/MM/yyyy - HH:mm:ss','DATE':'dd/MM/yyyy','TIME':'HH:mm:ss'};
+	
+	if(data_type == 'LIST' || type == 'EXEC_LOCAL' || type == 'HTTP_LOCAL' || type == 'EXEC_SECRET' || type == 'HTTP_SECRET' || (arr_json.options && arr_json.options.choices && arr_json.options.choices.length != 0)) {
+		input_return = '<select ' +placeHolder+ ' ' +isDisabled+ ' class="form-control select2-basic" style="height:auto;" id="'+uuid_id+'" '+multiple+'>'+_option_handler(arr_json)+'</select>';
+	}
+	else {
+		if(val_type == 'DATE_TIME' || val_type == 'DATE')
+			input_return = '<span class="input-group"><input type="text" id="'+uuid_id+'" class="form-control" style="background-color:white;" ReadOnly="true" value="'+_option_handler(arr_json)+'"/><span class="input-group-btn"><button class="btn btn-default" ' +isDisabled+ ' onclick="new GwtDateTimePicker(\''+uuid_id+'\', \''+GWT_calm_format[val_type]+'\', '+show_time+')"><span class="icon-calendar icon"></span></button></span></span>';
+		else if(val_type == 'MULTILINE_STRING')
+			input_return = '<textarea ' +placeHolder+ ' ' +isDisabled+ ' class="form-control" id="'+uuid_id+'">'+_option_handler(arr_json)+'</textarea>';
+		else
+			input_return = '<input type="'+inputType+'" ' +placeHolder+ ' ' +isDisabled+ ' class="form-control" id="'+uuid_id+'" value="'+_option_handler(arr_json)+'"/>';
+	}
+
+	return input_return;
+}
+
+function _option_handler(arr_json) {
+
+	
+	var options = '<option value=""></option>';
+	if(arr_json.data_type == 'BASE' && arr_json.options && arr_json.options.choices && arr_json.options.choices.length == 0) {
+		/*if(arr_json.type == 'EXEC_LOCAL' || arr_json.type == 'HTTP_LOCAL' || arr_json.type == 'EXEC_SECRET' || arr_json.type == 'HTTP_SECRET') {
+			_setRequestValues(arr_json);
+		}
+		else*/
+			options = arr_json.value + '';
+	}
+	else {
+		if(!(arr_json.type == 'EXEC_LOCAL' || arr_json.type == 'HTTP_LOCAL' || arr_json.type == 'EXEC_SECRET' || arr_json.type == 'HTTP_SECRET')) {
+			for(var i = 0; i < arr_json.options.choices.length; i++)
+				options += '<option value="' +arr_json.options.choices[i]+'">'+arr_json.options.choices[i]+'</option>';
+		}
+	}
+
+	return options;
+}
+
+function _setRequestValues() {
+	
+	//var label = ("label" in arr_json && arr_json.label != '')? arr_json.label : arr_json.name;
+	var loadingDialog = new GlideModal('variable_loader', true);
+	loadingDialog.setTitle('Fetching dependent values...'); //Set the loading dialog title here...
+	loadingDialog.renderWithContent('<div class="loading-container"><div class="loading-indicator icon-loading icon-lg"></div></div>');
+	
+	//var act_array = gel("act_json").value + "";
+	
+	var gajax = new GlideAjax('Nutanix_ClientServerScriptBridge');
+	gajax.addParam('sysparm_name', 'variableArrayParser');
+	gajax.addParam('sysparm_type', 'apps');
+	gajax.addParam('sysparm_parentUuid', appUUID + '');
+	gajax.addParam('sysparm_varJson', act_var_JSON);
+	gajax.getXML(getVarResponse, null, act_var_JSON);//, loadingDialog]);
+	
+}
+
+function getVarResponse(response, arr_json) {//, loadingDialog) {
+	
+	var answer = response.responseXML.documentElement.getAttribute("answer");
+	var parsedAnswer = JSON.parse(answer);
+	var options = '';
+	for(var i in parsedAnswer) {
+		
+		var type = parsedAnswer[i].type + "";
+		var uuid = parsedAnswer[i].uuid + "";
+		if(type == "LOCAL") {
+			$j("#"+uuid).val(parsedAnswer[i].value);
+		}
+		
+		if(type == 'EXEC_LOCAL' || type == 'HTTP_LOCAL' || type == 'EXEC_SECRET' || type == 'HTTP_SECRET') {
+			if(parsedAnswer[i].state == 'SUCCESS') {
+				options = '<option value=""></option>';
+				for(var j = 0; j < parsedAnswer[i].value.length; j++)
+					options += '<option value="' +parsedAnswer[i].value[j]+'">'+parsedAnswer[i].value[j]+'</option>';
+				$j("#"+uuid).empty();
+				$j("#"+uuid).append(options);
+				$j("#"+uuid+" option[value='" + parsedAnswer[i].default_value + "']").attr("selected","selected");
+			}
+			else {
+				var msg = '';
+				for(var k = 0; k < parsedAnswer[i].error.length; k++)
+					msg += parsedAnswer[i].error[k];
+				g_form.addErrorMessage("Failed fetching values for variable '"+parsedAnswer[i].name+"': "+msg);
+			}
+		}
+	}
+	
+	new GlideModal().get('variable_loader').destroy();
+}
+
+function render_variables(answer){
+
+	var parsed = JSON.parse(answer);
+	var parsed_length = parsed.length;
+
+	var containerString = '';
+	
+	var instance_type = (parsed[0].data_type) ? 'newer' : 'older';
+	
+	for (var i = 0; i < parsed_length; i++) {
+		
+		if(instance_type == "newer") {
+			if(!parsed[i].is_hidden) {
+				var input_type = _set_values(parsed[i]);
+			
+				var description = (parsed[i].description) ? '<div style="padding: 5px 1px; margin-bottom: 10px; background-color: #e8f0fa; color: #007eff; position: relative;">'+parsed[i].description+'</div>' : '';
+			
+				var label = (parsed[i].label)? parsed[i].label : parsed[i].name;
+			
+				containerString = '<div class="form-group"><label style="margin-bottom: 7px;" class="control-label"><strong>'+label+'</strong></label>'+description+input_type+'</div>';
+				$j(".bodyData").append(containerString);
+				
+				if(!(parsed[i].type == 'EXEC_LOCAL' || parsed[i].type == 'HTTP_LOCAL' || parsed[i].type == 'EXEC_SECRET' || parsed[i].type == 'HTTP_SECRET') && parsed[i].value)
+					$j("#"+parsed[i].uuid).val(parsed[i].value).trigger('change');
+				if(parsed[i].data_type == 'LIST' && parsed[i].options.type == 'PREDEFINED' && parsed[i].value)
+					$j("#"+parsed[i].uuid).val(parsed[i].value.split(',')).trigger('change');
+			}
+		}
+		else {
+			var isDisabled =(parsed[i].editables && parsed[i].editables.value) ? '' :'disabled';
+			var inputType = (parsed[i].type == 'SECRET') ? 'password' : 'text';
+			var placeHolder = (parsed[i].type == 'SECRET') ? 'placeholder="*******"' : '';
+			var input_type = '<input type="'+inputType+'" ' +placeHolder+ ' ' +isDisabled+ ' class="form-control" id="'+parsed[i].uuid+'" value="'+parsed[i].value+'"/>';
+			var label = (parsed[i].label)? parsed[i].label : parsed[i].name;
+			containerString = '<div class="form-group"><label style="margin-bottom: 7px;" class="control-label"><strong>'+label+'</strong></label>'+input_type+'</div>';
+			$j(".bodyData").append(containerString);
+		}
+	}
+	
+	$j('#runAct').mousedown(runAction);
+	$j('#cancelAct').mousedown(cancelDialog);
+	$j("input").click( function(){ $j(".error_body").html(''); } );
+	$j('.select2-basic').select2({allowClear: true});
+	
+	_setRequestValues();
+}
+
+function _regexValid(actJSON) {
+
+	var regex_validated = '';
+	var var_name = (actJSON.label) ? actJSON.label + "" : actJSON.name + '';
+	var field_val = $j("#"+actJSON.uuid).val() + '';
+	var reg_exp_str = actJSON.regex.value;
+	
+	var msg_json = {
+		"DATE_TIME": 'Please enter '+var_name+' in "DD/MM/YYYY - hh:mm:ss" format',
+		"DATE": 'Please enter '+var_name+' in "DD/MM/YYYY" format',
+		"TIME": 'Please enter '+var_name+' in "hh:mm:ss" format',
+		"INT": 'Please enter a valid integer value for '+var_name
+	};
+
+	var msg = var_name+"'s value "+field_val+" doesn't match with specified regex '"+reg_exp_str+"'";
+	
+	if(actJSON.val_type == 'INT')
+		field_val = parseInt(field_val);
+
+	if(!actJSON.regex.should_validate && (actJSON.val_type == 'DATE_TIME' || actJSON.val_type == 'DATE' || actJSON.val_type == 'TIME' || actJSON.val_type == 'INT')) {
+		msg = msg_json[actJSON.val_type];
+	}
+
+	var reg_exp = new RegExp(reg_exp_str);
+	if(reg_exp.test(field_val))
+		regex_validated = true;
+	else {
+		regex_validated = false;
+		var error_str = '<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">'+msg+'</div>';
+		$j(".error_body").append(error_str);
+	}
+	return regex_validated;
+}
+
+function runAction() {
+
+	$j(".error_body").html('');
+	var parsedActJSON = JSON.parse(act_var_JSON);
+	var JSONlength = parsedActJSON.length;
+
+	var regexValidationFlag = true;
+	var isMandatoryFlag = true;
+
+	var newJSON = [];
+
+	for(var i = 0; i < JSONlength ; i++) {
+
+		if('regex' in parsedActJSON[i] && !parsedActJSON[i].regex.should_validate && (parsedActJSON.val_type == 'DATE_TIME' || parsedActJSON.val_type == 'DATE' || parsedActJSON.val_type == 'TIME' || parsedActJSON[i].val_type == 'INT') && $j("#"+parsedActJSON[i].uuid).val()) {
+			var regex_json = {
+				"DATE_TIME": /^(((0[1-9]|[12][0-9]|3[01])([/])(0[13578]|10|12)([/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([/])(0[469]|11)([/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([/])(02)([/])(\d{4}))|((29)(\.|-|\/)(02)([/])([02468][048]00))|((29)([/])(02)([/])([13579][26]00))|((29)([/])(02)([/])([0-9][0-9][0][48]))|((29)([/])(02)([/])([0-9][0-9][2468][048]))|((29)([/])(02)([/])([0-9][0-9][13579][26])))(\s-\s)(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)$/,
+				"DATE":/^(((0[1-9]|[12][0-9]|3[01])([/])(0[13578]|10|12)([/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([/])(0[469]|11)([/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([/])(02)([/])(\d{4}))|((29)(\.|-|\/)(02)([/])([02468][048]00))|((29)([/])(02)([/])([13579][26]00))|((29)([/])(02)([/])([0-9][0-9][0][48]))|((29)([/])(02)([/])([0-9][0-9][2468][048]))|((29)([/])(02)([/])([0-9][0-9][13579][26])))$/,
+				"TIME":/(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)$/,
+				"INT":/^(\d)*$/
+	};
+			parsedActJSON[i].regex.value = regex_json[parsedActJSON[i].val_type];
+			parsedActJSON[i].value = $j("#"+parsedActJSON[i].uuid).val() + "";//changes done below
+			if(!_regexValid(parsedActJSON[i])) {
+				regexValidationFlag = false;
+			}
+		}
+		
+		if('regex' in parsedActJSON[i] && parsedActJSON[i].regex.should_validate && parsedActJSON[i].value) {
+			if(!_regexValid(parsedActJSON[i])) {
+				regexValidationFlag = false;
+			}
+		}
+		
+		var var_name = (parsedActJSON[i].label) ? parsedActJSON[i].label + "" : parsedActJSON[i].name + '';    //check the type
+		//check Mandatory flag.
+		if(parsedActJSON[i].is_mandatory) {
+			if(!($j("#"+parsedActJSON[i].uuid).val())) {
+				isMandatoryFlag = false;
+				var msg =  "Variable '"+var_name+"' is marked as mandatory. Assign a value to it";
+				var error_str = '<div class="alert alert-danger" style="padding: 5px 16px; position: relative; margin: 5px 0px;">'+msg+'</div>';
+				//$j(".error_body").html('');
+				$j(".error_body").append(error_str);
+			}
+		}
+		
+		if(parsedActJSON[i].is_hidden) {
+			newJSON[i] = {"name":parsedActJSON[i].name,"value":parsedActJSON[i].value};
+			continue;
+		}
+		
+		if(parsedActJSON[i].type=='LOCAL' || parsedActJSON[i].type == 'EXEC_LOCAL' || parsedActJSON[i].type == 'HTTP_LOCAL' || parsedActJSON[i].type == 'EXEC_SECRET' || parsedActJSON[i].type == 'HTTP_SECRET') {
+			
+			if($j("#"+parsedActJSON[i].uuid).val())
+				newJSON[i] = {"name":parsedActJSON[i].name,"value":$j("#"+parsedActJSON[i].uuid).val().toString()};
+			else
+				newJSON[i] = {"name":parsedActJSON[i].name,"value":""};
+			
+		}
+		else {
+			if($j("#"+parsedActJSON[i].uuid).val())
+				newJSON[i] = {"name":parsedActJSON[i].name,"value":$j("#"+parsedActJSON[i].uuid).val().toString()};
+			else
+				newJSON[i] = {"name":parsedActJSON[i].name};
+		}
+	}
+
+	if(regexValidationFlag && isMandatoryFlag)
+		callRunActions(JSON.stringify(newJSON));
+}
+
+function cancelDialog() {
+	GlideModal.get().destroy();
+}
+
+function callRunActions(modVarString) {
+	
+	$j('#runAct').prop("disabled", true);
+	$j('#cancelAct').prop("disabled", true);
+	
+	var gajax = new GlideAjax('Run_App_Actions');
+	gajax.addParam('sysparm_name', 'runAction');
+	gajax.addParam('sysparm_actionsysid', actSysId);
+	gajax.addParam('sysparm_actionVars', modVarString);
+	gajax.getXML(getResponse);
+
+	function getResponse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		GlideModal.get().destroy();
+		g_form.addInfoMessage(answer);
+	}
+}
+
+function submitActionVars() {
+	actSysId = "${JS:sysparm_sysId}";
+	var patt = new RegExp(/[0-9a-f]{32}/);
+	if(!patt.test(actSysId)){
+		return;
+	}
+	render_variables(act_var_JSON);
+}
+]]></client_script>
+        <description>This is used to set runtime action variables</description>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Set_Runtime_Action_Variables.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	
+	<j:set var="jvar_element_id" value="${JS:sysparm_sysId}"/>
+	<g:evaluate var="jvar_not" object="true">
+		var appUtil= new Nutanix_Calm_Utils();
+		var not = new GlideRecordSecure(appUtil.configuration.table.NutanixCalmAction);
+		if (not.get('${jvar_element_id}'))
+		{
+		var app_id = not.parent_uuid + '';
+		app_id;
+		}
+	</g:evaluate>
+	
+	<input type="hidden" name="app_id" id="app_id" value="${JS:app_id}"/>
+	
+	<body>
+		<script>
+			addLoadEvent( function() {
+			submitActionVars();
+			});
+		</script>
+	</body>
+	 <!--style="height: 450px; overflow-y: auto; overflow-x: hidden;"-->
+	<div class="error_body"></div>
+	<div class="bodyData"></div>
+	<div class="modal-footer"><div class="row"><div class="col-sm-9 pull-right"><button class="btn btn-primary" id="runAct">Run</button><button class="btn btn-default" id="cancelAct">Cancel</button></div></div></div>
+</j:jelly>]]></html>
+        <name>Set_Runtime_Action_Variables</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-19 10:11:58</sys_created_on>
+        <sys_id>a194ded4dbf32300bfa82a9a489619a9</sys_id>
+        <sys_mod_count>729</sys_mod_count>
+        <sys_name>Set_Runtime_Action_Variables</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_a194ded4dbf32300bfa82a9a489619a9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-12-17 12:06:34</sys_updated_on>
+    </sys_ui_page>
+</record_update>

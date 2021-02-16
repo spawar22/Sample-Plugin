@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update node_type="sys_portal_page" unload_date="2021-02-16 07:26:52">
+    <sys_portal_page action="INSERT_OR_UPDATE">
+        <layout/>
+        <order>3050</order>
+        <read_roles>x_nuta2_nutanix_ca.user</read_roles>
+        <roles/>
+        <selectable>false</selectable>
+        <sys_class_name>sys_portal_page</sys_class_name>
+        <sys_created_by>bharat.vajj</sys_created_by>
+        <sys_created_on>2018-11-24 04:20:42</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>f9c441d4374e2300d27b8cf6c3990eb9</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>PA New Tab</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_portal_page_f9c441d4374e2300d27b8cf6c3990eb9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-05-02 10:45:41</sys_updated_on>
+        <title>PA New Tab</title>
+        <user/>
+        <view>pa_new_tab_1</view>
+        <related_items_node>
+            <sys_portal action="INSERT_OR_UPDATE">
+                <dropzone/>
+                <offset/>
+                <page display_value="PA New Tab">f9c441d4374e2300d27b8cf6c3990eb9</page>
+                <summary>Catalog items</summary>
+                <sys_created_by>bharat.vajj</sys_created_by>
+                <sys_created_on>2018-11-24 06:14:56</sys_created_on>
+                <sys_id>13ee915c378e2300d27b8cf6c3990e6b</sys_id>
+                <sys_mod_count>1</sys_mod_count>
+                <sys_updated_by>bharat.vajj</sys_updated_by>
+                <sys_updated_on>2018-11-24 06:14:56</sys_updated_on>
+                <related_items_node>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_publish</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:56">13ee915c378e2300d27b8cf6c3990e6b</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:56</sys_created_on>
+                        <sys_id>13ee915c378e2300d27b8cf6c3990e6c</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:56</sys_updated_on>
+                        <value>false</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>sys_id</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:56">13ee915c378e2300d27b8cf6c3990e6b</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:56</sys_created_on>
+                        <sys_id>57ee915c378e2300d27b8cf6c3990e6b</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:56</sys_updated_on>
+                        <value>1baef4fa37716300d27b8cf6c3990e29</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:56">13ee915c378e2300d27b8cf6c3990e6b</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:56</sys_created_on>
+                        <sys_id>5bee915c378e2300d27b8cf6c3990e6c</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:56</sys_updated_on>
+                        <value>Catalog items</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>help_text_window</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:56">13ee915c378e2300d27b8cf6c3990e6b</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:56</sys_created_on>
+                        <sys_id>5fee915c378e2300d27b8cf6c3990e6b</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:56</sys_updated_on>
+                        <value>report_widget_description</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>report_type</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:56">13ee915c378e2300d27b8cf6c3990e6b</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:56</sys_created_on>
+                        <sys_id>97ee915c378e2300d27b8cf6c3990e6c</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:56</sys_updated_on>
+                        <value>single_score</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>renderer</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:56">13ee915c378e2300d27b8cf6c3990e6b</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:56</sys_created_on>
+                        <sys_id>9bee915c378e2300d27b8cf6c3990e6b</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:56</sys_updated_on>
+                        <value>com.glide.ui.portal.RenderReport</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>is_using_database_view</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:56">13ee915c378e2300d27b8cf6c3990e6b</portal_section>
+                        <sys_created_by>system</sys_created_by>
+                        <sys_created_on>2019-08-10 07:10:52</sys_created_on>
+                        <sys_id>bf7f1febdb033300282e255c8a961988</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>system</sys_updated_by>
+                        <sys_updated_on>2019-08-10 07:10:52</sys_updated_on>
+                        <value>false</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_subscribe</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:56">13ee915c378e2300d27b8cf6c3990e6b</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:56</sys_created_on>
+                        <sys_id>d3ee915c378e2300d27b8cf6c3990e6c</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:56</sys_updated_on>
+                        <value>true</value>
+                    </sys_portal_preferences>
+                </related_items_node>
+            </sys_portal>
+            <sys_portal action="INSERT_OR_UPDATE">
+                <dropzone/>
+                <offset/>
+                <page display_value="PA New Tab">f9c441d4374e2300d27b8cf6c3990eb9</page>
+                <summary>Incidents</summary>
+                <sys_created_by>bharat.vajj</sys_created_by>
+                <sys_created_on>2018-11-24 06:12:52</sys_created_on>
+                <sys_id>4d7e9dd8378e2300d27b8cf6c3990e55</sys_id>
+                <sys_mod_count>1</sys_mod_count>
+                <sys_updated_by>bharat.vajj</sys_updated_by>
+                <sys_updated_on>2018-11-24 06:12:52</sys_updated_on>
+                <related_items_node>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title</name>
+                        <portal_section display_value="Created 2018-11-23 22:12:52">4d7e9dd8378e2300d27b8cf6c3990e55</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:12:52</sys_created_on>
+                        <sys_id>017e9dd8378e2300d27b8cf6c3990e58</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:12:52</sys_updated_on>
+                        <value>Incidents</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>help_text_window</name>
+                        <portal_section display_value="Created 2018-11-23 22:12:52">4d7e9dd8378e2300d27b8cf6c3990e55</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:12:52</sys_created_on>
+                        <sys_id>057e9dd8378e2300d27b8cf6c3990e57</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:12:52</sys_updated_on>
+                        <value>report_widget_description</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>renderer</name>
+                        <portal_section display_value="Created 2018-11-23 22:12:52">4d7e9dd8378e2300d27b8cf6c3990e55</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:12:52</sys_created_on>
+                        <sys_id>417e9dd8378e2300d27b8cf6c3990e57</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:12:52</sys_updated_on>
+                        <value>com.glide.ui.portal.RenderReport</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>report_type</name>
+                        <portal_section display_value="Created 2018-11-23 22:12:52">4d7e9dd8378e2300d27b8cf6c3990e55</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:12:52</sys_created_on>
+                        <sys_id>4d7e9dd8378e2300d27b8cf6c3990e57</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:12:52</sys_updated_on>
+                        <value>single_score</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>is_using_database_view</name>
+                        <portal_section display_value="Created 2018-11-23 22:12:52">4d7e9dd8378e2300d27b8cf6c3990e55</portal_section>
+                        <sys_created_by>system</sys_created_by>
+                        <sys_created_on>2019-08-10 07:10:52</sys_created_on>
+                        <sys_id>7f7f1febdb033300282e255c8a961987</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>system</sys_updated_by>
+                        <sys_updated_on>2019-08-10 07:10:52</sys_updated_on>
+                        <value>false</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_subscribe</name>
+                        <portal_section display_value="Created 2018-11-23 22:12:52">4d7e9dd8378e2300d27b8cf6c3990e55</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:12:52</sys_created_on>
+                        <sys_id>897e9dd8378e2300d27b8cf6c3990e57</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:12:52</sys_updated_on>
+                        <value>true</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>sys_id</name>
+                        <portal_section display_value="Created 2018-11-23 22:12:52">4d7e9dd8378e2300d27b8cf6c3990e55</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:12:52</sys_created_on>
+                        <sys_id>c57e9dd8378e2300d27b8cf6c3990e56</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:12:52</sys_updated_on>
+                        <value>6fa80d4837c22300d27b8cf6c3990e55</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_publish</name>
+                        <portal_section display_value="Created 2018-11-23 22:12:52">4d7e9dd8378e2300d27b8cf6c3990e55</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:12:52</sys_created_on>
+                        <sys_id>c57e9dd8378e2300d27b8cf6c3990e57</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:12:52</sys_updated_on>
+                        <value>false</value>
+                    </sys_portal_preferences>
+                </related_items_node>
+            </sys_portal>
+            <sys_portal action="INSERT_OR_UPDATE">
+                <dropzone/>
+                <offset/>
+                <page display_value="PA New Tab">f9c441d4374e2300d27b8cf6c3990eb9</page>
+                <summary>Blueprints</summary>
+                <sys_created_by>bharat.vajj</sys_created_by>
+                <sys_created_on>2018-11-24 06:13:39</sys_created_on>
+                <sys_id>54ae191c378e2300d27b8cf6c3990e18</sys_id>
+                <sys_mod_count>1</sys_mod_count>
+                <sys_updated_by>bharat.vajj</sys_updated_by>
+                <sys_updated_on>2018-11-24 06:13:39</sys_updated_on>
+                <related_items_node>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_subscribe</name>
+                        <portal_section display_value="Created 2018-11-23 22:13:39">54ae191c378e2300d27b8cf6c3990e18</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:13:39</sys_created_on>
+                        <sys_id>18ae191c378e2300d27b8cf6c3990e19</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:13:39</sys_updated_on>
+                        <value>true</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_publish</name>
+                        <portal_section display_value="Created 2018-11-23 22:13:39">54ae191c378e2300d27b8cf6c3990e18</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:13:39</sys_created_on>
+                        <sys_id>54ae191c378e2300d27b8cf6c3990e19</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:13:39</sys_updated_on>
+                        <value>true</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>help_text_window</name>
+                        <portal_section display_value="Created 2018-11-23 22:13:39">54ae191c378e2300d27b8cf6c3990e18</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:13:39</sys_created_on>
+                        <sys_id>90ae191c378e2300d27b8cf6c3990e19</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:13:39</sys_updated_on>
+                        <value>report_widget_description</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>sys_id</name>
+                        <portal_section display_value="Created 2018-11-23 22:13:39">54ae191c378e2300d27b8cf6c3990e18</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:13:39</sys_created_on>
+                        <sys_id>98ae191c378e2300d27b8cf6c3990e18</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:13:39</sys_updated_on>
+                        <value>5db789cf37312300d27b8cf6c3990eb8</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title</name>
+                        <portal_section display_value="Created 2018-11-23 22:13:39">54ae191c378e2300d27b8cf6c3990e18</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:13:39</sys_created_on>
+                        <sys_id>9cae191c378e2300d27b8cf6c3990e19</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:13:39</sys_updated_on>
+                        <value>Blueprints</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>report_type</name>
+                        <portal_section display_value="Created 2018-11-23 22:13:39">54ae191c378e2300d27b8cf6c3990e18</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:13:39</sys_created_on>
+                        <sys_id>d8ae191c378e2300d27b8cf6c3990e19</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:13:39</sys_updated_on>
+                        <value>pie</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>renderer</name>
+                        <portal_section display_value="Created 2018-11-23 22:13:39">54ae191c378e2300d27b8cf6c3990e18</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:13:39</sys_created_on>
+                        <sys_id>dcae191c378e2300d27b8cf6c3990e18</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:13:39</sys_updated_on>
+                        <value>com.glide.ui.portal.RenderReport</value>
+                    </sys_portal_preferences>
+                </related_items_node>
+            </sys_portal>
+            <sys_portal action="INSERT_OR_UPDATE">
+                <dropzone/>
+                <offset/>
+                <page display_value="PA New Tab">f9c441d4374e2300d27b8cf6c3990eb9</page>
+                <summary>App Launches</summary>
+                <sys_created_by>bharat.vajj</sys_created_by>
+                <sys_created_on>2018-11-24 06:14:16</sys_created_on>
+                <sys_id>69ce115c378e2300d27b8cf6c3990e85</sys_id>
+                <sys_mod_count>1</sys_mod_count>
+                <sys_updated_by>bharat.vajj</sys_updated_by>
+                <sys_updated_on>2018-11-24 06:14:16</sys_updated_on>
+                <related_items_node>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_subscribe</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:16">69ce115c378e2300d27b8cf6c3990e85</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:16</sys_created_on>
+                        <sys_id>2dce115c378e2300d27b8cf6c3990e86</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:16</sys_updated_on>
+                        <value>true</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_publish</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:16">69ce115c378e2300d27b8cf6c3990e85</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:16</sys_created_on>
+                        <sys_id>69ce115c378e2300d27b8cf6c3990e86</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:16</sys_updated_on>
+                        <value>true</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:16">69ce115c378e2300d27b8cf6c3990e85</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:16</sys_created_on>
+                        <sys_id>a1ce115c378e2300d27b8cf6c3990e87</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:16</sys_updated_on>
+                        <value>App Launches</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>help_text_window</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:16">69ce115c378e2300d27b8cf6c3990e85</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:16</sys_created_on>
+                        <sys_id>a5ce115c378e2300d27b8cf6c3990e86</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:16</sys_updated_on>
+                        <value>report_widget_description</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>sys_id</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:16">69ce115c378e2300d27b8cf6c3990e85</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:16</sys_created_on>
+                        <sys_id>adce115c378e2300d27b8cf6c3990e85</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:16</sys_updated_on>
+                        <value>5727c50837c22300d27b8cf6c3990eff</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>renderer</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:16">69ce115c378e2300d27b8cf6c3990e85</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:16</sys_created_on>
+                        <sys_id>e1ce115c378e2300d27b8cf6c3990e86</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:16</sys_updated_on>
+                        <value>com.glide.ui.portal.RenderReport</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>report_type</name>
+                        <portal_section display_value="Created 2018-11-23 22:14:16">69ce115c378e2300d27b8cf6c3990e85</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-24 06:14:16</sys_created_on>
+                        <sys_id>edce115c378e2300d27b8cf6c3990e86</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-24 06:14:16</sys_updated_on>
+                        <value>pie</value>
+                    </sys_portal_preferences>
+                </related_items_node>
+            </sys_portal>
+            <sys_portal action="INSERT_OR_UPDATE">
+                <dropzone/>
+                <offset/>
+                <page display_value="PA New Tab">f9c441d4374e2300d27b8cf6c3990eb9</page>
+                <summary>Top Catalog Items</summary>
+                <sys_created_by>bharat.vajj</sys_created_by>
+                <sys_created_on>2018-11-27 05:49:16</sys_created_on>
+                <sys_id>d0d534dd37022300d27b8cf6c3990ed5</sys_id>
+                <sys_mod_count>1</sys_mod_count>
+                <sys_updated_by>bharat.vajj</sys_updated_by>
+                <sys_updated_on>2018-11-27 05:49:16</sys_updated_on>
+                <related_items_node>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_publish</name>
+                        <portal_section display_value="Created 2018-11-26 21:49:16">d0d534dd37022300d27b8cf6c3990ed5</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 05:49:16</sys_created_on>
+                        <sys_id>10d534dd37022300d27b8cf6c3990ed7</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 05:49:16</sys_updated_on>
+                        <value>false</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title</name>
+                        <portal_section display_value="Created 2018-11-26 21:49:16">d0d534dd37022300d27b8cf6c3990ed5</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 05:49:16</sys_created_on>
+                        <sys_id>58d534dd37022300d27b8cf6c3990ed7</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 05:49:16</sys_updated_on>
+                        <value>Top Catalog Items</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>help_text_window</name>
+                        <portal_section display_value="Created 2018-11-26 21:49:16">d0d534dd37022300d27b8cf6c3990ed5</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 05:49:16</sys_created_on>
+                        <sys_id>5cd534dd37022300d27b8cf6c3990ed6</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 05:49:16</sys_updated_on>
+                        <value>report_widget_description</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>report_type</name>
+                        <portal_section display_value="Created 2018-11-26 21:49:16">d0d534dd37022300d27b8cf6c3990ed5</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 05:49:16</sys_created_on>
+                        <sys_id>94d534dd37022300d27b8cf6c3990ed7</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 05:49:16</sys_updated_on>
+                        <value>bar</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>renderer</name>
+                        <portal_section display_value="Created 2018-11-26 21:49:16">d0d534dd37022300d27b8cf6c3990ed5</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 05:49:16</sys_created_on>
+                        <sys_id>98d534dd37022300d27b8cf6c3990ed6</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 05:49:16</sys_updated_on>
+                        <value>com.glide.ui.portal.RenderReport</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>sys_id</name>
+                        <portal_section display_value="Created 2018-11-26 21:49:16">d0d534dd37022300d27b8cf6c3990ed5</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 05:49:16</sys_created_on>
+                        <sys_id>9cd534dd37022300d27b8cf6c3990ed5</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 05:49:16</sys_updated_on>
+                        <value>9d12745d37022300d27b8cf6c3990ed1</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_subscribe</name>
+                        <portal_section display_value="Created 2018-11-26 21:49:16">d0d534dd37022300d27b8cf6c3990ed5</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 05:49:16</sys_created_on>
+                        <sys_id>d0d534dd37022300d27b8cf6c3990ed7</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 05:49:16</sys_updated_on>
+                        <value>true</value>
+                    </sys_portal_preferences>
+                </related_items_node>
+            </sys_portal>
+            <sys_portal action="INSERT_OR_UPDATE">
+                <dropzone/>
+                <offset/>
+                <page display_value="PA New Tab">f9c441d4374e2300d27b8cf6c3990eb9</page>
+                <summary>Active Users</summary>
+                <sys_created_by>bharat.vajj</sys_created_by>
+                <sys_created_on>2018-11-27 06:02:19</sys_created_on>
+                <sys_id>e7c8b09137422300d27b8cf6c3990eb2</sys_id>
+                <sys_mod_count>1</sys_mod_count>
+                <sys_updated_by>bharat.vajj</sys_updated_by>
+                <sys_updated_on>2018-11-27 06:02:19</sys_updated_on>
+                <related_items_node>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>sys_id</name>
+                        <portal_section display_value="Created 2018-11-26 22:02:19">e7c8b09137422300d27b8cf6c3990eb2</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 06:02:19</sys_created_on>
+                        <sys_id>23c8b09137422300d27b8cf6c3990eb3</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 06:02:19</sys_updated_on>
+                        <value>70c8b09137422300d27b8cf6c3990ed2</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_publish</name>
+                        <portal_section display_value="Created 2018-11-26 22:02:19">e7c8b09137422300d27b8cf6c3990eb2</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 06:02:19</sys_created_on>
+                        <sys_id>23c8b09137422300d27b8cf6c3990eb4</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 06:02:19</sys_updated_on>
+                        <value>false</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>title</name>
+                        <portal_section display_value="Created 2018-11-26 22:02:19">e7c8b09137422300d27b8cf6c3990eb2</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 06:02:19</sys_created_on>
+                        <sys_id>6bc8b09137422300d27b8cf6c3990eb4</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 06:02:19</sys_updated_on>
+                        <value>Active Users</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>help_text_window</name>
+                        <portal_section display_value="Created 2018-11-26 22:02:19">e7c8b09137422300d27b8cf6c3990eb2</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 06:02:19</sys_created_on>
+                        <sys_id>6fc8b09137422300d27b8cf6c3990eb3</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 06:02:19</sys_updated_on>
+                        <value>report_widget_description</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>report_type</name>
+                        <portal_section display_value="Created 2018-11-26 22:02:19">e7c8b09137422300d27b8cf6c3990eb2</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 06:02:19</sys_created_on>
+                        <sys_id>a7c8b09137422300d27b8cf6c3990eb4</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 06:02:19</sys_updated_on>
+                        <value>bar</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>renderer</name>
+                        <portal_section display_value="Created 2018-11-26 22:02:19">e7c8b09137422300d27b8cf6c3990eb2</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 06:02:19</sys_created_on>
+                        <sys_id>abc8b09137422300d27b8cf6c3990eb3</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 06:02:19</sys_updated_on>
+                        <value>com.glide.ui.portal.RenderReport</value>
+                    </sys_portal_preferences>
+                    <sys_portal_preferences action="INSERT_OR_UPDATE">
+                        <name>can_subscribe</name>
+                        <portal_section display_value="Created 2018-11-26 22:02:19">e7c8b09137422300d27b8cf6c3990eb2</portal_section>
+                        <sys_created_by>bharat.vajj</sys_created_by>
+                        <sys_created_on>2018-11-27 06:02:19</sys_created_on>
+                        <sys_id>e3c8b09137422300d27b8cf6c3990eb4</sys_id>
+                        <sys_mod_count>0</sys_mod_count>
+                        <sys_updated_by>bharat.vajj</sys_updated_by>
+                        <sys_updated_on>2018-11-27 06:02:19</sys_updated_on>
+                        <value>true</value>
+                    </sys_portal_preferences>
+                </related_items_node>
+            </sys_portal>
+        </related_items_node>
+    </sys_portal_page>
+</record_update>

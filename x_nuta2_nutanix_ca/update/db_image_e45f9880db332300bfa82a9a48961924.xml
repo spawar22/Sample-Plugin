@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category/>
+        <format/>
+        <height/>
+        <image/>
+        <name>gcp.svg</name>
+        <size_bytes>3067</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:48:30</sys_created_on>
+        <sys_id>e45f9880db332300bfa82a9a48961924</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>gcp.svg</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>db_image_e45f9880db332300bfa82a9a48961924</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-18 06:48:39</sys_updated_on>
+        <thumbnail/>
+        <width/>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color/>
+        <chunk_size_bytes/>
+        <compressed>true</compressed>
+        <content_type>image/svg+xml</content_type>
+        <file_name>image</file_name>
+        <hash/>
+        <image_height/>
+        <image_width/>
+        <size_bytes>3067</size_bytes>
+        <size_compressed>1159</size_compressed>
+        <state/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:48:39</sys_created_on>
+        <sys_id>d75f9880db332300bfa82a9a4896198a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-18 06:48:39</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>e45f9880db332300bfa82a9a48961924</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="d75f9880db332300bfa82a9a4896198a">d75f9880db332300bfa82a9a4896198a</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:48:39</sys_created_on>
+        <sys_id>1b5f9880db332300bfa82a9a4896198a</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>lVZNb+M2EL33VxDaSwJQNL9EUoEdIL3UBxc9tHvJTXFkWyhXCiTtOvn3HX7IkrxysI0RU5SHw5k3bx657n4c0fs3W3eb5NT3bw+r1fl8JmdBmva44pTSFVgkweTh3Vb1v0uGLM/zlf81QefqtT9tEsZNgk5ldTz1cfKjKs+/N++bhCKK4I37Tx5/Q2j9Wh469wCPbfFaFfYPN5R1j6rXTVIkaA+rUs4ZMYLmMP0AlyInKqNZgtpNklMimOAJOsaF/7RF3R2a9tsm6d2jLfryTjBNcp0xlDKliaDqHnX7wpZ3jAj4ux+Xf62rHhD53pXt32/Fvvyr/tqVyeO665s31BwOXQlJ0QS5ebpvbAMxfDkcDvFNA2uqHoKkhCWrq2XsF5a5Ras5FB6o1YDUuq96Wz4+tf1LU7SviK1X4c36rehPCFD703BCqdI4zwg3StuUccwpMWorDMlMoYnhkuM4UPiwVBENpqkgOeBhU54RyVMpieDeXGscB2+OaaphgYVCaCEAVHC+44Ax+MBKWmawYH7z5wQdKmtdti8veyjaahIog7oq7paAc9gY54pwFzljnHC/M1M+UDdMA8Uh0K2mlvHUJ7djlBLKwIuS2HAsONEwO3EwBZ+WZX6OIUz5BNFrY3AcQk7X0Yyhl4UU4ip0mpHcuYvbbGXms5+ikDJGcumi0xlYugAkYOwCUE8LuWFfHkieGLDfmhxqoLRDQXCB4xAsZyiMgUpusoOcBTqQIcY5Kc0OQIoU8dGDq3kN02h4EopQPqJB3cdtsq/avS19jyoZmtONwG3IVUGuY/GB6jEq3+0uMvCuXdGBPQCv+AwRTrJfhwNY6Zra+eXmRAQwdOeIxWINTHBytRedt8DNVqFzBkKRQ1k9rxRhxgkMd8T3iU7y9/OJQPDwpus/bLlJqq4Bqaqa+iE8lR6vxn6Atpboralqp0u+PhopiTzfNAplRZGO02km3YyqiSVMBgeCCDmWhxVc6DJM01mIUyopjyVWwGc1a33fsUB1fKH6hWQn4ZhgiTApiDa0Y+rJBLBFes2bJA1usXfr0NfSl9oNAX0Gq7EEdXB8yQTDcRiIMIb4PGPfHPnPUHcie5ybT0DQcOC4HgWBzD+hyZWi7obANOGyWIjc5wXGmQPTyVL4ouHXIWfrdRl7XV5mMb7WR9/9IxQvB6Ho3p8yxxuZAueOTX2hnJNVYRzlQErgIVLM68qEf157ndXF/rKnKLnm4qbycxnPmyGvRSXw7e9xz7a+BjaFL8+pIA0LwjCgMRxrk1MtoMdNONfMFOn0JrvmUT8vJHgT1J/PDehANTuUlmgRSr9Mi/QSbBAh8OPPlm2UfDvg85MKX1U4lhLOgnxSvmlNRwuACnlSacSgSZn0U1gwzKbOrjcGdOZHwAgo3Jeov6pMEtldrgNOtRdYQS+sIAYkODTj04Jm48tZ4zztRpVwmy5ccNzHX3D+b7/dPqQ+5aLPjUkch8jFK3BmJ8r31t59Ke4dqm2572/fvYN53dT+QHF3+sf/ANuia8f7CwAA</data>
+        <length>1532</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="d75f9880db332300bfa82a9a4896198a">d75f9880db332300bfa82a9a4896198a</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:48:39</sys_created_on>
+        <sys_id>9b5f9880db332300bfa82a9a4896198a</sys_id>
+    </sys_attachment_doc>
+</record_update>

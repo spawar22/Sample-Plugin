@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="update_synch=true" extends="sc_cat_item" label="Catalog Items" max_length="40" name="x_nuta2_nutanix_ca_nutanix_catalog_items" type="collection">
+        <element attributes="edge_encryption_enabled=true" label="Blueprint Name" max_length="32" name="blueprint_name" reference="sc_cat_item" type="reference"/>
+        <element label="Cloned BP JSON" max_length="10000" name="cloned_bp_json" type="string"/>
+        <element label="Cloned BP Name" max_length="100" name="cloned_bp_name" type="string"/>
+        <element label="Cloned BP UUID" max_length="250" name="cloned_bp_uuid" type="string"/>
+        <element attributes="no_truncate=false" label="Description" max_length="8000" name="description_markdown" type="string"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+        <index name="index">
+            <element name="blueprint_name"/>
+        </index>
+    </element>
+</database>

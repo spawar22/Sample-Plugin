@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="catalog_ui_policy_action">
+    <catalog_ui_policy_action action="INSERT_OR_UPDATE">
+        <catalog_item display_value="General Settings">d4d3da7f37d12300fdfc097973990e11</catalog_item>
+        <catalog_variable>IO:8e341aff37d12300fdfc097973990eee</catalog_variable>
+        <cleared>false</cleared>
+        <disabled>true</disabled>
+        <field/>
+        <mandatory>ignore</mandatory>
+        <order>100</order>
+        <sys_class_name>catalog_ui_policy_action</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-11-14 21:12:03</sys_created_on>
+        <sys_id>9d5cc15d37bd6300fdfc097973990ef5</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>description</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>catalog_ui_policy_action_9d5cc15d37bd6300fdfc097973990ef5</sys_update_name>
+        <sys_updated_by>nikita.kumari</sys_updated_by>
+        <sys_updated_on>2018-11-21 06:57:18</sys_updated_on>
+        <table/>
+        <ui_policy display_value="Show Catalog Item DropDown and Make other fields readOnly.">cdf007b437fd2300fdfc097973990ebb</ui_policy>
+        <variable>description</variable>
+        <variable_set/>
+        <visible>ignore</visible>
+    </catalog_ui_policy_action>
+</record_update>

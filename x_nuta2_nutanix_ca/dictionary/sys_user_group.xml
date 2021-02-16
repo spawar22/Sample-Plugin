@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="all_tables.text_index_translations=true,iterativeDelete=true" defaultsort="-1" label="Group" max_length="40" name="sys_user_group" sizeclass="39" text_index="true" type="collection">
+        <element label="Nutanix Group UUID" max_length="100" name="x_nuta2_nutanix_ca_nutanix_group_uuid" type="string"/>
+    </element>
+</database>

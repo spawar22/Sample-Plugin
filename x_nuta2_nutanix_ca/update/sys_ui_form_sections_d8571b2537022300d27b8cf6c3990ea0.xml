@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_form_sections form_id="d8571b2537022300d27b8cf6c3990ea0" sys_domain="global" table="incident" version="3">
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>0</position>
+            <sys_created_by>mumtaz.ansari</sys_created_by>
+            <sys_created_on>2018-11-28 12:13:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>54571b2537022300d27b8cf6c3990ea1</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="incident" name="incident" sys_domain="global" view="a3c61b2537022300d27b8cf6c3990e54">d8571b2537022300d27b8cf6c3990ea0</sys_ui_form>
+            <sys_ui_section caption="NULL" display_value="" name="incident" sys_domain="global" view="a3c61b2537022300d27b8cf6c3990e54">23c6db2537022300d27b8cf6c3990e2c</sys_ui_section>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-11-28 12:13:20</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>1</position>
+            <sys_created_by>mumtaz.ansari</sys_created_by>
+            <sys_created_on>2018-11-28 12:13:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>d457936537022300d27b8cf6c3990e66</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="incident" name="incident" sys_domain="global" view="a3c61b2537022300d27b8cf6c3990e54">d8571b2537022300d27b8cf6c3990ea0</sys_ui_form>
+            <sys_ui_section caption="Notes" display_value="Notes" name="incident" sys_domain="global" view="a3c61b2537022300d27b8cf6c3990e54">5c571b2537022300d27b8cf6c3990ea1</sys_ui_section>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-11-28 12:13:20</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>2</position>
+            <sys_created_by>mumtaz.ansari</sys_created_by>
+            <sys_created_on>2018-11-28 12:15:06</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0ab7536537022300d27b8cf6c3990e77</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="incident" name="incident" sys_domain="global" view="a3c61b2537022300d27b8cf6c3990e54">d8571b2537022300d27b8cf6c3990ea0</sys_ui_form>
+            <sys_ui_section caption="Related Records" display_value="Related Records" name="incident" sys_domain="global" view="a3c61b2537022300d27b8cf6c3990e54">0eb7536537022300d27b8cf6c3990e75</sys_ui_section>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-11-28 12:15:06</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>3</position>
+            <sys_created_by>mumtaz.ansari</sys_created_by>
+            <sys_created_on>2018-11-28 12:16:19</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>b3f7136537022300d27b8cf6c3990e96</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="incident" name="incident" sys_domain="global" view="a3c61b2537022300d27b8cf6c3990e54">d8571b2537022300d27b8cf6c3990ea0</sys_ui_form>
+            <sys_ui_section caption="Resolution Information" display_value="Resolution Information" name="incident" sys_domain="global" view="a3c61b2537022300d27b8cf6c3990e54">f3f7136537022300d27b8cf6c3990e94</sys_ui_section>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-11-28 12:16:19</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>incident</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>mumtaz.ansari</sys_created_by>
+            <sys_created_on>2018-11-28 12:13:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>d8571b2537022300d27b8cf6c3990ea0</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>incident</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+            <sys_update_name>sys_ui_form_sections_d8571b2537022300d27b8cf6c3990ea0</sys_update_name>
+            <sys_updated_by>mumtaz.ansari</sys_updated_by>
+            <sys_updated_on>2018-11-28 12:13:20</sys_updated_on>
+            <sys_user/>
+            <view display_value="Calm Incident" name="calm_incident">a3c61b2537022300d27b8cf6c3990e54</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>

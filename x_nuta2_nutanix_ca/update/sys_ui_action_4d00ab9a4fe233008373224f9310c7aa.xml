@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_action">
+    <sys_ui_action action="INSERT_OR_UPDATE">
+        <action_name>nuta_snapshot_delete</action_name>
+        <active>true</active>
+        <client>true</client>
+        <client_script_v2><![CDATA[function onClick(g_form) {
+
+}]]></client_script_v2>
+        <comments/>
+        <condition>new Perform_Action_Condition().performActions(current.parent_uuid, 'action_snapshot_delete', 'system');</condition>
+        <form_action>true</form_action>
+        <form_button>true</form_button>
+        <form_button_v2>false</form_button_v2>
+        <form_context_menu>true</form_context_menu>
+        <form_link>false</form_link>
+        <form_menu_button_v2>false</form_menu_button_v2>
+        <form_style>destructive</form_style>
+        <hint/>
+        <isolate_script>false</isolate_script>
+        <list_action>true</list_action>
+        <list_banner_button>false</list_banner_button>
+        <list_button>false</list_button>
+        <list_choice>false</list_choice>
+        <list_context_menu>true</list_context_menu>
+        <list_link>false</list_link>
+        <list_save_with_form_button>false</list_save_with_form_button>
+        <list_style/>
+        <name>Delete</name>
+        <onclick>performSnapshotDelete()</onclick>
+        <order>100</order>
+        <script><![CDATA[var template = '<div id="#{HTML:id}" tabindex="-1" ' + 'aria-hidden="true" class="modal fade " role="dialog" ' + 'aria-labelledby="#{HTML:id}_title" data-readonly="#{HTML:readOnly}" data-has-help="#{HTML:showHelp}" focus-escape="#{HTML:focusEscape}" style="overflow-y: scroll;">' +
+    '	<div class="modal-dialog #{size}">' +
+    '		<div class="modal-content">' +
+    '			<header class="modal-header">' +
+    '				<button data-dismiss="GlideModal" class="btn btn-icon close icon-cross" id="#{HTML:id}_closemodal">' +
+    '					<span class="sr-only">Close</span>' +
+    '				</button>' +
+    '			<h1 id="#{HTML:id}_title" class="modal-title h4">' +
+    '				#{HTML:title}' +
+    '			<button class="btn btn-icon icon-help help">' +
+    '				<span class="sr-only">Help</span>' +
+    '			</button>' +
+    '			</h1>' +
+    '			</header>' +
+    '			<div class="modal-body container-fluid"></div>' +
+    '		</div>' +
+    '	</div>' +
+    '</div>';
+
+function performSnapshotDelete() {
+	var sysId = ' ';
+	if (typeof rowSysId == 'undefined'){
+		sysId = gel('sys_uniqueValue').value + '';
+	} else{
+		sysId = rowSysId + '';
+	}
+	g_form.clearMessages();
+	
+	getSingleVmProvider(sysId);
+	
+}
+
+function getSingleVmProvider(act_sys_id) {
+
+	var loadingHTML = "<div class='loading-container'><div class='loading-indicator icon-loading icon-lg'></div></div>";
+    var loadingDialog = new GlideModal("nuta_delete_modal", true);
+    loadingDialog.setTitle('Performing action...'); //Set the loading dialog title here...
+    loadingDialog.renderWithContent('' + loadingHTML);
+	
+	var ga = new GlideAjax('Run_App_Actions');
+    ga.addParam('sysparm_name', 'getProviderTypeSingleVM');
+    ga.addParam('sysparm_actionsysid', act_sys_id);
+	ga.addParam('sysparm_sysid_type', "restore_points");
+    ga.getXML(getProviderAjax, null, act_sys_id);
+}
+
+function getProviderAjax(response, sysId) {
+	var provider_name = response.responseXML.documentElement.getAttribute("answer") + '';
+	var page_selector = {"AHV_VM":"x_nuta2_nutanix_ca_Snapshot_delete","AWS_VM":"x_nuta2_nutanix_ca_Snapshot_delete_aws","VMWARE_VM":"x_nuta2_nutanix_ca_Snapshot_delete_vmware"};
+	var page_title_selector = {"AHV_VM":"Delete Restore Point","AWS_VM":"Delete AMI","VMWARE_VM":"Delete Snapshot"};
+	
+	var gm = new GlideModal("nuta_delete_modal");
+	gm.setDialog(page_selector[provider_name]);
+	gm.setWidth(450);
+	gm.setPreference('sysparm_sysId', sysId + '');
+	gm.setTitle(page_title_selector[provider_name]);
+	gm.backdropStatic = true;
+    gm.template = template;
+	gm.render();
+}]]></script>
+        <show_insert>true</show_insert>
+        <show_multiple_update>false</show_multiple_update>
+        <show_query>false</show_query>
+        <show_update>true</show_update>
+        <sys_class_name>sys_ui_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-07-12 13:31:17</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>4d00ab9a4fe233008373224f9310c7aa</sys_id>
+        <sys_mod_count>14</sys_mod_count>
+        <sys_name>Delete</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_action_4d00ab9a4fe233008373224f9310c7aa</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-04-06 09:23:37</sys_updated_on>
+        <table>x_nuta2_nutanix_ca_restore_points</table>
+        <ui11_compatible>true</ui11_compatible>
+        <ui16_compatible>false</ui16_compatible>
+    </sys_ui_action>
+</record_update>

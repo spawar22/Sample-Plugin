@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_nuta2_nutanix_ca.Nutanix_ImportCredentials</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Nutanix_ImportCredentials</name>
+        <script><![CDATA[var Nutanix_ImportCredentials = Class.create();
+Nutanix_ImportCredentials.prototype = {
+    initialize: function() {
+		this.appUtil = new Nutanix_Calm_Utils();
+		this.logger = new Nutanix_Calm_Logger();
+		
+		this.start = 51000;
+		this.end = 70000;
+		this.order = 51001;
+    },	
+	
+	ProcessingCredentials : function(current){
+		try{			
+			this.logger.debug("Inside Nutanix_ImportCredentials.ProcessingCredentials");
+			
+			var credentialJSON = this.appUtil.parse(current.payload+'');
+			var defaultCredentialJSON = this.appUtil.parse(current.parameter+'');
+			
+			var catSysId = defaultCredentialJSON.sys_id+'';
+			var isDefaultUUID = defaultCredentialJSON.default_credential_local_reference.uuid+"";
+			
+			this._createContainerStartandEnd( 'Credentials', catSysId, this.start, this.end, 'normal' );
+			
+			this._createField('credential_mapping', false, catSysId, '51001', '', 7); //Credential Name
+			
+			this.order = this.start + 2;
+			
+			for (var i in credentialJSON){
+				
+				var credential = credentialJSON[i];
+				
+				var insertData = new GlideRecord(this.appUtil.configuration.table.Credentials+'');
+				insertData.addEncodedQuery('catalog_item=' + catSysId + '^uuid=' + credential.uuid);
+				insertData.query();
+				
+				if(insertData.next()){
+
+					insertData.catalog_item = catSysId;
+					insertData.username = credential.username+'';
+					insertData.description = credential.description+'';
+					insertData.state = credential.state+'';
+					insertData.uuid = credential.uuid+'';
+					insertData.is_secret_modified = (credential.secret && credential.secret.attrs && credential.secret.attrs.is_secret_modified) ? credential.secret.attrs.is_secret_modified+'' : "";
+					insertData.username_editable = (credential.editables && credential.editables.username) ? credential.editables.username+'':false;
+					insertData.secret_editable = (credential.editables && credential.editables.secret) ? credential.editables.secret+'':false;
+					insertData.passphrase_editable = (credential.editables && credential.editables.passphrase) ? credential.editables.passphrase+'':false;
+					insertData.type = credential.type+'';
+					insertData.name = credential.name+'';
+					
+					insertData.username_isdisabled = (credential.editables && credential.editables.username && credential.editables.username+'' == 'true') ? false : true;
+					insertData.secret_isdisabled = false;
+					insertData.ssh_private_key_isdisabled = false;
+					insertData.passphrase_isdisabled = false;
+
+					insertData.is_default = (credential.uuid == isDefaultUUID)?true:false;
+
+					insertData.update();
+					
+				}else{
+					insertData.initialize();
+					insertData.catalog_item = catSysId;
+					insertData.username = credential.username+'';
+					insertData.description = credential.description+'';
+					insertData.state = credential.state+'';
+					insertData.uuid = credential.uuid+'';
+					insertData.is_secret_modified = (credential.secret && credential.secret.attrs && credential.secret.attrs.is_secret_modified) ? credential.secret.attrs.is_secret_modified+'' : "";
+					insertData.username_editable = (credential.editables && credential.editables.username) ? credential.editables.username+'':false;
+					insertData.secret_editable = (credential.editables && credential.editables.secret) ? credential.editables.secret+'':false;
+					insertData.passphrase_editable = (credential.editables && credential.editables.passphrase) ? credential.editables.passphrase+'':false;
+					insertData.type = credential.type+'';
+					insertData.name = credential.name+'';
+					
+					insertData.username_isdisabled = (credential.editables && credential.editables.username && credential.editables.username+'' == 'true') ? false : true;
+					insertData.secret_isdisabled = false;
+					insertData.ssh_private_key_isdisabled = false;
+					insertData.passphrase_isdisabled = false;
+
+					insertData.is_default = (credential.uuid == isDefaultUUID)?true:false;
+
+					insertData.insert();	
+					
+					this._createCredentialsField(credential, catSysId);
+					
+				}
+				
+			}
+			
+		} catch(e) {
+			this.logger.debug("Nutanix_ImportCredentials.ProcessingCredentials :- Exception caught during processing of Credentials. Error :- "+e);
+			this.logger.error("Exception caught during processing of Credentials. Error :- "+e);
+		}
+	},
+	
+	processEnvCredentials : function(current){
+		try{			
+			this.logger.debug("Inside Nutanix_ImportCredentials.processEnvCredentials");
+			
+			var credentialJSON = this.appUtil.parse(current.payload+'');
+			var relatedJSON = this.appUtil.parse(current.parameter+'');
+			
+			var projectSysId = relatedJSON.projectSysId+'';
+			var envSysId = relatedJSON.envSysId+"";
+			
+			//this._createContainerStartandEnd( 'Credentials', catSysId, this.start, this.end, 'normal' );
+			
+// 			this.order = this.start + 2;
+			
+			for (var i in credentialJSON){
+				
+				var credential = credentialJSON[i];
+				
+				var insertData = new GlideRecord(this.appUtil.configuration.table.Credentials+'');
+				//insertData.addEncodedQuery('catalog_item=' + catSysId + '^uuid=' + credential.uuid);
+				insertData.addQuery('uuid',credential.uuid);
+				insertData.addEncodedQuery('project=' + projectSysId +'^environment='+ envSysId +'^uuid=' + credential.uuid);
+				insertData.query();
+				
+				if(insertData.next()){
+
+					insertData.project = projectSysId;
+					insertData.environment = envSysId;
+					insertData.username = credential.username+'';
+					insertData.description = credential.description+'';
+					insertData.state = credential.state+'';
+					insertData.uuid = credential.uuid+'';
+					insertData.is_secret_modified = (credential.secret && credential.secret.attrs && credential.secret.attrs.is_secret_modified) ? credential.secret.attrs.is_secret_modified+'' : "";
+					insertData.username_editable = (credential.editables && credential.editables.username) ? credential.editables.username+'':false;
+					insertData.secret_editable = (credential.editables && credential.editables.secret) ? credential.editables.secret+'':false;
+					insertData.passphrase_editable = (credential.editables && credential.editables.passphrase) ? credential.editables.passphrase+'':false;
+					insertData.type = credential.type+'';
+					insertData.name = credential.name+'';
+					
+					insertData.username_isdisabled = (credential.editables && credential.editables.username && credential.editables.username+'' == 'true') ? false : true;
+					insertData.secret_isdisabled = false;
+					insertData.ssh_private_key_isdisabled = false;
+					insertData.passphrase_isdisabled = false;
+
+					//insertData.is_default = (credential.uuid == isDefaultUUID)?true:false;
+
+					insertData.update();
+					
+				}else{
+					insertData.initialize();
+					insertData.project = projectSysId;
+					insertData.environment = envSysId;
+					insertData.username = credential.username+'';
+					insertData.description = credential.description+'';
+					insertData.state = credential.state+'';
+					insertData.uuid = credential.uuid+'';
+					insertData.is_secret_modified = (credential.secret && credential.secret.attrs && credential.secret.attrs.is_secret_modified) ? credential.secret.attrs.is_secret_modified+'' : "";
+					insertData.username_editable = (credential.editables && credential.editables.username)?credential.editables.username+'':false;
+					insertData.secret_editable = (credential.editables && credential.editables.secret)?credential.editables.secret+'':false;
+					insertData.passphrase_editable = (credential.editables && credential.editables.passphrase) ? credential.editables.passphrase+'':false;
+					insertData.type = credential.type+'';
+					insertData.name = credential.name+'';
+
+					insertData.username_isdisabled = (credential.editables && credential.editables.username && credential.editables.username+'' == 'true') ? false : true;
+					insertData.secret_isdisabled = false;
+					insertData.ssh_private_key_isdisabled = false;
+					insertData.passphrase_isdisabled = false;
+					
+					//insertData.is_default = (credential.uuid == isDefaultUUID)?true:false;
+
+					insertData.insert();	
+					
+					//this._createCredentialsField(credential, catSysId);
+					
+				}
+				
+			}
+			
+		} catch(e) {
+			this.logger.debug("Nutanix_ImportCredentials.ProcessingCredentials :- Exception caught during processing of Environment Credentials. Error :- "+e);
+			this.logger.error("Exception caught during processing of Environment Credentials. Error :- "+e);
+		}
+	},
+	
+	_createCredentialsField: function(credential, catSysID){
+		try{
+			this.logger.debug("Inside Nutanix_ImportCredentials._createCredentialsField");
+			this._createContainerStartandEnd( credential.name, catSysID, this.order+1, this.order+10, 'normal', credential.name );
+
+			this._createField('credential_name', credential.name, catSysID, this.order+3, credential.name+''); //Credential Name
+			this._createField('credential_reference', '', catSysID, this.order+4, credential.name+'', 5); //Credential Reference
+			this._createField('username', credential.username, catSysID, this.order+5, credential.name+''); //Username
+
+			var typeValue = '';
+
+			if(credential.type+'' == 'KEY'){
+				typeValue = 'SSH Private Key';
+			} else{
+				typeValue = 'Password';
+			}
+
+			this._createField('secret_type', typeValue, catSysID, this.order+6, credential.name+''); //Secret Type
+			this._createField('ssh_private_key', '', catSysID, this.order+7, credential.name+'', 2); //SSH Private Key
+			this._createField('passphrase', '', catSysID, this.order+8, credential.name+'', 25); //Passphrase
+			this._createField('password', '', catSysID, this.order+9, credential.name+'', 25); //password
+
+			//this._createField('is_Default', , cat_sycatSysIDsID, this.order+8, credential.name+''); //password
+
+			this.order = this.order + 11;
+		} catch(e) {
+			this.logger.debug("Nutanix_ImportCredentials._createCredentialsField :- Exception caught while creating Credential fields. Error :- "+e);
+			this.logger.error("Exception caught while creating Credential fields. Error :- "+e);
+		}
+	},
+	
+	_createField: function( name, value, catSysID, order, serviceName, type){//, profileUUID, serviceSysId, categorySysId, editable){
+		
+		try{
+			this.logger.debug("Inside Nutanix_ImportCredentials._createField");
+			var variable = new GlideRecord(this.appUtil.configuration.table.varaiblesTable+'');
+			variable.addQuery('name', serviceName+'_'+name+'');
+			variable.addQuery('cat_item', catSysID+'');
+			variable.query();
+
+			if(variable.next()){
+				variable.variable_width = 50;
+				variable.update();
+			} else {
+				variable.initialize();
+
+				variable.type = (type)?type:6;
+				variable.cat_item = catSysID;
+				variable.active = true;
+				variable.question_text = this._toTitleCase(name.replace(/_/g, ' '));//'profile_configuration';
+				variable.name = (serviceName+'_'+name+'').toLowerCase().replace(/ /g, '_'	);
+				variable.default_value = value;
+				variable.variable_width = 50;
+				//variable.tooltip = field.description+'';
+				variable.order = order;
+
+				//field.uuid;
+				var fieldSysd = variable.insert();
+
+				//this._insertCatalogVariableProperties(profileUUID, value, editable, fieldSysd, catSysID, serviceSysId, categorySysId);			
+			}
+		} catch(e) {
+			this.logger.debug("Nutanix_ImportCredentials._createField :- Exception caught during field creation in item_option_new table. Error :- "+e);
+			this.logger.error("Exception caught during during field creation in catalaog variables table. Error :- "+e);
+		}
+	},
+	
+	_createContainerStartandEnd: function( name, catSysID, start, end, type, serviceName ){
+		try{
+			
+			this.logger.debug("Inside Nutanix_CreateCatalogVariables._createContainerStartandEnd");
+			
+			serviceName = (serviceName)?serviceName+'_':'';
+			
+			var startSysId = '';
+			
+			var variable = new GlideRecord(this.appUtil.configuration.table.varaiblesTable+'');
+			variable.addQuery('name', (serviceName+name+'').toLowerCase().replace(/ /g, '_'	));
+			variable.addQuery('cat_item', catSysID+'');
+			variable.addQuery('order', start);
+			variable.query();
+			
+			if(variable.next()){
+				
+				startSysId = variable.sys_id;
+				
+				variable.layout = (type)?type:'2across';
+				variable.update();
+			} else {
+				variable.initialize();
+				variable.type = '19';
+				variable.display_title = 'true';
+				variable.cat_item = catSysID;
+				variable.active = 'true';
+				variable.order = start;
+				variable.question_text = name;
+				variable.name = (serviceName+name+'').toLowerCase().replace(/ /g, '_'	); //(name+((serviceName)?serviceName:'')).toLowerCase().replace(/ /g, '_'	);//'profile_configuration';
+				variable.layout = (type)?type:'2across';
+				startSysId = variable.insert();	
+				
+				variable.initialize();
+				variable.type = '20';
+				variable.cat_item = catSysID;
+				variable.active = 'true';
+				variable.order = end;
+				variable.insert();		
+			}
+			
+			return startSysId;
+			
+		}catch(e){
+			this.logger.error("Error Nutanix_CreateCatalogVariables._createContainerStartandEnd: Error:- "+e);
+		}
+	},
+	
+	fetchCredentialsList: function(catSysID){
+		try{
+			this.logger.debug("Inside Nutanix_ImportCredentials.fetchCredentialsList");
+			var gr = new GlideRecord(this.appUtil.configuration.table.Credentials+'');
+			gr.addEncodedQuery('catalog_item='+catSysID+'^environmentISEMPTY^projectISEMPTY');
+			gr.query();
+
+			var ans = {};
+
+			var i =0;
+
+			while(gr.next()){
+
+				ans[i] = {};
+
+				ans[i].name = gr.name+'';
+				ans[i].type = gr.type+'';
+				ans[i].actual_name = gr.actual_name+'';
+
+				ans[i].username = {
+					'value': gr.username+'',
+					'readOnly': (gr.username_editable+''+''=='true')?false:true
+				};
+
+				if(gr.type+'' == 'KEY'){
+					ans[i].ssh_private_key = {
+						'value': gr.ssh_private_key+'',
+						'readOnly': (gr.secret_editable+''=='true')?false:true
+					};
+					ans[i].passphrase = {
+						'value': gr.passphrase+'',
+						'readOnly': (gr.passphrase_editable+''=='true')?false:true
+					};
+				}else{
+					ans[i].password = {
+						'value': gr.password+'',
+						'readOnly': (gr.secret_editable+''=='true')?false:true
+					};
+				}		
+				
+				ans[i].credential_reference = {
+					"name": gr.credential_reference.name+'',
+					"uuid": gr.credential_reference.uuid+'',
+					"readOnly": (gr.runtime+''=='true')?false:true
+				};
+				
+				i++;
+			}
+			
+			
+
+			return JSON.stringify(ans);
+		} catch(e) {
+			this.logger.debug("Nutanix_ImportCredentials.fetchCredentialsList :- Exception caught while fetching the the list of credentials. Error :- "+e);
+			this.logger.error("Exception caught while fetching the the list of credentials. Error :- "+e);
+		}
+	},
+	
+	fetchMappedCredentialsDetails: function(catSysID){
+		try{
+			this.logger.debug("Inside Nutanix_ImportCredentials.fetchMappedCredentialsDetails");
+			var gr = new GlideRecord(this.appUtil.configuration.table.Credentials+'');
+			gr.addEncodedQuery('catalog_item='+catSysID+'^environmentISNOTEMPTY^projectISNOTEMPTY');
+			gr.query();
+
+			var ans = {
+				'show': false,
+				'values': {},
+				'hide':[]
+			};
+
+			var i =0;
+
+			while(gr.next()){
+
+				ans.values.name = gr.name+'';
+				ans.values.type = gr.type+'';
+				ans.values.actual_name = gr.actual_name+'';
+				
+				ans.values.username = {
+					'value': gr.username+'',
+					'readOnly': (gr.username_editable+''+''=='true')?false:true
+				};
+
+				if(gr.type+'' == 'KEY'){
+					ans.values.ssh_private_key = {
+						'value': gr.ssh_private_key+'',
+						'readOnly': (gr.ssh_private_key_editable+''=='true')?false:true
+					};
+					ans.values.passphrase = {
+						'value': gr.passphrase+'',
+						'readOnly': (gr.passphrase_editable+''=='true')?false:true
+					};
+				}else{
+					ans.values.password = {
+						'value': gr.password+'',
+						'readOnly': (gr.secret_editable+''=='true')?false:true
+					};
+				}													
+				i++;
+			}
+			
+			var gr = new GlideRecord(this.appUtil.configuration.table.Credentials+'');
+			gr.addEncodedQuery('catalog_item='+catSysID+'^environmentISEMPTY^projectISEMPTY');
+			gr.query();
+			while(gr.next()){
+				ans.hide.push(gr.actual_name+'');
+			}
+			
+			var gr = new GlideRecord(this.appUtil.configuration.table.variablesProperties+'');
+			gr.addQuery('variable', gs.getProperty('x_nuta2_nutanix_ca.credentials.mapping.variable.sys.id')+'');
+			gr.addQuery('catalog_item', catSysID+'');
+			gr.query();
+
+			if(gr.next()){
+				ans.show = gr.default_value+'';
+			}
+
+			return JSON.stringify(ans);
+		} catch(e) {
+			this.logger.debug("Nutanix_ImportCredentials.fetchMappedCredentialsDetails :- Exception caught while fetching the the list of credentials. Error :- "+e);
+			this.logger.error("Exception caught while fetching the the list of credentials. Error :- "+e);
+		}
+	},
+	
+	_toTitleCase: function (str) {
+		try{
+			this.logger.debug("Inside Nutanix_ImportCredentials._toTitleCase");
+			/*str = str.toLowerCase().split(' ');
+			for (var i = 0; i < str.length; i++) {
+				str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+			}
+			return str.join(' ');*/
+			return str;
+		} catch(e) {
+			this.logger.debug("Nutanix_ImportCredentials._toTitleCase :- Exception caught while changing case of string to title case. Error :- "+e);
+			this.logger.error("Exception caught while changing case of string to title case. Error :- "+e);
+		}
+	},
+	
+	
+    type: 'Nutanix_ImportCredentials'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>nikita.kumari</sys_created_by>
+        <sys_created_on>2018-11-16 10:06:53</sys_created_on>
+        <sys_id>7c3789f137f1e300fdfc097973990e32</sys_id>
+        <sys_mod_count>54</sys_mod_count>
+        <sys_name>Nutanix_ImportCredentials</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy>protected</sys_policy>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_script_include_7c3789f137f1e300fdfc097973990e32</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-03-06 15:02:13</sys_updated_on>
+    </sys_script_include>
+</record_update>

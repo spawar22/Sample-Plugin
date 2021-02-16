@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script/>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_nuta2_nutanix_ca_Provider_icons_page.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	
+	<div class="bodyData">
+	</div>
+	<body onload="getProfiles()">
+	</body>
+	<g:requires name="x_nuta2_nutanix_ca.final_provider_script.jsdbx"/>
+</j:jelly>]]></html>
+        <name>Provider_icons_page</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-18 06:43:22</sys_created_on>
+        <sys_id>e7ed5c40db332300bfa82a9a48961965</sys_id>
+        <sys_mod_count>38</sys_mod_count>
+        <sys_name>Provider_icons_page</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_ui_page_e7ed5c40db332300bfa82a9a48961965</sys_update_name>
+        <sys_updated_by>Bharat</sys_updated_by>
+        <sys_updated_on>2019-03-15 12:05:29</sys_updated_on>
+    </sys_ui_page>
+</record_update>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_script">
+    <sys_transform_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <map display_value="Nutanix Transform Blueprints ">d002f782dbcd230084249235ca9619ab</map>
+        <order>100</order>
+        <script><![CDATA[(function runTransformScript(source, map, log, target /*undefined onStart*/ ) {
+
+	// Add your code here
+	var appUtil = new Nutanix_Calm_Utils();
+	var catVariableBody = {}; //changes
+	var body = {
+		'name': source.name+'',
+		'sys_id': target.sys_id+''
+	};
+
+	if(source.default_credential_local_reference){
+		var defaultCredentialBody = {
+			'default_credential_local_reference': JSON.parse(source.default_credential_local_reference+''),
+			'sys_id': target.sys_id+''
+		};
+		appUtil.insertIntoQueue("ProcessingCredentials", '', JSON.stringify(defaultCredentialBody), source.credential_definition_list+'', 'Process credentials', 'This job processes the imported credentials.');
+	}
+	///changes///
+	if(source.template_type == "Single Vm"){
+		
+		var service_body = [{
+				"uuid" : "singleVm-default-service-uuid",
+				"name" : "Single Vm Configuration"
+			}];
+		catVariableBody={
+			"substrate_definition_list": JSON.parse(source.substrate_definition_list),
+			"app_profile_list": JSON.parse(source.app_profile_list),
+			"service_definition_list": service_body ,
+			"package_definition_list": JSON.parse(source.package_definition_list)
+		};
+		//gs.error("transform single vm ::"+JSON.stringify(catVariableBody));
+	}
+	///changes///
+	else{
+		catVariableBody={
+			"substrate_definition_list": JSON.parse(source.substrate_definition_list),
+			"app_profile_list": JSON.parse(source.app_profile_list),
+			"service_definition_list": JSON.parse(source.service_definition_list),
+			"package_definition_list": JSON.parse(source.package_definition_list)
+		};
+	}
+	//appUtil.insertIntoQueue("ProcessApplicationProfiles", '', target.sys_id+'', source.app_profile_list+'');
+	var appBody = {
+		"parameter": target.sys_id+'',
+		"payload": source.app_profile_list+'',
+		"substrate" : source.substrate_definition_list+''
+		
+	};
+	var call = new Nutanix_ImportApplicationProfiles();
+	call.processApplicationProfiles(appBody);
+
+	appUtil.insertIntoQueue("MapCatItemToProject", '', target.sys_id+'', source.project_reference+'', 'Map catalog items to project', 'This job maps the catalog items to their respective projects.');
+
+	appUtil.insertIntoQueue("processCatalogVariables", '', target.sys_id+'', JSON.stringify(catVariableBody), 'Process catalog variables', 'This job processes the imported catalog variables.');
+	//appUtil.insertIntoQueue("createUserCriteria", '', '', JSON.stringify(body));
+
+})(source, map, log, target);
+]]></script>
+        <sys_class_name>sys_transform_script</sys_class_name>
+        <sys_created_by>girishgyani</sys_created_by>
+        <sys_created_on>2018-10-14 17:34:09</sys_created_on>
+        <sys_id>8d3e205b37496300fdfc097973990ed9</sys_id>
+        <sys_mod_count>21</sys_mod_count>
+        <sys_name>onAfter</sys_name>
+        <sys_package display_value="Nutanix Calm" source="x_nuta2_nutanix_ca">3b7631654f452b001200e5201310c76b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Nutanix Calm">3b7631654f452b001200e5201310c76b</sys_scope>
+        <sys_update_name>sys_transform_script_8d3e205b37496300fdfc097973990ed9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-05 13:24:11</sys_updated_on>
+        <when>onAfter</when>
+    </sys_transform_script>
+</record_update>
